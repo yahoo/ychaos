@@ -10,7 +10,7 @@ Package setup file for python module vzmi.ychaos
 # is used to obtain package metadata and install the package on other computer systems.   As a
 # result, it must be able to execute without generating errors or execeptions in an environment with
 # only the python interpreter and nothing else.
-# 
+#
 # This file should never do any of the following:
 #  - Import Python modules that are not included with the Python standard library
 #  - Import any code that is contained in the package
@@ -32,14 +32,14 @@ def scripts():
         List of filenames
     """
     script_list = []
-    if os.path.isdir('scripts'):
-        for item in os.listdir('scripts'):
-            filename = os.path.join('scripts', item)
+    if os.path.isdir("scripts"):
+        for item in os.listdir("scripts"):
+            filename = os.path.join("scripts", item)
             if os.path.isfile(filename):
                 script_list.append(filename)
     return script_list
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # We're being run from the command line so call setup with our arguments
     setuptools.setup(scripts=scripts())

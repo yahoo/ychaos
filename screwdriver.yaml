@@ -1,0 +1,102 @@
+version: 4
+shared:
+    settings:
+        slack: ['pythonbuildstatus']
+    environment:
+        # Filename to contain the generated changelog, the default puts the file in the [docs](docs) directory
+        # used by the mkdocs utility.
+        CHANGELOG_FILENAME: docs/changelog.md
+        
+        # Documentation tool to use, can be either sphinx which looks for documentation in doc/source
+        # or mkdocs which looks for documentation in docs.
+        # By default use [mkdocs](https://www.mkdocs.org/) tool to build documentation from the [docs](docs) directory.
+        DOCUMENTATION_FORMATS: mkdocs
+
+jobs:
+    # Validation jobs
+    dependency_validation:
+        template: pythonv6/validate_dependencies
+        requires: [~pr, ~commit]
+
+    doc_validation:
+         template: pythonv6/documentation
+         environment:
+             DOCUMENTATION_PUBLISH: False
+         requires: [~pr]
+
+    lint_validation:
+        template: pythonv6/validate_lint
+        requires: [~pr, ~commit]
+
+    package_validation:
+        template: pythonv6/package_python
+        environment:
+            PACKAGE_PYTHON_PUBLISH: False
+        requires: [~pr]
+
+    security_validation:
+        template: pythonv6/validate_security
+        requires: [~pr, ~commit]
+
+    style_validation:
+        template: pythonv6/validate_style
+        requires: [~pr, ~commit]
+
+    test_validation:
+        template: pythonv6/validate_unittest
+        # Uncomment the following to have tox test all python verions in parallel
+        # environment:
+        #     TOX_ARGS: --parallel all
+        requires: [~pr, ~commit]
+
+    type_validation:
+        template: pythonv6/validate_type
+        requires: [~pr, ~commit]
+        
+    # Package auto-versioning, this must run before generating a package for publishing
+    version:
+        template: pythonv6/version
+        requires: [dependency_validation, lint_validation, style_validation, type_validation, security_validation, test_validation]
+        
+    # Python packaging
+    python_package:
+        template: pythonv6/package_python
+        requires: [version]
+    
+    
+    # Application packaging
+    # The jobs in this section are configured using the deploy.conf file.
+    
+    # By default these don't publish the packages since applications don't generally need all types
+    # of packaging.  Uncomment the desired job and change PACKAGE_PUBLISH to True to enable a specific 
+    # deployment packaging type.
+    
+    # docker_package:
+    #      template: pythonv6/docker_pythonapp
+    #      environment:
+    #         PACKAGE_PUBLISH: False
+    #      requires: [python_package]
+
+    # yinst_rh7_package:
+    #     template: pythonv6/package_yinst
+    #     environment:
+    #         PACKAGE_PUBLISH: False
+    #     image: docker-registry.ops.yahoo.com:4443/python/ylinux7
+    #     requires: [python_package]
+
+    # Before publishing rpm packages, the CI Pipeline will need to be whitelisted to access the
+    # specified rpm repository in artifactory.  If this is not done the publish operation will
+    # fail with permission errors.
+
+    # rpm_rh7_package:
+    #     template: pythonv6/package_rpm
+    #    image: docker-registry.ops.yahoo.com:4443/python/ylinux7
+    #     environment:
+    #         PACKAGE_PUBLISH: False
+    #     requires: [python_package]
+    
+
+    # Publish sphinx or mkdocs documentation to github pages of this repo
+    doc_publish:
+         template: pythonv6/documentation
+         requires: [python_package]

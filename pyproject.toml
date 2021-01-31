@@ -1,0 +1,22 @@
+[build-system]
+# Minimum requirements for the build system to execute.
+requires = ["setuptools", "wheel"]  # PEP 508 specifications.
+
+[tool.sdv4_installdeps]
+# Non Python package dependencies to install
+# See the documentation at https://yahoo.github.io/python-screwdrivercd/Install_Dependencies/
+# for the configuration options available.
+fail_on_error = true
+install = ["apk", "apt-get", "brew", "yum"]
+
+[tool.sdv4_installdeps.apk]
+deps = []
+
+[tool.sdv4_installdeps.apt-get]
+deps = []
+
+[tool.sdv4_installdeps.brew]
+deps = []
+
+[tool.sdv4_installdeps.yum]
+deps = []

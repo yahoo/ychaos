@@ -1,0 +1,69 @@
+edit_uri: edit/master/docs/
+
+extra:
+    config_override: false
+    doc_owner: Shashank Sharma
+    doc_owner_shortid: ssharma06@verizonmedia.com
+    slack_title: 'Python'
+    slack_link: https://vzbuilders.slack.com/messages/C02UXMS7Z
+
+extra_css: []
+
+markdown_extensions:
+    - admonition
+    - codehilite
+    - markdown_include.include:
+        base_path: docs
+    - toc:
+        permalink: true
+        toc_depth: 3
+    - pymdownx.arithmatex
+    - pymdownx.betterem:
+        smart_enable: all
+    - pymdownx.caret
+    - pymdownx.critic
+    - pymdownx.details
+    - pymdownx.inlinehilite
+    - pymdownx.magiclink
+    - pymdownx.mark
+    - pymdownx.smartsymbols
+    - pymdownx.superfences
+    - pymdownx.emoji:
+        emoji_generator: !!python/name:pymdownx.emoji.to_png
+    - pymdownx.tasklist:
+        custom_checkbox: true
+    - pymdownx.tilde
+
+nav:
+    - Home: index.md
+    - Changelog: changelog.md
+
+plugins:
+    - search
+    - git-import:
+        base_url: "https://git.vzbuilders.com/api/v3"
+        token: !!python/object/apply:os.getenv ["GIT_ACCESS_TOKEN"]
+    - git-commit-extractor:
+        base_url: "https://git.vzbuilders.com/api/v3"
+        repo: !!python/object/apply:os.getenv ["GIT_REPO"]
+        token: !!python/object/apply:os.getenv ["GIT_ACCESS_TOKEN"]
+
+remote_branch: gh-pages
+remote_name: origin
+repo_name: GitHub
+repo_url: https://git.vzbuilders.com/ssharma06/vzmi.ychaos
+site_name: ychaos
+site_url: https://git.vzbuilders.com/pages/ssharma06/vzmi.ychaos
+site_description: Python module vzmi.ychaos
+strict: true
+
+theme:
+    name: 'vzm-pythonguide'
+    base_url: https://git.vzbuilders.com/ssharma06/vzmi.ychaos
+    show_contributions: true
+    language: 'en'
+    favicon: 'assets/images/dev-guide-icon.ico'
+    logo: 'assets/images/dev-guide-icon.png'
+    banner: 'assets/images/python-logo.png'
+
+use_directory_urls: true

@@ -23,6 +23,8 @@ jobs:
          environment:
              DOCUMENTATION_PUBLISH: False
          requires: [~pr]
+         steps:
+             - postinit: pip install -e .[doc_build]
 
     lint_validation:
         template: pythonv6/validate_lint
@@ -38,9 +40,19 @@ jobs:
         template: pythonv6/validate_security
         requires: [~pr, ~commit]
 
+    # Style validation using `flake8`
     style_validation:
         template: pythonv6/validate_style
         requires: [~pr, ~commit]
+        steps:
+            - validate_code: pypirun flake8 flake8 vzmi/ychaos
+
+    # Code Format Validation using `black`
+    code_format_validation:
+        template: pythonv6/validate_style
+        requires: [~pr, ~commit]
+        steps:
+            - validate_code: pypirun black black --check vzmi/ tests/ setup.py
 
     test_validation:
         template: pythonv6/validate_unittest
@@ -52,25 +64,25 @@ jobs:
     type_validation:
         template: pythonv6/validate_type
         requires: [~pr, ~commit]
-        
+
     # Package auto-versioning, this must run before generating a package for publishing
     version:
         template: pythonv6/version
-        requires: [dependency_validation, lint_validation, style_validation, type_validation, security_validation, test_validation]
-        
+        requires: [dependency_validation, lint_validation, style_validation, type_validation, security_validation, test_validation, code_format_validation]
+
     # Python packaging
     python_package:
         template: pythonv6/package_python
         requires: [version]
-    
-    
+
+
     # Application packaging
     # The jobs in this section are configured using the deploy.conf file.
-    
+
     # By default these don't publish the packages since applications don't generally need all types
-    # of packaging.  Uncomment the desired job and change PACKAGE_PUBLISH to True to enable a specific 
+    # of packaging.  Uncomment the desired job and change PACKAGE_PUBLISH to True to enable a specific
     # deployment packaging type.
-    
+
     # docker_package:
     #      template: pythonv6/docker_pythonapp
     #      environment:
@@ -94,9 +106,11 @@ jobs:
     #     environment:
     #         PACKAGE_PUBLISH: False
     #     requires: [python_package]
-    
+
 
     # Publish sphinx or mkdocs documentation to github pages of this repo
     doc_publish:
          template: pythonv6/documentation
          requires: [python_package]
+         steps:
+             - postinit: pip install -e .[doc_build]

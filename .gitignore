@@ -79,3 +79,11 @@ pip-delete-this-directory.txt
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+
+.idea/
+pip-wheel-metadata/
+venv/
+artifacts/
+site/
+
+.pytype/

@@ -1,9 +1,9 @@
 """
 vzmi.ychaos module
 """
-import pkg_resources
 from typing import List
 
+import pkg_resources
 
 __all__: List[str] = []
 __copyright__: str = "Copyright 2021, Verizon Media Inc."

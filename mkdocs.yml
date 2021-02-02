@@ -48,10 +48,15 @@ markdown_extensions:
         custom_checkbox: true
     - pymdownx.tilde
     - pymdownx.tabbed
+    - pymdownx.emoji:
+        emoji_index: !!python/name:materialx.emoji.twemoji
+        emoji_generator: !!python/name:materialx.emoji.to_svg
 
 nav:
-    - Home: index.md
-    - Changelog: changelog.md
+    - YChaos:
+      - Home: index.md
+      - Changelog: changelog.md
+      - Project Dependencies: dependencies.md
 
 plugins:
     - search
@@ -67,7 +72,7 @@ repo_url: https://git.vzbuilders.com/ssharma06/vzmi.ychaos
 site_name: YChaos - The Resilience Toolkit
 site_url: https://git.vzbuilders.com/pages/ssharma06/vzmi.ychaos
 site_description: Python module vzmi.ychaos
-strict: true
+strict: false
 
 theme:
     name: 'material'

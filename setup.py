@@ -42,4 +42,8 @@ def scripts():
 
 if __name__ == "__main__":
     # We're being run from the command line so call setup with our arguments
-    setuptools.setup(scripts=scripts())
+    setuptools.setup(
+        scripts=scripts(),
+        packages=setuptools.find_packages(),
+        test_suite="tests",
+    )

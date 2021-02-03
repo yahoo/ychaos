@@ -87,3 +87,5 @@ artifacts/
 site/
 
 .pytype/
+
+.pytest_cache/

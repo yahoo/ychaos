@@ -43,9 +43,9 @@ directory,
 | Project Dependencies | Project Link                                    | License Type         | License URL                                                         |
 | -------------------- | ----------------------------------------------- | -------------------- | ------------------------------------------------------------------- |
 | callee               | [LINK](https://github.com/Xion/callee)          | BSD-3-Clause         | [LINK](https://github.com/Xion/callee/blob/master/LICENSE)          |
-| green                | [LINK](https://github.com/CleanCut/green)       | MIT                  | [LINK](https://github.com/CleanCut/green/blob/master/LICENSE)       |
 | mockito              | [LINK](https://github.com/kaste/mockito-python) | MIT                  | [LINK](https://github.com/kaste/mockito-python/blob/master/LICENSE) |
 | pytest               | [LINK](https://github.com/pytest-dev/pytest)    | MIT                  | [LINK](https://github.com/pytest-dev/pytest/blob/master/LICENSE)    |
+| pytest-cov           | [LINK](https://github.com/pytest-dev/pytest-cov)| MIT                  | [LINK](https://github.com/pytest-dev/pytest-cov/blob/master/LICENSE)|
 
 ### Code styling and validation
 

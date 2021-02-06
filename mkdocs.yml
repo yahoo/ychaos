@@ -20,6 +20,11 @@ extra:
         - icon: fontawesome/brands/yahoo
           link: mailto://shashank.sharma@verizonmedia.com
           name: Mail Shashank Sharma
+    data:
+        git:
+            schema_link: "https://git.vzbuilders.com/ssharma06/vzmi.ychaos/blob/master/vzmi/ychaos/testplan/resources/schema.json"
+        general:
+            todo: "This part of the documentation is under development. Stay tuned.."
 
 extra_css: []
 
@@ -54,10 +59,13 @@ markdown_extensions:
 
 nav:
     - YChaos:
-      - Home: index.md
-      - Changelog: changelog.md
-      - Contribution: contribution.md
-      - Project Dependencies: dependencies.md
+        - Home: index.md
+        - Changelog: changelog.md
+        - Contribution: contribution.md
+        - Project Dependencies: dependencies.md
+    - YChaos Test Plan:
+        - Test Plan: testplan/index.md
+        - Schema: testplan/schema/index.html
 
 plugins:
     - search

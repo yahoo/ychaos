@@ -46,4 +46,5 @@ if __name__ == "__main__":
         scripts=scripts(),
         packages=setuptools.find_packages(),
         test_suite="tests",
+        package_data={"": ["*.json"]},
     )

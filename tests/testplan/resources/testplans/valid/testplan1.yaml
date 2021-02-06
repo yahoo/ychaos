@@ -1,0 +1,7 @@
+verification:
+  - states:
+      - CHAOS
+      - STEADY
+    type: python_module
+    config:
+        path: "/home/y/lib/script.py"

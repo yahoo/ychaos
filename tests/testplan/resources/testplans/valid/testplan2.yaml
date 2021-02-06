@@ -1,0 +1,15 @@
+verification:
+  - states:
+      - CHAOS
+      - STEADY
+    type: python_module
+    config:
+        path: "/home/y/lib/script.py"
+  - states:
+      - CHAOS
+    type: python_module
+    config:
+        path: "/home/y/lib/script.py"
+        arguments:
+            - "key1=value1"
+            - "key2=value2"

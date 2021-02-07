@@ -59,6 +59,8 @@ jobs:
         environment:
             TOX_ARGS: --parallel all
         requires: [~pr, ~commit]
+        steps:
+            - poststore_artifacts: python3 screwdriver/coverage_status.py
 
     type_validation:
         template: pythonv6/validate_type
@@ -73,6 +75,8 @@ jobs:
     python_package:
         template: pythonv6/package_python
         requires: [version]
+        steps:
+            - posttag_release: python3 screwdriver/label_build.py
 
 
     # Application packaging

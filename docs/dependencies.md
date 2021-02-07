@@ -16,6 +16,7 @@ the required dependencies of the project.
 | pydantic             | [LINK](https://github.com/samuelcolvin/pydantic) | MIT          | [LINK](https://github.com/samuelcolvin/pydantic/blob/master/LICENSE) |
 | requests             | [LINK](https://github.com/psf/requests)          | Apache 2.0   | [LINK](https://github.com/psf/requests/blob/master/LICENSE)          |
 | rich                 | [LINK](https://github.com/willmcgugan/rich)      | MIT          | [LINK](https://github.com/willmcgugan/rich/blob/master/LICENSE)      |
+| pyyaml               | [LINK](https://github.com/yaml/pyyaml)           | MIT          | [LINK](https://github.com/yaml/pyyaml/blob/master/LICENSE)           |
 
 ----
 

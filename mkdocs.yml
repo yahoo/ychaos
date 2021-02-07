@@ -85,7 +85,7 @@ strict: false
 
 theme:
     name: 'material'
-    base_url: https://git.vzbuilders.com/ssharma06/vzmi.gru2
+    base_url: https://git.vzbuilders.com/ssharma06/vzmi.ychaos
     language: 'en'
     features:
         - navigation.tabs

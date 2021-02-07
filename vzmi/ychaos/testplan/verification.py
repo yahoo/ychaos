@@ -100,4 +100,7 @@ class VerificationConfig(SchemaModel):
         Returns:
             Parsed mapper object
         """
-        return VerificationType(values["type"]).get_mapper()(**v)
+        if "type" in values:
+            return VerificationType(values["type"]).get_mapper()(**v)
+        else:
+            return v

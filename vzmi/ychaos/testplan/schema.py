@@ -44,8 +44,8 @@ class TestPlanSchema(SchemaModel):
                 prop.pop("title", None)
 
             schema_extra = {
-                "$schema": "http://json-schema.org/draft-07/schema",
-                "$id": "http://resilience.yahoo.com/test-plan-schema.json",
+                "$schema": "https://json-schema.org/draft-07/schema",
+                "$id": "https://resilience.yahoo.com/schema.json",
             }
             schema.update(schema_extra)
 

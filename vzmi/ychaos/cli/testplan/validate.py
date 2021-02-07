@@ -72,10 +72,19 @@ class TestPlanValidatorCommand(SubCommand):
 
     def do_testplans_validation(self):
         exitcode = 0
-        self.console.log("Validating Test plans")
-        self.console.line()
+        self.console.log("Getting Test plans")
 
         resolved_filepaths = self.resolve_validation_paths()
+
+        if len(resolved_filepaths) == 0:
+            self.console.line()
+            self.console.print(
+                ":open_file_folder: No Test plans found", style="orange3"
+            )
+            return
+
+        self.console.log("Validating Test plans")
+        self.console.line()
 
         with self.console.status("Validating...") as status:
             for file in sorted(resolved_filepaths):

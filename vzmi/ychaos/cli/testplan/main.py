@@ -38,5 +38,5 @@ class TestPlan(SubCommand):
         return parser
 
     @classmethod
-    def main(cls, args: Namespace) -> Any:
+    def main(cls, args: Namespace) -> Any:  # pragma: no cover
         pass

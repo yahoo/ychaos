@@ -42,7 +42,7 @@ function security_validation() {
 function unittest() {
     echo "==============================================="
     echo "Running Unittests with coverage"
-    pytest --cov=vzmi.ychaos --cov-report=html:artifacts/coverage --cov-report term-missing tests --cov-fail-under=10
+    pytest --cov=vzmi.ychaos --cov-report=html:artifacts/coverage --cov-report term-missing tests --cov-fail-under=80
 }
 
 format_codestyle

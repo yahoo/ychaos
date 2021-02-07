@@ -1,5 +1,6 @@
 {
     "title": "TestPlanSchema",
+    "description": "Defines the schema for the Test Plan.",
     "type": "object",
     "properties": {
         "description": {
@@ -30,7 +31,7 @@
         },
         "VerificationType": {
             "title": "VerificationType",
-            "description": "An enumeration.",
+            "description": "Defines the Type of plugin to be used for verification.",
             "enum": [
                 "python_module"
             ]

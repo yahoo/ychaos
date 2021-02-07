@@ -10,7 +10,7 @@ You can also view a human readable documentation of the schema by visiting [here
 === "Python"
 
     To validate a JSON/YAML test plan file, use the 
-    `TestPlanValidator.validate_file()` method. The method can
+    [`TestPlanValidator.validate_file()`](../package_docs/testplan/validator.md) method. The method can
     take both JSON and YAML files as input and validate whether the file
     is a valid Test Plan or not.
     
@@ -58,69 +58,71 @@ You can also view a human readable documentation of the schema by visiting [here
     ???+ "Example Run - Valid Test Plans"
     
         ```
-        $ ychaos testplan validate tests/testplan/resources/testplans/valid/
+        $ ychaos testplan validate tests/resources/testplans/valid/
         
-        ──────────── YChaos, The resilience testing framework ─────────────
+        ───────────────────── YChaos, The resilience testing framework ──────────────────────
+
+                     YChaos CLI configuration
+        ┏━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+        ┃ Configuration ┃ Value                           ┃
+        ┡━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+        │ _command_     │ ychaos ➡ testplan ➡ validate    │
+        │ config        │ prod                            │
+        │ paths         │ tests/resources/testplans/valid │
+        │ verbose       │ 0                               │
+        └───────────────┴─────────────────────────────────┘
         
-                          YChaos CLI configuration
-        ┏━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-        ┃ Configuration ┃ Value                                    ┃
-        ┡━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-        │ _command_     │ ychaos ➡ testplan ➡ validate             │
-        │ config        │ prod                                     │
-        │ paths         │ tests/testplan/resources/testplans/valid │
-        │ verbose       │ 0                                        │
-        └───────────────┴──────────────────────────────────────────┘
+        [18:15:30] Starting app                                                   main.py:125
+                   Getting Test plans                                          validate.py:75
+                   Validating Test plans                                       validate.py:86
         
-        [10:24:16] Starting app                                 main.py:118
-                   Validating Test plans                     validate.py:75
+        ✅ tests/resources/testplans/valid/testplan1.json
+        ✅ tests/resources/testplans/valid/testplan1.yaml
+        ✅ tests/resources/testplans/valid/testplan2.yaml
         
-        ✅ tests/testplan/resources/testplans/valid/testplan1.json
-        ✅ tests/testplan/resources/testplans/valid/testplan1.yaml
-        ✅ tests/testplan/resources/testplans/valid/testplan2.yaml
-        
-                   Exiting with exitcode=0                      main.py:169
-        ──────────────────────────────── ☀ ────────────────────────────────
+                   Exiting with exitcode=0                                        main.py:176
+        ───────────────────────────────────────── ☀ ─────────────────────────────────────────
         ```
     
     ??? "Example Run - Invalid Test Plans"
     
         ```
         $ ychaos testplan validate \
-            tests/testplan/resources/testplans/valid/ \
-            tests/testplan/resources/testplans/valid/testplan4.json \
-            tests/testplan/resources/testplans/invalid
+            tests/resources/testplans/valid/ \
+            tests/resources/testplans/valid/testplan4.json \
+            tests/resources/testplans/invalid/
         
-        ──────────────── YChaos, The resilience testing framework ─────────────────
+        ───────────────────── YChaos, The resilience testing framework ──────────────────────
 
-                                YChaos CLI configuration
-        ┏━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-        ┃ Configuration ┃ Value                                                   ┃
-        ┡━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-        │ _command_     │ ychaos ➡ testplan ➡ validate                            │
-        │ config        │ prod                                                    │
-        │ paths         │ tests/testplan/resources/testplans/valid                │
-        │               │ tests/testplan/resources/testplans/valid/testplan4.json │
-        │               │ tests/testplan/resources/testplans/invalid              │
-        │ verbose       │ 0                                                       │
-        └───────────────┴─────────────────────────────────────────────────────────┘
+                             YChaos CLI configuration
+        ┏━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+        ┃ Configuration ┃ Value                                          ┃
+        ┡━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+        │ _command_     │ ychaos ➡ testplan ➡ validate                   │
+        │ config        │ prod                                           │
+        │ paths         │ tests/resources/testplans/valid                │
+        │               │ tests/resources/testplans/valid/testplan4.json │
+        │               │ tests/resources/testplans/invalid              │
+        │ verbose       │ 0                                              │
+        └───────────────┴────────────────────────────────────────────────┘
         
-        [10:35:01] Starting app                                         main.py:118
-                   Validating Test plans                             validate.py:75
+        [18:16:08] Starting app                                                   main.py:125
+                   Getting Test plans                                          validate.py:75
+                   Validating Test plans                                       validate.py:86
         
         
-        ❗ tests/testplan/resources/testplans/invalid/testplan1.yaml
+        ❗ tests/resources/testplans/invalid/testplan1.yaml
         ╭───────────── Validation Error ──────────────╮
         │ 1 validation error for TestPlan             │
         │ verification -> 0 -> type                   │
         │   field required (type=value_error.missing) │
         ╰─────────────────────────────────────────────╯
         
-        ✅ tests/testplan/resources/testplans/valid/testplan1.json
-        ✅ tests/testplan/resources/testplans/valid/testplan1.yaml
-        ✅ tests/testplan/resources/testplans/valid/testplan2.yaml
-        🔍 tests/testplan/resources/testplans/valid/testplan4.json not found
+        ✅ tests/resources/testplans/valid/testplan1.json
+        ✅ tests/resources/testplans/valid/testplan1.yaml
+        ✅ tests/resources/testplans/valid/testplan2.yaml
+        🔍 tests/resources/testplans/valid/testplan4.json not found
         
-                   Exiting with exitcode=1                              main.py:169
-        ──────────────────────────────────── ☀ ────────────────────────────────────
+                   Exiting with exitcode=1                                        main.py:176
+        ───────────────────────────────────────── ☀ ─────────────────────────────────────────
         ```

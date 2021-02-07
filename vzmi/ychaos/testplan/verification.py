@@ -34,6 +34,9 @@ class PythonModuleVerification(SchemaModel):
 
 
 class VerificationType(Enum):
+    """
+    Defines the Type of plugin to be used for verification.
+    """
 
     __CONFIG_MAPPER__ = {"python_module": PythonModuleVerification}
 
@@ -76,7 +79,7 @@ class VerificationConfig(SchemaModel):
         return self.type.get_mapper()(**self.config)
 
     @validator("states", pre=True)
-    def parse_states_to_list(cls, v):
+    def _parse_states_to_list(cls, v):
         """
         Parses the state object to List of states to keep
         the access consistent
@@ -89,7 +92,7 @@ class VerificationConfig(SchemaModel):
         return BuiltinUtils.wrap_if_non_iterable(v)
 
     @validator("config", pre=True)
-    def parse_plugin_configuration(cls, v, values):
+    def _parse_plugin_configuration(cls, v, values):
         """
         Validates the plugin configuration to match with the
         mapper class of the plugin.

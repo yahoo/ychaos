@@ -13,6 +13,8 @@ class ApplicationSettings(BaseModel):
     APP_DESC = "YChaos, The resilience testing framework"
     PROG = "ychaos"
 
+    COMMAND_IDENTIFIER = "_cmd.{}"
+
     @classmethod
     def get_instance(cls):
         return cls()

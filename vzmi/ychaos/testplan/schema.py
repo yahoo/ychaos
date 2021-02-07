@@ -8,6 +8,9 @@ from vzmi.ychaos.testplan.verification import VerificationConfig
 
 
 class TestPlanSchema(SchemaModel):
+    """
+    Defines the schema for the Test Plan.
+    """
 
     description: str = Field(
         default="", description="Description of the Test performed in this test plan"
@@ -52,7 +55,7 @@ class TestPlanSchema(SchemaModel):
 
 class TestPlan(TestPlanSchema):
     """
-    The Test Plan Dataclass
+    The Test Plan Dataclass.
     """
 
     id: UUID = Field(

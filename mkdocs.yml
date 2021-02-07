@@ -66,6 +66,11 @@ nav:
     - YChaos Test Plan:
         - Test Plan: testplan/index.md
         - Schema: testplan/schema/index.html
+    - Package Documentation:
+        - testplan:
+             - schema: package_docs/testplan/schema.md
+             - verification: package_docs/testplan/verification.md
+             - validator: package_docs/testplan/validator.md
 
 plugins:
     - search

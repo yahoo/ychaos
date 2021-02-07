@@ -8,7 +8,12 @@ from rich.table import Table
 from vzmi.ychaos import __version__
 from vzmi.ychaos.cli.exceptions import YChaosCLIError
 from vzmi.ychaos.cli.testplan import TestPlan
-from vzmi.ychaos.settings import DevSettings, ProdSettings, Settings
+from vzmi.ychaos.settings import (
+    ApplicationSettings,
+    DevSettings,
+    ProdSettings,
+    Settings,
+)
 from vzmi.ychaos.utils.argparse import SubCommandParsersAction
 
 
@@ -34,9 +39,11 @@ class YChaos:
     ```
     """
 
+    settings = ApplicationSettings.get_instance()
+
     @classmethod
     def main(cls, program_arguments: list):
-        ychaos_cli = ArgumentParser(prog=Settings.get_instance().PROG)
+        ychaos_cli = ArgumentParser(prog=cls.settings.PROG)
 
         # YChaos CLI version
         ychaos_cli.add_argument(
@@ -66,7 +73,7 @@ class YChaos:
 
         ychaos_cli_subparsers = ychaos_cli.add_subparsers(
             action=SubCommandParsersAction,
-            dest="_cmd.{}".format(Settings.get_instance().PROG),
+            dest=cls.settings.COMMAND_IDENTIFIER.format(cls.settings.PROG),
         )
 
         # Subcommands
@@ -127,13 +134,13 @@ class App:
         _args = vars(self.args)
 
         parent = self.settings.PROG
-        branch = _args.get("_cmd.{}".format(parent), None)
+        branch = _args.get(self.settings.COMMAND_IDENTIFIER.format(parent), None)
 
         tree = []
         while branch is not None:
             tree.append(parent)
             parent = branch
-            branch = _args.get("_cmd.{}".format(parent), None)
+            branch = _args.get(self.settings.COMMAND_IDENTIFIER.format(parent), None)
 
         tree.append(parent)
         return tree

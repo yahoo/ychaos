@@ -50,7 +50,7 @@ class YChaos:
             "-v",
             "--version",
             action="version",
-            version="v{version} [ssharma06/vzmi.ychaos]".format(version=__version__),
+            version="v{version} [resilience/vzmi.ychaos]".format(version=__version__),
         )
 
         ychaos_cli.add_argument(

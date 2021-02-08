@@ -25,7 +25,7 @@ You can install the package using pip or directly from Github
     You can also install the package directly from source. To do this,
     
     ```bash
-    git clone git@git.vzbuilders.com:ssharma06/vzmi.ychaos.git
+    git clone git@git.vzbuilders.com:resilience/vzmi.ychaos.git
     cd vzmi.ychaos
     python3 setup.py install
     ```

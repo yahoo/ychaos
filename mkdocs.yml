@@ -2,27 +2,21 @@ edit_uri: edit/master/docs/
 
 extra:
     config_override: false
-    doc_owner: Shashank Sharma
-    doc_owner_shortid: ssharma06@verizonmedia.com
+    doc_owner: Resilience Team
+    doc_owner_shortid: resilience-core@verizonmedia.com
     social:
-        - icon: fontawesome/regular/user-circle
-          link: http://yo/u/shashank.sharma
-          name: Shashank Sharma on Street
         - icon: fontawesome/brands/github
-          link: https://git.vzbuilders.com/ssharma06/
-          name: Shashank Sharma on Github
-        - icon: fontawesome/brands/linkedin
-          link: https://www.linkedin.com/in/shashank-sharma-932701108/
-          name: Shashank Sharma on Linkedin
+          link: https://git.vzbuilders.com/resilience/
+          name: Resilience Project on Github
         - icon: fontawesome/brands/slack
-          link: https://vzbuilders.slack.com/messages/@ssharma06
+          link: https://vzbuilders.slack.com/messages/C014B20A11U
           name: Shashank Sharma on Slack
         - icon: fontawesome/brands/yahoo
-          link: mailto://shashank.sharma@verizonmedia.com
-          name: Mail Shashank Sharma
+          link: mailto://resilience-core@verizonmedia.com
+          name: Mail Resilience Team
     data:
         git:
-            schema_link: "https://git.vzbuilders.com/ssharma06/vzmi.ychaos/blob/master/vzmi/ychaos/testplan/resources/schema.json"
+            schema_link: "https://git.vzbuilders.com/resilience/vzmi.ychaos/blob/master/vzmi/ychaos/testplan/resources/schema.json"
         general:
             todo: "This part of the documentation is under development. Stay tuned.."
 
@@ -82,15 +76,15 @@ plugins:
 remote_branch: gh-pages
 remote_name: origin
 repo_name: GitHub
-repo_url: https://git.vzbuilders.com/ssharma06/vzmi.ychaos
+repo_url: https://git.vzbuilders.com/resilience/vzmi.ychaos
 site_name: YChaos - The Resilience Toolkit
-site_url: https://git.vzbuilders.com/pages/ssharma06/vzmi.ychaos
+site_url: https://git.vzbuilders.com/pages/resilience/vzmi.ychaos
 site_description: Python module vzmi.ychaos
 strict: false
 
 theme:
     name: 'material'
-    base_url: https://git.vzbuilders.com/ssharma06/vzmi.ychaos
+    base_url: https://git.vzbuilders.com/resilience/vzmi.ychaos
     language: 'en'
     features:
         - navigation.tabs
@@ -99,5 +93,7 @@ theme:
     icon:
         repo: fontawesome/brands/github
 
+# Not Strictly Copyright :D
+copyright: Maintained by Resilience Team
 
 use_directory_urls: true

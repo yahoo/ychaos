@@ -62,11 +62,11 @@ jobs:
         steps:
             - poststore_artifacts: python3 screwdriver/coverage_status.py
 
-
-    # Disabling Type Validation until we come up with a solution
-    # type_validation:
-    #   template: pythonv6/validate_type
-    #   requires: [~pr, ~commit]
+    type_validation:
+        environment:
+            PYPIRUN_ARGS: '--upgrade_pip'
+        template: pythonv6/validate_type
+        requires: [~pr, ~commit]
 
     # Package auto-versioning, this must run before generating a package for publishing
     version:

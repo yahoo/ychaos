@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+#  Copyright 2021, Verizon Media
+#  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
+
 """
 Package setup file for python module vzmi.ychaos
 """

@@ -6,9 +6,6 @@ from argparse import ArgumentParser, Namespace
 from collections import OrderedDict
 from typing import Dict, Iterable, List, Optional, Union
 
-from rich.console import Console
-from rich.table import Table
-
 from vzmi.ychaos import __version__
 from vzmi.ychaos.cli.exceptions import YChaosCLIError
 from vzmi.ychaos.cli.manual import Manual
@@ -20,6 +17,10 @@ from vzmi.ychaos.settings import (
     Settings,
 )
 from vzmi.ychaos.utils.argparse import SubCommandParsersAction
+from vzmi.ychaos.utils.dependency import DependencyUtils
+
+(Console,) = DependencyUtils.import_from("rich.console", ("Console",))
+(Table,) = DependencyUtils.import_from("rich.table", ("Table",))
 
 
 class YChaos:
@@ -115,7 +116,7 @@ class App:
         args.verbose = min(2, args.verbose)
 
         self.args = args
-        self.console: Console = Console(record=True)
+        self.console = Console(record=True)
         self.settings: Union[DevSettings, ProdSettings] = Settings.get_instance()
 
         self.cli = cli

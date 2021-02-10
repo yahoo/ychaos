@@ -7,18 +7,18 @@ You can install the package using pip or directly from Github
 === "Artifactory"
 
     ```bash
-    pip install vzmi.ychaos
+    pip install vzmi.ychaos[chaos]
     ```
     
-    The above command will install the latest version of the package
-    from artifactory. 
-    
-    To install a specific version of the package, use the command below
-    replace `<VERSION>` with a custom version
+    The above command will install the latest version of the `chaos` sub-package
+    from artifactory. To install another subpackage of `vzmi.ychaos`, 
     
     ```bash
-    pip install vzmi.ychaos==<VERSION>
+    pip install vzmi.ychaos[my-awesome-subpackage]
     ```
+    
+    To see all the subpackages available in the toolkit, refer to the documentation
+    about subpackages [here](subpackages.md)
    
 === "Source"
 

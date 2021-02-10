@@ -4,9 +4,10 @@
 from argparse import Namespace
 from io import StringIO
 
-from rich.console import Console
-
 from vzmi.ychaos.cli.main import App
+from vzmi.ychaos.utils.dependency import DependencyUtils
+
+(Console,) = DependencyUtils.import_from("rich.console", ("Console",))
 
 
 class MockApp(App):

@@ -3,13 +3,15 @@
 
 import sys
 from argparse import ArgumentParser, Namespace
-from typing import Iterable, List, Union
+from collections import OrderedDict
+from typing import Dict, Iterable, List, Optional, Union
 
 from rich.console import Console
 from rich.table import Table
 
 from vzmi.ychaos import __version__
 from vzmi.ychaos.cli.exceptions import YChaosCLIError
+from vzmi.ychaos.cli.manual import Manual
 from vzmi.ychaos.cli.testplan import TestPlan
 from vzmi.ychaos.settings import (
     ApplicationSettings,
@@ -81,10 +83,11 @@ class YChaos:
 
         # Subcommands
         ychaos_cli_subparsers.add_parser(cls=TestPlan, name=TestPlan.name)
+        ychaos_cli_subparsers.add_parser(cls=Manual, name=Manual.name)
 
         args = ychaos_cli.parse_args(program_arguments)
 
-        args.app = App(args)
+        args.app = App(args, ychaos_cli)
 
         # Start the Application
         args.app.start()
@@ -106,7 +109,7 @@ class YChaos:
 
 
 class App:
-    def __init__(self, args: Namespace):
+    def __init__(self, args: Namespace, cli: Optional[ArgumentParser] = None):
         Settings(args.config)
 
         args.verbose = min(2, args.verbose)
@@ -114,6 +117,8 @@ class App:
         self.args = args
         self.console: Console = Console(record=True)
         self.settings: Union[DevSettings, ProdSettings] = Settings.get_instance()
+
+        self.cli = cli
 
     def start(self) -> None:
         self.console.clear()
@@ -147,6 +152,39 @@ class App:
 
         tree.append(parent)
         return tree
+
+    def _walk_parser(self, parser: ArgumentParser, tree):
+        """
+        Walk the Argument parser and collect all the subcommands and its help message.
+
+        Args:
+            parser: Argument Parser
+
+        Returns:
+            Tree dictionary
+        """
+        if parser._subparsers is not None:
+            for action in parser._subparsers._actions:
+                if isinstance(action, SubCommandParsersAction):
+                    for command, subparser in action.choices.items():
+                        tree[subparser.prog] = subparser.format_help()
+                        tree = self._walk_parser(subparser, tree)
+        return tree
+
+    def manual_entry(self) -> Dict[str, str]:
+        """
+        Determines the manual entry of the YChaos CLI and returns a program
+        aware dictionary of PROG -> HELP mapping
+
+        Returns:
+            Dictionary of command to help message mapping
+        """
+        _tree = OrderedDict()
+        assert self.cli is not None
+        _tree[self.settings.PROG] = self.cli.format_help()
+        self._walk_parser(self.cli, _tree)
+
+        return _tree
 
     def print_cli_configuration(self):
         self.console.line()

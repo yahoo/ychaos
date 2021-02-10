@@ -6,7 +6,7 @@ import os
 import json
 from pprint import pprint
 
-COVERAGE_THRESHOLD = 75
+COVERAGE_THRESHOLD = 70
 SONAR_URL = "https://sonar.screwdriver.ouroath.com/dashboard?id=pipeline:{pipeline_id}&pullRequest={pr_num}"
 
 PR_NUM = os.getenv("SD_PULL_REQUEST", 1)

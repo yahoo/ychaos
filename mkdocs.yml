@@ -57,6 +57,9 @@ nav:
         - Changelog: changelog.md
         - Contribution: contribution.md
         - Project Dependencies: dependencies.md
+    - YChaos CLI:
+        - YChaos CLI: cli/index.md
+        - CLI Usage: cli/manual.md
     - YChaos Test Plan:
         - Test Plan: testplan/index.md
         - Schema: testplan/schema/index.html

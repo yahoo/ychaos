@@ -84,7 +84,7 @@ class Manual(SubCommand):
             except IsADirectoryError as is_a_directory_error:
                 self.set_exitcode(1)
                 self.console.print(
-                    ":file_folder: The input path ({path}) is not a valid testplan file".format(
+                    ":file_folder: The input path ({path}) is a directory".format(
                         path=self.file
                     )
                 )

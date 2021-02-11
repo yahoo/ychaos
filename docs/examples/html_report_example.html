@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<style>
+.r1 {color: #800080}
+.r2 {font-style: italic}
+.r3 {color: #008000; font-weight: bold}
+.r4 {color: #5fff5f; font-weight: bold}
+.r5 {color: #7fbfbf}
+.r6 {color: #7f7f7f}
+.r7 {color: #800000; font-weight: bold}
+.r8 {color: #800000}
+.r9 {color: #008000}
+.r10 {color: #d75f5f}
+.r11 {color: #d75f5f; font-style: italic}
+.r12 {color: #808000}
+.r13 {color: #000080; font-weight: bold}
+body {
+    color: #000000;
+    background-color: #ffffff;
+}
+</style>
+</head>
+<html>
+<body>
+    <code>
+        <pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span class="r1">────────────────────── </span>YChaos, The resilience testing framework<span class="r1"> ──────────────────────</span>
+
+<span class="r2">                     YChaos CLI configuration                     </span>
+┏━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃<span class="r3"> Configuration </span>┃<span class="r3"> Value                                          </span>┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│<span class="r4"> _command_     </span>│ ychaos ➡ testplan ➡ validate                   │
+│<span class="r4"> config        </span>│ prod                                           │
+│<span class="r4"> html_report   </span>│ docs/examples/html_report_example.html         │
+│<span class="r4"> paths         </span>│ tests/resources/testplans/valid                │
+│               │ tests/resources/testplans/valid/testplan4.json │
+│               │ tests/resources/testplans/invalid              │
+│<span class="r4"> text_report   </span>│ None                                           │
+│<span class="r4"> verbose       </span>│ 0                                              │
+└───────────────┴────────────────────────────────────────────────┘
+
+<span class="r5">[17:48:06] </span>Starting app                                                    <a href="file:///Users/ssharma06/Projects/vzmi.ychaos/vzmi/ychaos/cli/main.py"><span class="r6">main.py</span></a><span class="r6">:152</span>
+<span class="r5">           </span>Getting Test plans                                           <a href="file:///Users/ssharma06/Projects/vzmi.ychaos/vzmi/ychaos/cli/testplan/validate.py"><span class="r6">validate.py</span></a><span class="r6">:80</span>
+<span class="r5">           </span>Validating Test plans                                        <a href="file:///Users/ssharma06/Projects/vzmi.ychaos/vzmi/ychaos/cli/testplan/validate.py"><span class="r6">validate.py</span></a><span class="r6">:91</span>
+
+
+<span class="r7">❗ tests/resources/testplans/invalid/testplan1.yaml</span>
+<span class="r8">╭───────────── Validation Error ──────────────╮</span>
+<span class="r8">│ 1 validation error for TestPlan             │</span>
+<span class="r8">│ verification -&gt; 0 -&gt; type                   │</span>
+<span class="r8">│   field required (type=value_error.missing) │</span>
+<span class="r8">╰─────────────────────────────────────────────╯</span>
+
+<span class="r9">✅ tests/resources/testplans/valid/testplan1.json</span>
+<span class="r9">✅ tests/resources/testplans/valid/testplan1.yaml</span>
+<span class="r9">✅ tests/resources/testplans/valid/testplan2.yaml</span>
+<span class="r10">🔍 tests/resources/testplans/valid/testplan4.json </span><span class="r11">not found</span>
+
+<span class="r5">           </span>Exiting with <span class="r12">exitcode</span>=<span class="r13">1</span>                                         <a href="file:///Users/ssharma06/Projects/vzmi.ychaos/vzmi/ychaos/cli/main.py"><span class="r6">main.py</span></a><span class="r6">:236</span>
+<span class="r1">───────────────────────────────────────── </span>☀<span class="r1"> ──────────────────────────────────────────</span>
+</pre>
+    </code>
+</body>
+</html>

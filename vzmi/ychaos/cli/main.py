@@ -4,6 +4,7 @@
 import sys
 from argparse import ArgumentParser, Namespace
 from collections import OrderedDict
+from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Union
 
 from vzmi.ychaos import __version__
@@ -59,12 +60,21 @@ class YChaos:
             version="v{version} [resilience/vzmi.ychaos]".format(version=__version__),
         )
 
-        ychaos_cli.add_argument(
+        # Verbosity Argument Group
+        verbosity_argument_group = ychaos_cli.add_argument_group("verbosity")
+        verbosity_argument_group.add_argument(
             "-V",
             "--verbose",
             action="count",
             help="Increase verbosity of logs (INFO)",
             default=0,
+            required=False,
+        )
+        verbosity_argument_group.add_argument(
+            "--debug",
+            action="store_true",
+            help="Enable debug mode",
+            default=False,
             required=False,
         )
 
@@ -75,6 +85,23 @@ class YChaos:
             choices=["dev", "prod"],
             default="prod",
             help="Set YChaos CLI configuration (prod)",
+        )
+
+        # Arguments for creating HTML & Text Reports
+        report_argument_group = ychaos_cli.add_argument_group("reports")
+        report_argument_group.add_argument(
+            "--text-report",
+            type=Path,
+            default=None,
+            required=False,
+            help="Generate a text report from the YChaos execution",
+        )
+        report_argument_group.add_argument(
+            "--html-report",
+            type=Path,
+            default=None,
+            required=False,
+            help="Generate a HTML report from YChaos execution",
         )
 
         ychaos_cli_subparsers = ychaos_cli.add_subparsers(
@@ -187,6 +214,14 @@ class App:
 
         return _tree
 
+    def is_debug_mode(self):
+        """
+        Returns if the app was initialized with debug mode
+        Returns:
+            True if debug mode
+        """
+        return self.args.debug
+
     def print_cli_configuration(self):
         self.console.line()
         table = Table(title="YChaos CLI configuration", header_style="bold green")
@@ -220,6 +255,13 @@ class App:
             title=":sunny:",
             style="magenta",
         )
+
+        # Save Reports
+        if self.args.text_report:
+            self.console.save_text(self.args.text_report)
+
+        if self.args.html_report:
+            self.console.save_html(self.args.html_report)
 
 
 # This is where it all started..

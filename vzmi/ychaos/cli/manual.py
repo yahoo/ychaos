@@ -3,10 +3,11 @@ from io import StringIO
 from pathlib import Path
 from typing import Any, Optional
 
-from rich.console import Console
-from rich.markdown import Markdown
-
 from vzmi.ychaos.utils.argparse import SubCommand
+from vzmi.ychaos.utils.dependency import DependencyUtils
+
+(Console,) = DependencyUtils.import_from("rich.console", ("Console",))
+(Markdown,) = DependencyUtils.import_from("rich.markdown", ("Markdown",))
 
 __all__ = ["Manual"]
 

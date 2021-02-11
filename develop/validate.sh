@@ -45,8 +45,17 @@ function unittest() {
     pytest --cov=vzmi.ychaos --cov-report=html:artifacts/coverage --cov-report term-missing tests --cov-fail-under=70
 }
 
+function autogen_cli_docs() {
+    echo "==============================================="
+    echo "Autogenerating CLI documentation"
+    ychaos manual --file docs/cli/manual.md > /dev/null
+    echo "Done"
+}
+
 format_codestyle
 sort_imports
+
+autogen_cli_docs
 
 flake8_validation
 type_validation

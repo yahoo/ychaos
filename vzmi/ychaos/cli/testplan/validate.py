@@ -34,6 +34,8 @@ class TestPlanValidatorCommand(SubCommand):
     ```
     """
 
+    __test__ = False
+
     name = "validate"
     help = "Validate YChaos Test plans"
 
@@ -91,37 +93,34 @@ class TestPlanValidatorCommand(SubCommand):
         self.console.log("Validating Test plans")
         self.console.line()
 
-        with self.console.status("Validating...") as status:
-            for file in sorted(resolved_filepaths):
-                try:
-                    TestPlanValidator.validate_file(file)
-                    self.console.print(
-                        ":white_check_mark: {file}".format(file=str(file)),
-                        style="green",
-                    )
+        for file in sorted(resolved_filepaths):
+            try:
+                TestPlanValidator.validate_file(file)
+                self.console.print(
+                    ":white_check_mark: {file}".format(file=str(file)),
+                    style="green",
+                )
 
-                except ValidationError as validation_error:
-                    self.set_exitcode(1)
+            except ValidationError as validation_error:
+                self.set_exitcode(1)
 
-                    self.console.print("")
-                    self.console.print(
-                        ":exclamation: {file}".format(file=str(file)), style="bold red"
+                self.console.print("")
+                self.console.print(
+                    ":exclamation: {file}".format(file=str(file)), style="bold red"
+                )
+                self.console.print(
+                    Panel.fit(
+                        str(validation_error), title="Validation Error", style="red"
                     )
-                    self.console.print(
-                        Panel.fit(
-                            str(validation_error), title="Validation Error", style="red"
-                        )
-                    )
-                    self.console.print("")
+                )
+                self.console.print("")
 
-                except FileNotFoundError as file_not_found_error:
-                    self.set_exitcode(1)
-                    self.console.print(
-                        ":mag: {file} [italic]not found[/italic]".format(
-                            file=str(file)
-                        ),
-                        style="indian_red",
-                    )
+            except FileNotFoundError as file_not_found_error:
+                self.set_exitcode(1)
+                self.console.print(
+                    ":mag: {file} [italic]not found[/italic]".format(file=str(file)),
+                    style="indian_red",
+                )
 
         return exitcode
 

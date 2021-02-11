@@ -1,6 +1,8 @@
 # ychaos
 ```
-usage: ychaos [-h] [-v] [-V] [-c {dev,prod}] {testplan,manual} ...
+usage: ychaos [-h] [-v] [-V] [--debug] [-c {dev,prod}]
+              [--text-report TEXT_REPORT] [--html-report HTML_REPORT]
+              {testplan,manual} ...
 
 positional arguments:
   {testplan,manual}
@@ -10,9 +12,18 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -v, --version         show program's version number and exit
-  -V, --verbose         Increase verbosity of logs (INFO)
   -c {dev,prod}, --config {dev,prod}
                         Set YChaos CLI configuration (prod)
+
+verbosity:
+  -V, --verbose         Increase verbosity of logs (INFO)
+  --debug               Enable debug mode
+
+reports:
+  --text-report TEXT_REPORT
+                        Generate a text report from the YChaos execution
+  --html-report HTML_REPORT
+                        Generate a HTML report from YChaos execution
 
 ```
 ## ychaos testplan

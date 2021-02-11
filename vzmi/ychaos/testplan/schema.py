@@ -15,6 +15,8 @@ class TestPlanSchema(SchemaModel):
     Defines the schema for the Test Plan.
     """
 
+    __test__ = False
+
     description: str = Field(
         default="", description="Description of the Test performed in this test plan"
     )
@@ -60,6 +62,8 @@ class TestPlan(TestPlanSchema):
     """
     The Test Plan Dataclass.
     """
+
+    __test__ = False
 
     id: UUID = Field(
         default_factory=uuid4,

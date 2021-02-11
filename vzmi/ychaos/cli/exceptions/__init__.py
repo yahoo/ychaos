@@ -23,4 +23,6 @@ class YChaosCLIError(Exception):
 
         This can be used to print message of exception or handle the panic in a suitable way
         """
+        if self.app.is_debug_mode():
+            self.app.console.print_exception(extra_lines=2)
         pass

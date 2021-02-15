@@ -36,3 +36,8 @@ class BuiltinUtils:
         return [
             obj,
         ]
+
+    @classmethod
+    def pass_coroutine(cls, *args, **kwargs):
+        """This method literally does nothing"""
+        pass

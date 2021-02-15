@@ -71,7 +71,7 @@ jobs:
     # Package auto-versioning, this must run before generating a package for publishing
     version:
         template: pythonv6/version
-        requires: [dependency_validation, lint_validation, style_validation, security_validation, test_validation, code_format_validation]
+        requires: [dependency_validation, lint_validation, style_validation, type_validation, security_validation, test_validation, code_format_validation]
 
     # Python packaging
     python_package:

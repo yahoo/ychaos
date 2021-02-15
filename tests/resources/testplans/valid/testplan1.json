@@ -1,4 +1,5 @@
 {
+    "description": "A valid mock testplan file",
     "verification": [
         {
             "states": ["CHAOS", "STEADY"],

@@ -45,7 +45,7 @@ class DependencyUtils:
     def import_from(
         cls,
         module_name: str,
-        attrs: Tuple[str],
+        attrs: Tuple[str, ...],
         message: str = None,
         raise_error: bool = True,
     ) -> Tuple[Any, ...]:

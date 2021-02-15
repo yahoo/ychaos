@@ -2,6 +2,7 @@
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 
 import json
+import tempfile
 from pathlib import Path
 from unittest import TestCase
 
@@ -17,8 +18,15 @@ from vzmi.ychaos.testplan.verification import (
 
 
 class TestSchemaDataClass(TestCase):
-    def test_testplan_construction(self):
-        testplan = TestPlan(
+    def setUp(self) -> None:
+        self.testplans_directory = (
+            Path(__file__).joinpath("../../resources/testplans").resolve()
+        )
+        self.assertTrue(
+            str(self.testplans_directory).endswith("tests/resources/testplans")
+        )
+
+        self.mock_testplan = TestPlan(
             verification=[
                 VerificationConfig(
                     states=[SystemState.STEADY, SystemState.RECOVERED],
@@ -32,17 +40,21 @@ class TestSchemaDataClass(TestCase):
                 ),
             ]
         )
-        self.assertIsNotNone(testplan.id)
-        self.assertEqual(len(testplan.verification), 2)
+
+    def test_testplan_construction(self):
+        self.assertIsNotNone(self.mock_testplan.id)
+        self.assertEqual(len(self.mock_testplan.verification), 2)
         self.assertEqual(
-            len(testplan.filter_verification_by_state(SystemState.CHAOS)), 1
+            len(self.mock_testplan.filter_verification_by_state(SystemState.CHAOS)), 1
         )
         self.assertEqual(
-            len(testplan.filter_verification_by_state(SystemState.RECOVERED)), 1
+            len(self.mock_testplan.filter_verification_by_state(SystemState.RECOVERED)),
+            1,
         )
 
         self.assertIsInstance(
-            testplan.verification[0].get_parsed_config(), PythonModuleVerification
+            self.mock_testplan.verification[0].get_parsed_config(),
+            PythonModuleVerification,
         )
 
     def test_testplan_schema_is_updated(self):
@@ -61,3 +73,27 @@ class TestSchemaDataClass(TestCase):
             print(difference)
 
         self.assertFalse(difference)
+
+    def test_testplan_load_from_file(self):
+        testplan = TestPlan.load_file(
+            self.testplans_directory.joinpath("valid/testplan1.json")
+        )
+        self.assertEqual(testplan.description, "A valid mock testplan file")
+
+    def test_testplan_export_to_json_file(self):
+        temporary_file = tempfile.NamedTemporaryFile("w+")
+
+        self.mock_testplan.export_to_file(temporary_file.name)
+        testplan_from_file = TestPlan.load_file(temporary_file.name)
+        self.assertEqual(self.mock_testplan, testplan_from_file)
+
+        temporary_file.close()
+
+    def test_testplan_export_to_yaml_file(self):
+        temporary_file = tempfile.NamedTemporaryFile("w+")
+
+        self.mock_testplan.export_to_file(temporary_file.name, yaml_format=True)
+        testplan_from_file = TestPlan.load_file(temporary_file.name)
+        self.assertEqual(self.mock_testplan, testplan_from_file)
+
+        temporary_file.close()

@@ -43,6 +43,7 @@ function unittest() {
     echo "==============================================="
     echo "Running Unittests with coverage"
     pytest --cov=vzmi.ychaos --cov-report=html:artifacts/coverage --cov-report term-missing tests --cov-fail-under=70
+    rm .coverage*
 }
 
 function autogen_cli_docs() {

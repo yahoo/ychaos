@@ -25,7 +25,7 @@ pip-log.txt
 
 # Unit test / coverage reports
 htmlcov/
-.coverage
+.coverage*
 .tox
 nosetests.xml
 .testrepository

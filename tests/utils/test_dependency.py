@@ -37,6 +37,15 @@ class TestDependencyUtils(TestCase):
         )
         self.assertTupleEqual((None,), handler_class)
 
+    def test_import_invalid_attr_from_valid_module_with_custom_message(self):
+        handler_class = DependencyUtils.import_from(
+            "vzmi.ychaos.utils.dependency",
+            ("SomeUnknownAttribute",),
+            message="mock import warning",
+            raise_error=False,
+        )
+        self.assertTupleEqual((None,), handler_class)
+
     def test_import_invalid_attr_from_valid_module_raises_error(self):
         with self.assertRaises(ImportError):
             DependencyUtils.import_from(

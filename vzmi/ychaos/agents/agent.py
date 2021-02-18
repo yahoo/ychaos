@@ -3,10 +3,11 @@
 
 import warnings
 from abc import ABC, abstractmethod
+from datetime import datetime
 from enum import IntEnum
 from queue import LifoQueue, Queue
 from threading import Thread
-from typing import Any, Tuple
+from typing import Any, Dict, Tuple
 
 from pydantic import BaseModel, Field
 
@@ -32,6 +33,16 @@ class AgentPriority(IntEnum):
     LOW_PRIORITY = 3
     VERY_LOW_PRIORITY = 4
     UNDEFINED_PRIORITY = -1
+
+
+class AgentMonitoringDataPoint(BaseModel):
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    data: Dict[str, Any] = Field(
+        ..., description="Data from the agent at `timestamp` instant"
+    )
+    state: AgentState = Field(
+        description="The state of the agent at `timestamp` instant"
+    )
 
 
 class AgentConfig(BaseModel):

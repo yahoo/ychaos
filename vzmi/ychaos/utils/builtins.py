@@ -5,6 +5,9 @@ from typing import Any, Iterable, List
 
 
 class BuiltinUtils:
+    class Float:
+        NAN = float("NaN")
+
     @classmethod
     def wrap_if_non_iterable(cls, obj: Any):
         """

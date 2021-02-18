@@ -38,3 +38,94 @@ are more than huge, it is advised to split the commits into multiple.
 You can also run all of the screwdriver validations at once using the script
 provided in the `develop` directory. Change the permission using `chmod +x develop/validate.sh`
 and run the script `./develop/validate.sh` to run all validations at once.
+
+## Coding standards
+
+This section of the document contains some of the coding standards
+followed in this package. It is recommended to read this and follow this
+for any contribution. Some of the preferred way of standards are mentioned.
+Although, most of the sub sections are provided with reasoning, this is not an
+official coding standard and can vary in special conditions.
+
+!!! hint
+    Note that this is a constantly updating section of the document
+    and will receive more items based on our experience.
+
+### Imports
+
+#### Importing class
+
+If you are importing a class from a module, then import only the class from the module 
+instead of importing the entire module.
+
+For example:
+
+=== "Preferred"
+
+    ```python
+    from pathlib import Path
+    mock_path = Path("/home/awesomeuser/mockdirectory")
+    ```
+
+=== "Avoid"
+
+    ```python
+    import pathlib
+    mock_path = pathlib.Path("/home/awesomeuser/mockdirectory")
+    ```
+
+#### Importing attributes/methods from module
+
+In case you want to import a method or an attribute from the module, 
+whose name starts with a small alphabet, then import the module instead of
+method or attribute.
+
+**Reasoning**: If the module under change already has a variable named
+same as method/attribute, this will make you do an extra work of renaming
+all of those variables.
+
+For example:
+
+=== "Preferred"
+
+    ```python
+    import os
+    print(os.cpu_count())
+    ```
+
+=== "Avoid"
+    
+    ```python
+    from os import cpu_count
+    print(cpu_count())
+    ```
+
+### `@staticmethod` vs `@classmethod`
+
+We generally use class method to create factory methods. Factory methods return classobject
+(similar to a constructor) for different use cases. We generally use static methods to create
+utility functions.
+
+### One Line if statements
+
+Use one line if statements if there is an else block defined and has some
+piece of code. If the else block just contains `None`, use a simple if statement
+
+=== "Preferred"
+
+    ```python
+    if True:
+        sum([1, 4, -3, 19])
+    ```
+
+=== "Avoid"
+    
+    ```python
+    sum([12, 4, -3, 10]) if True else None
+    ```
+    
+### Path operations
+
+Use [pathlib](https://docs.python.org/3/library/pathlib.html) for path operation instead of
+`os.path` as this has better methods of operating on path. It also has utility methods to resolve
+expand user etc. 

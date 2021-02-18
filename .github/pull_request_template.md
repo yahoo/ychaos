@@ -20,6 +20,9 @@
 
 ## Checklist
 
+### Prerequisites
+- [ ] I have read the contribution guidelines
+
 ### Code Analysis
 - [ ] Covered by Unittests
 - [ ] Security warnings ignored (Why?!)

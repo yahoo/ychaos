@@ -2,14 +2,14 @@
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 
 import sys
-from enum import Enum
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Dict, List, Union
 
 from pydantic import Field, validator
 
 from vzmi.ychaos.testplan import SchemaModel, SystemState
-from vzmi.ychaos.utils.builtins import BuiltinUtils
+from vzmi.ychaos.utils.builtins import AEnum, BuiltinUtils
 
 
 class PythonModuleVerification(SchemaModel):
@@ -36,19 +36,15 @@ class PythonModuleVerification(SchemaModel):
     )
 
 
-class VerificationType(Enum):
+class VerificationType(AEnum):
     """
     Defines the Type of plugin to be used for verification.
     """
 
-    __CONFIG_MAPPER__ = {"python_module": PythonModuleVerification}
+    # The metadata object will contain the following attributes
+    # 1. schema : The Schema class of the VerificationType
 
-    PYTHON_MODULE = "python_module"
-
-    def get_mapper(
-        self,
-    ):
-        return self.__CONFIG_MAPPER__.get(self.value)
+    PYTHON_MODULE = "python_module", SimpleNamespace(schema=PythonModuleVerification)
 
 
 class VerificationConfig(SchemaModel):
@@ -78,8 +74,8 @@ class VerificationConfig(SchemaModel):
         ..., description="The verification type configuration"
     )
 
-    def get_parsed_config(self):
-        return self.type.get_mapper()(**self.config)
+    def get_verification_config(self):
+        return self.type.metadata.schema(**self.config)
 
     @validator("states", pre=True)
     def _parse_states_to_list(cls, v):
@@ -107,6 +103,6 @@ class VerificationConfig(SchemaModel):
             Parsed mapper object
         """
         if "type" in values:
-            return VerificationType(values["type"]).get_mapper()(**v)
+            return VerificationType(values["type"]).metadata.schema(**v)
         else:
             return v

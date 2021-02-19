@@ -15,8 +15,19 @@
             "items": {
                 "$ref": "#/definitions/VerificationConfig"
             }
+        },
+        "attack": {
+            "description": "The configuration that will be used to create chaos",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/AttackConfig"
+                }
+            ]
         }
     },
+    "required": [
+        "attack"
+    ],
     "$schema": "https://json-schema.org/draft-07/schema",
     "$id": "https://resilience.yahoo.com/schema.json",
     "definitions": {
@@ -82,6 +93,84 @@
                 "states",
                 "type",
                 "config"
+            ]
+        },
+        "TargetType": {
+            "title": "TargetType",
+            "description": "An enumeration.",
+            "enum": [
+                "self",
+                "machine"
+            ]
+        },
+        "AgentType": {
+            "title": "AgentType",
+            "description": "An enumeration.",
+            "enum": [
+                "no_op",
+                "no_op_timed"
+            ]
+        },
+        "AgentExecutionConfig": {
+            "title": "AgentExecutionConfig",
+            "type": "object",
+            "properties": {
+                "type": {
+                    "description": "Defines the agent type to be executed on the target. The configuration of agent is determined by this attribute",
+                    "examples": [
+                        "cpu_burn",
+                        "no_op",
+                        "ping_disable"
+                    ],
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/AgentType"
+                        }
+                    ]
+                },
+                "config": {
+                    "description": "The Agent configuration for a particular agent type",
+                    "default": {},
+                    "type": "object"
+                }
+            },
+            "required": [
+                "type"
+            ]
+        },
+        "AttackConfig": {
+            "title": "AttackConfig",
+            "type": "object",
+            "properties": {
+                "target_type": {
+                    "description": "Defines the target type which will be used as a target for the execution of agents. The target_type configuration is determined the type mentioned in this attribute",
+                    "examples": [
+                        "self",
+                        "machine"
+                    ],
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/TargetType"
+                        }
+                    ]
+                },
+                "target_config": {
+                    "description": "Defines the targets for running the agents.This can be set to null to imply that the framework should run all the agents within the same system where the executor has been invoked",
+                    "default": {},
+                    "type": "object"
+                },
+                "agents": {
+                    "description": "List of agents to be executed on the Target. Each of the item of execution configuration will infer a type of agent and a configuration of the agent",
+                    "default": [],
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AgentExecutionConfig"
+                    }
+                }
+            },
+            "required": [
+                "target_type"
             ]
         }
     }

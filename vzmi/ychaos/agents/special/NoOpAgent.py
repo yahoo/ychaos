@@ -18,19 +18,15 @@ class NoOpAgent(Agent):  # pragma: no cover
     def monitor(self) -> LifoQueue:
         super(NoOpAgent, self).monitor()
         return self._status
-        pass
 
     def setup(self) -> None:
         super(NoOpAgent, self).setup()
-        pass
 
     def run(self) -> None:
         super(NoOpAgent, self).run()
-        pass
 
     def teardown(self) -> None:
         super(NoOpAgent, self).teardown()
-        pass
 
 
 class NoOpTimedAgent(NoOpAgent):  # pragma: no cover

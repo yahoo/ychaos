@@ -1,7 +1,12 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 
-from typing import Any, Iterable, List
+import re
+from enum import Enum
+from types import SimpleNamespace
+from typing import Any, Iterable, List, Optional, Type, TypeVar
+
+T = TypeVar("T")
 
 
 class BuiltinUtils:
@@ -44,3 +49,39 @@ class BuiltinUtils:
     def pass_coroutine(cls, *args, **kwargs):
         """This method literally does nothing"""
         pass
+
+
+class AEnum(Enum):
+    """
+    Advanced Enumeration to add a metadata to each of the Enum object.
+    This will add a 2 level mapping for NAME -> VALUE -> METADATA. The label
+    is optional and can be set to a simple
+    """
+
+    def __new__(cls: Type[T], value, metadata: Optional[SimpleNamespace] = None):
+        obj = object.__new__(cls)
+        obj._value_ = value
+        obj.metadata = metadata
+        return obj
+
+
+class FQDN(str):
+    _regex = r"^((?![-])[-A-Z\d]{1,63}(?<!-)[.])*(?!-)[-A-Z\d]{1,63}(?<!-)[.]?$"
+
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, fqdn: str):
+        if len(fqdn) > 255:
+            return False
+        fqdn = fqdn[:-1] if fqdn[-1] == "." else fqdn
+        allowed = re.compile(cls._regex, re.IGNORECASE)
+        if all(allowed.match(x) for x in fqdn.split(".")):
+            return fqdn
+        else:
+            raise ValueError("{fqdn} is not a valid FQDN".format(fqdn=fqdn))
+
+    def __new__(cls, *args, **kwargs):
+        return cls.validate(args[0])

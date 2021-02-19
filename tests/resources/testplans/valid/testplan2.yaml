@@ -13,3 +13,8 @@ verification:
         arguments:
             - "key1=value1"
             - "key2=value2"
+attack:
+    target_type: self
+    agents:
+        - type: no_op
+

@@ -9,6 +9,7 @@ import yaml
 from pydantic import Field
 
 from vzmi.ychaos.testplan import SchemaModel, SystemState
+from vzmi.ychaos.testplan.attack import AttackConfig
 from vzmi.ychaos.testplan.verification import VerificationConfig
 from vzmi.ychaos.utils.yaml import Dumper
 
@@ -27,6 +28,10 @@ class TestPlanSchema(SchemaModel):
     verification: List[VerificationConfig] = Field(
         default=list(),
         description="List of verification configurations that will be executed to verify the system is in favorable condition",
+    )
+
+    attack: AttackConfig = Field(
+        ..., description="The configuration that will be used to create chaos"
     )
 
     def filter_verification_by_state(

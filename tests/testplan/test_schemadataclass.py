@@ -10,6 +10,11 @@ import jsondiff
 from pkg_resources import resource_filename
 
 from vzmi.ychaos.testplan import SystemState
+from vzmi.ychaos.testplan.attack import (
+    AttackConfig,
+    TargetType,
+    MachineTargetDefinition,
+)
 from vzmi.ychaos.testplan.schema import TestPlan, TestPlanSchema
 from vzmi.ychaos.testplan.verification import (
     VerificationConfig,
@@ -38,7 +43,20 @@ class TestSchemaDataClass(TestCase):
                     type="python_module",
                     config=dict(path="/directory/subdirectory/script.py"),
                 ),
-            ]
+            ],
+            attack=AttackConfig(
+                target_type=TargetType.MACHINE,
+                target_config=MachineTargetDefinition(
+                    blast_radius=34,
+                    hostnames=[
+                        "mockhost1.yahoo.com",
+                        "mockhost2.yahoo.com",
+                        "mockhost3.yahoo.com",
+                    ],
+                    hostpatterns=["web[01-05].fe.yahoo.com", "mockhost4.yahoo.com"],
+                ).dict(),
+                agents=[dict(type="no_op", config=dict(name="no_op"))],
+            ),
         )
 
     def test_testplan_construction(self):
@@ -53,8 +71,31 @@ class TestSchemaDataClass(TestCase):
         )
 
         self.assertIsInstance(
-            self.mock_testplan.verification[0].get_parsed_config(),
+            self.mock_testplan.verification[0].get_verification_config(),
             PythonModuleVerification,
+        )
+
+        self.assertIsInstance(self.mock_testplan.attack, AttackConfig)
+        self.assertEqual(len(self.mock_testplan.attack.agents), 1)
+        self.assertListEqual(
+            self.mock_testplan.attack.get_target_config().hostnames,
+            ["mockhost1.yahoo.com", "mockhost2.yahoo.com", "mockhost3.yahoo.com"],
+        )
+
+        self.assertListEqual(
+            self.mock_testplan.attack.get_target_config().hostpatterns,
+            ["web[01-05].fe.yahoo.com", "mockhost4.yahoo.com"],
+        )
+        self.assertListEqual(
+            self.mock_testplan.attack.get_target_config().expand_hostpatterns(),
+            [
+                "web01.fe.yahoo.com",
+                "web02.fe.yahoo.com",
+                "web03.fe.yahoo.com",
+                "web04.fe.yahoo.com",
+                "web05.fe.yahoo.com",
+                "mockhost4.yahoo.com",
+            ],
         )
 
     def test_testplan_schema_is_updated(self):

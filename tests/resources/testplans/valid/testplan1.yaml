@@ -1,3 +1,4 @@
+description: A valid mock testplan file in YAML format
 verification:
   - states:
       - CHAOS
@@ -5,3 +6,7 @@ verification:
     type: python_module
     config:
         path: "/home/y/lib/script.py"
+attack:
+    target_type: self
+    agents:
+        - type: no_op

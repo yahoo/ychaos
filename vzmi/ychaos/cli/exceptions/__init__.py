@@ -25,4 +25,3 @@ class YChaosCLIError(Exception):
         """
         if self.app.is_debug_mode():
             self.app.console.print_exception(extra_lines=2)
-        pass

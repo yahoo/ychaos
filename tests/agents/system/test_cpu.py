@@ -17,10 +17,10 @@ class TestCpuBurn(TestCase):
 
     def test_burn_while_loop_exits_when_end_datetime_reached(self):
         start = datetime.now()
-        _burn(end=start + timedelta(seconds=2))
+        _burn(end=start + timedelta(milliseconds=100))
         end = datetime.now()
         difference = end - start
-        self.assertEqual(difference.seconds, 2)
+        self.assertTrue(100000 < difference.microseconds)
         self.assertEqual(difference.days, 0)
 
     def test_cpu_burn_updates_state_when_complete(self):
@@ -28,7 +28,7 @@ class TestCpuBurn(TestCase):
             1
         )  # Mock that the system has only one CPU
 
-        cpu_burn_config = CPUBurnConfig(duration=1)
+        cpu_burn_config = CPUBurnConfig(duration=0.1)
         cpu_burn_agent = CPUBurn(cpu_burn_config)
 
         cpu_burn_agent.setup()
@@ -44,12 +44,12 @@ class TestCpuBurn(TestCase):
         when(DependencyUtils).import_module("psutil", raise_error=False).thenReturn(
             None
         )
-        cpu_burn_config = CPUBurnConfig(duration=1)
+        cpu_burn_config = CPUBurnConfig(duration=0.1)
         cpu_burn_agent = CPUBurn(cpu_burn_config)
         self.assertIsNone(cpu_burn_agent._psutil)
 
     def test_cpu_burn_when_effective_cpu_count_is_zero(self):
-        cpu_burn_config = CPUBurnConfig(duration=1, cores_pct=0)
+        cpu_burn_config = CPUBurnConfig(duration=0.1, cores_pct=0)
         cpu_burn_agent = CPUBurn(cpu_burn_config)
 
         self.assertEqual(cpu_burn_config.effective_cpu_count(), 0)

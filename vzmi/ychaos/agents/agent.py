@@ -1,12 +1,14 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 
+import os
 import warnings
 from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import IntEnum
 from queue import LifoQueue, Queue
 from threading import Thread
+from types import SimpleNamespace
 from typing import Any, Dict, Tuple
 
 from pydantic import BaseModel, Field
@@ -61,6 +63,13 @@ class AgentConfig(BaseModel):
     )
 
     # Runner configurations (Advanced configuration parameters)
+    is_sudo: bool = Field(
+        default=False,
+        description="Setting this to true, requires the agent to run as root.",
+    )
+
+    # Be very careful when setting this key to False.
+    # If you are aware of what you are doing, then go ahead.
     raise_on_state_mismatch: bool = Field(
         default=True, description="Raise error on state mismatch"
     )
@@ -95,6 +104,15 @@ class Agent(ABC):
     """
 
     def __init__(self, config):
+        """
+        Initialize an agent with a configuration
+
+        Raises:
+            InsufficientPermissionError: When the agent is configured to be sudo, but the agent is not run as root.
+
+        Args:
+            config: Agent configuration.
+        """
         self.config = config
 
         self._runner = Thread(target=self.__run_exc_wrapper, name=config.name)
@@ -108,6 +126,7 @@ class Agent(ABC):
         self._status = LifoQueue()
         self._state_history = list()
 
+        self.preserved_state = SimpleNamespace()
         self.advance_state(AgentState.INIT)
 
     @abstractmethod
@@ -145,10 +164,10 @@ class Agent(ABC):
         Returns:
             None
         """
-        if self.current_state != AgentState.SETUP:
+        if self.current_state != AgentState.SETUP or not self.is_runnable():
             if self.config.raise_on_state_mismatch:
                 self.advance_state(AgentState.ABORTED)
-                raise AgentError("Agent state is not in SETUP. Bailing out")
+                raise AgentError("Agent state is not in SETUP state. Bailing out")
 
             warnings.warn(
                 "Agent is currently not in the SETUP state. Proceeding anyway"
@@ -216,6 +235,24 @@ class Agent(ABC):
         self.stop_async_run = True
         if self._runner.is_alive():
             self._runner.join()
+
+    def is_runnable(self) -> bool:
+        """
+        Fail Fast approach to find if the agent will be able to proceed to the next step.
+        It is advised to run this method before running, start, run or start_async to
+        avoid any mishaps in testing.
+
+        Returns:
+            True if able to proceed, False otherwise
+        """
+        if self.current_state < 0:
+            return False
+        if not self.exception.empty():
+            return False
+        if self.config.is_sudo and os.geteuid() != 0:
+            return False
+
+        return True
 
     def advance_state(self, state: AgentState):
         if self._state_history and self._state_history[-1] == state:

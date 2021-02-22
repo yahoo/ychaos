@@ -5,3 +5,7 @@
 class AgentError(Exception):
     def __init__(self, msg: str, **kwargs):
         self.msg = msg
+
+
+class InsufficientPermissionError(AgentError):
+    pass

@@ -108,7 +108,8 @@
             "description": "An enumeration.",
             "enum": [
                 "no_op",
-                "no_op_timed"
+                "no_op_timed",
+                "cpu_burn"
             ]
         },
         "AgentExecutionConfig": {

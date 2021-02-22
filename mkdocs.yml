@@ -70,6 +70,8 @@ nav:
              - schema: package_docs/testplan/schema.md
              - verification: package_docs/testplan/verification.md
              - validator: package_docs/testplan/validator.md
+             - common: package_docs/testplan/common.md
+             - attack: package_docs/testplan/attack.md
 
 plugins:
     - search

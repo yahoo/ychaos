@@ -14,6 +14,7 @@ from vzmi.ychaos.testplan.attack import (
     AttackConfig,
     TargetType,
     MachineTargetDefinition,
+    SSHConfig,
 )
 from vzmi.ychaos.testplan.schema import TestPlan, TestPlanSchema
 from vzmi.ychaos.testplan.verification import (
@@ -54,6 +55,7 @@ class TestSchemaDataClass(TestCase):
                         "mockhost3.yahoo.com",
                     ],
                     hostpatterns=["web[01-05].fe.yahoo.com", "mockhost4.yahoo.com"],
+                    ssh_config=SSHConfig(private_key="/sd/tokens/pkey-cert"),
                 ).dict(),
                 agents=[dict(type="no_op", config=dict(name="no_op"))],
             ),
@@ -96,6 +98,23 @@ class TestSchemaDataClass(TestCase):
                 "web05.fe.yahoo.com",
                 "mockhost4.yahoo.com",
             ],
+        )
+
+        self.assertListEqual(
+            sorted(self.mock_testplan.attack.get_target_config().get_effective_hosts()),
+            sorted(
+                [
+                    "mockhost1.yahoo.com",
+                    "web04.fe.yahoo.com",
+                    "mockhost3.yahoo.com",
+                    "web03.fe.yahoo.com",
+                    "web05.fe.yahoo.com",
+                    "mockhost2.yahoo.com",
+                    "web02.fe.yahoo.com",
+                    "mockhost4.yahoo.com",
+                    "web01.fe.yahoo.com",
+                ]
+            ),
         )
 
     def test_testplan_schema_is_updated(self):

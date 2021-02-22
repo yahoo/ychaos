@@ -1,18 +1,36 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
+import getpass
 import re
+from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Union
 
-from pydantic import Field, FilePath, validator
+from pydantic import Field, FilePath, SecretStr, validator
 
 from vzmi.ychaos.agents import AgentType
 from vzmi.ychaos.testplan import SchemaModel
+from vzmi.ychaos.testplan.common import Secret
 from vzmi.ychaos.utils.builtins import FQDN, AEnum
 
 
 class TargetDefinition(SchemaModel):
     pass
+
+
+class SSHConfig(SchemaModel):
+    user: str = Field(
+        default=getpass.getuser(),
+        description="The login user for SSH connection. Defaults to current user.",
+    )
+    private_key: Optional[Path] = Field(
+        default=None,
+        description="The private key file that will be used to login to the hosts.",
+    )
+    password: Union[SecretStr, Secret] = Field(
+        default=None,
+        description="The password that will be used to login to the hosts.",
+    )
 
 
 class MachineTargetDefinition(TargetDefinition):
@@ -23,6 +41,7 @@ class MachineTargetDefinition(TargetDefinition):
 
     Attributes:
         blast_radius: The percentage of targets to be attacked. **This is a required field**
+        ssh_config: The SSH Configuration to be used while logging into the hosts. See [SSHConfig][vzmi.ychaos.testplan.attack.SSHConfig]
         hostnames: List of hosts as targets to run the agents on. These should be valid FQDNs.
         hostpatterns: List of Host patterns with a single number range within the pattern
         hostfiles:
@@ -39,6 +58,10 @@ class MachineTargetDefinition(TargetDefinition):
 
     blast_radius: float = Field(
         ..., description="The percentage of targets to be attacked"
+    )
+
+    ssh_config: SSHConfig = Field(
+        ..., description="The configuration used to SSH to the target machines."
     )
 
     hostnames: List[FQDN] = Field(
@@ -111,6 +134,13 @@ class MachineTargetDefinition(TargetDefinition):
         for host in self.iterate_hostfiles():
             expanded_list.append(host)
         return expanded_list
+
+    def get_effective_hosts(self):
+        return list(
+            set(
+                self.expand_hostpatterns() + self.expand_hostfiles() + self.hostnames
+            ).difference(set(self.exclude))
+        )
 
     @validator("hostpatterns", pre=True, each_item=True)
     def validate_hostpatterns(cls, v):

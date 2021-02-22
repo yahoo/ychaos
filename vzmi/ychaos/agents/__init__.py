@@ -3,6 +3,7 @@
 
 from types import SimpleNamespace
 
+from vzmi.ychaos.agents.system.cpu import CPUBurnConfig
 from vzmi.ychaos.utils.builtins import AEnum
 
 from .agent import AgentConfig, TimedAgentConfig
@@ -15,4 +16,5 @@ class AgentType(AEnum):
     NO_OP_TIMED = "no_op_timed", SimpleNamespace(schema=TimedAgentConfig)
 
     # System Agents
+    CPU_BURN = "cpu_burn", SimpleNamespace(schema=CPUBurnConfig)
     # TODO: Add CPU Burn etc.

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Union
 
 from vzmi.ychaos import __version__
+from vzmi.ychaos.app_logger import AppLogger
 from vzmi.ychaos.cli.exceptions import YChaosCLIError
 from vzmi.ychaos.cli.manual import Manual
 from vzmi.ychaos.cli.testplan import TestPlan
@@ -147,6 +148,8 @@ class App:
         self.settings: Union[DevSettings, ProdSettings] = Settings.get_instance()
 
         self.cli = cli
+
+        AppLogger()  # Initializes the AppLogger
 
     def start(self) -> None:
         self.console.clear()

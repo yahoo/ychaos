@@ -81,7 +81,7 @@ class FQDN(str):
         if all(allowed.match(x) for x in fqdn.split(".")):
             return fqdn
         else:
-            raise ValueError("{fqdn} is not a valid FQDN".format(fqdn=fqdn))
+            raise ValueError(f"{fqdn} is not a valid FQDN")
 
     def __new__(cls, *args, **kwargs):
         return cls.validate(args[0])

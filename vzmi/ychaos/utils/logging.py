@@ -1,3 +1,4 @@
+import logging
 from logging import DEBUG, ERROR, INFO, WARNING, Logger
 from typing import Optional, Set
 
@@ -5,17 +6,30 @@ from typing import Optional, Set
 class StructLogger(Logger):
     def __init__(self, name):
         super().__init__(name)
+        logging.setLoggerClass(self.__class__)
         self._binder = dict()
 
-    def _build_msg(self, msg="", log_dict=None, **kwargs) -> str:
-        if log_dict is None:  # pragma: no cover
-            log_dict = dict()
-
-        dict_msg = " ".join([f"{k}={v}" for k, v in log_dict.items()])
+    def _build_msg(self, msg="", **kwargs) -> str:
         bind_msg = " ".join([f"{k}={v}" for k, v in self._binder.items()])
         kwargs_msg = " ".join([f"{k}={v}" for k, v in kwargs.items()])
 
-        return f"{bind_msg} {dict_msg} {kwargs_msg} {msg}"
+        return f"{bind_msg} {kwargs_msg} {msg}"
+
+    def getChild(self, suffix: str, bind_parent_attributes=False) -> "StructLogger":
+        """
+        Get Child Logger and bind Parent attributes to child if needed.
+        Args:
+            suffix: Suffix to be added to the child logger
+            bind_parent_attributes: Bind Parent Attributes to Child if needed
+        Returns:
+            Child Struct Logger
+        """
+        _logger: StructLogger = super(StructLogger, self).getChild(suffix)  # type: ignore
+        if bind_parent_attributes:
+            assert isinstance(_logger, StructLogger)
+            _logger.bind(**self._binder)
+
+        return _logger
 
     def debug(self, msg="", *args, **kwargs) -> None:
         level = DEBUG
@@ -27,7 +41,7 @@ class StructLogger(Logger):
         if self.isEnabledFor(level):
             self._log(
                 level,
-                self._build_msg(msg, kwargs),
+                self._build_msg(msg, **kwargs),
                 args,
                 exc_info=exc_info,
                 extra=extra,
@@ -44,7 +58,7 @@ class StructLogger(Logger):
         if self.isEnabledFor(level):
             self._log(
                 level,
-                self._build_msg(msg, kwargs),
+                self._build_msg(msg, **kwargs),
                 args,
                 exc_info=exc_info,
                 extra=extra,
@@ -61,7 +75,7 @@ class StructLogger(Logger):
         if self.isEnabledFor(level):
             self._log(
                 level,
-                self._build_msg(msg, kwargs),
+                self._build_msg(msg, **kwargs),
                 args,
                 exc_info=exc_info,
                 extra=extra,
@@ -78,7 +92,7 @@ class StructLogger(Logger):
         if self.isEnabledFor(level):
             self._log(
                 level,
-                self._build_msg(msg, kwargs),
+                self._build_msg(msg, **kwargs),
                 args,
                 exc_info=exc_info,
                 extra=extra,
@@ -95,7 +109,7 @@ class StructLogger(Logger):
         if self.isEnabledFor(level):
             self._log(
                 level,
-                self._build_msg(msg, kwargs),
+                self._build_msg(msg, **kwargs),
                 args,
                 exc_info=exc_info,
                 extra=extra,

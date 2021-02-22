@@ -1,7 +1,6 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
-from os import uname
-from tempfile import gettempdir as temp_file_get_temp_dir
+import tempfile
 from typing import Optional, Union
 
 from pydantic import BaseModel
@@ -18,9 +17,8 @@ class ApplicationSettings(BaseModel):
     PROG = "ychaos"
 
     COMMAND_IDENTIFIER = "_cmd.{}"
-    LOG_FILE_PATH = temp_file_get_temp_dir()
+    LOG_FILE_PATH = tempfile.gettempdir()
     LOG_FILE_NAME_SUFFIX = ".log"
-    HOST_NAME = uname()[1]
 
     @classmethod
     def get_instance(cls):

@@ -1,6 +1,7 @@
 import logging
+import os
+import time
 from tempfile import NamedTemporaryFile
-from time import gmtime
 from typing import Optional, Union
 
 from vzmi.ychaos.settings import DevSettings, ProdSettings, Settings
@@ -23,10 +24,13 @@ class AppLogger:
             self.__class__.__instance.setLevel(logging.DEBUG)
 
             formatter = logging.Formatter(
-                f"%(asctime)s [%(levelname)-s] host={settings.HOST_NAME} application=%(name)s module=%(module)s method=%(funcName)s line=%(lineno)d %(message)s"
+                (
+                    f"%(asctime)s [%(levelname)-s] host={os.uname()[1]} application=%(name)s module=%(module)s "
+                    f"method=%(funcName)s line=%(lineno)d %(message)s"
+                )
             )
-            formatter.converter = gmtime
-            formatter.datefmt = "%m/%d/%Y %I:%M:%S %p %Z"
+            formatter.converter = time.gmtime
+            formatter.datefmt = "%Y-%m-%d %H:%M:%S"
 
             if settings.CONFIG == "prod":
                 settings.LOG_FILE_PATH = NamedTemporaryFile(
@@ -41,7 +45,9 @@ class AppLogger:
                 self.__class__.__instance.addHandler(file_handler)
 
     @classmethod
-    def get_logger(cls, name):
+    def get_logger(cls, name: str):
         if cls.__instance is None:
             cls()
+
+        assert isinstance(cls.__instance, StructLogger)
         return cls.__instance.getChild(name)

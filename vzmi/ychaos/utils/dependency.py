@@ -30,7 +30,7 @@ class DependencyUtils:
             module = importlib.import_module(name)
         except ImportError as import_error:
             if not message:
-                message = "Dependency {module} is not installed.".format(module=name)
+                message = f"Dependency {name} is not installed."
 
             warnings.warn(message)
             if raise_error:
@@ -91,9 +91,7 @@ class DependencyUtils:
                     _attr_list.append(attr)
                 except AttributeError as attr_error:
                     if not message:
-                        message = "cannot import {attr} from {module}".format(
-                            attr=_attr_name, module=module_name
-                        )
+                        message = f"cannot import {_attr_name} from {module_name}"
                     warnings.warn(message)
                     if raise_error:
                         raise ImportError(message) from None

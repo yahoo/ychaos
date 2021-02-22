@@ -31,7 +31,7 @@ class TestPlan(SubCommand):
     @classmethod
     def build_parser(cls, parser: ArgumentParser) -> ArgumentParser:
         test_plan_command_subparser = parser.add_subparsers(
-            action=SubCommandParsersAction, dest="_cmd.{}".format(cls.name)
+            action=SubCommandParsersAction, dest=f"_cmd.{cls.name}"
         )
 
         test_plan_command_subparser.add_parser(

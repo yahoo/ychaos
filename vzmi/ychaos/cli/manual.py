@@ -57,9 +57,7 @@ class Manual(SubCommand):
     def do_print_manual_entry(self):
         tempfile = StringIO()
         for cmd, msg in self.app.manual_entry().items():
-            tempfile.write(
-                "{header} {cmd}".format(header="#" * len(cmd.split()), cmd=cmd)
-            )
+            tempfile.write(f"{'#' * len(cmd.split())} {cmd}")
             tempfile.write("\n")
             tempfile.write("```\n")
             tempfile.write(msg)
@@ -69,24 +67,18 @@ class Manual(SubCommand):
             try:
                 self.file.write_text(tempfile.getvalue())
                 self.console.log(
-                    "{prog} manual entry written to {file}".format(
-                        prog=self.app.settings.PROG, file=self.file
-                    )
+                    f"{self.app.settings.PROG} manual entry written to {self.file}"
                 )
             except FileNotFoundError as file_not_found_error:
                 self.set_exitcode(1)
                 self.console.print(
-                    ":mag: {file} [italic]not found[/italic]".format(
-                        file=str(self.file)
-                    ),
+                    f":mag: {self.file} [italic]not found[/italic]",
                     style="indian_red",
                 )
             except IsADirectoryError as is_a_directory_error:
                 self.set_exitcode(1)
                 self.console.print(
-                    ":file_folder: The input path ({path}) is a directory".format(
-                        path=self.file
-                    )
+                    f":file_folder: The input path ({self.file}) is a directory"
                 )
         else:
             self.console.print(Markdown(tempfile.getvalue()))

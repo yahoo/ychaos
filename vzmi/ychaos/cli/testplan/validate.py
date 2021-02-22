@@ -67,7 +67,7 @@ class TestPlanValidatorCommand(SubCommand):
             if input_path.resolve().is_dir():
                 for file_type in file_types:
                     resolved_filepaths.extend(
-                        list(input_path.glob("**/*.{}".format(file_type)))
+                        list(input_path.glob(f"**/*.{file_type}"))
                     )
             else:
                 resolved_filepaths.append(input_path)
@@ -97,7 +97,7 @@ class TestPlanValidatorCommand(SubCommand):
             try:
                 TestPlanValidator.validate_file(file)
                 self.console.print(
-                    ":white_check_mark: {file}".format(file=str(file)),
+                    f":white_check_mark: {file}",
                     style="green",
                 )
 
@@ -105,9 +105,7 @@ class TestPlanValidatorCommand(SubCommand):
                 self.set_exitcode(1)
 
                 self.console.print("")
-                self.console.print(
-                    ":exclamation: {file}".format(file=str(file)), style="bold red"
-                )
+                self.console.print(f":exclamation: {file}", style="bold red")
                 self.console.print(
                     Panel.fit(
                         str(validation_error), title="Validation Error", style="red"
@@ -118,7 +116,7 @@ class TestPlanValidatorCommand(SubCommand):
             except FileNotFoundError as file_not_found_error:
                 self.set_exitcode(1)
                 self.console.print(
-                    ":mag: {file} [italic]not found[/italic]".format(file=str(file)),
+                    f":mag: {file} [italic]not found[/italic]",
                     style="indian_red",
                 )
 

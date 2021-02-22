@@ -21,15 +21,15 @@ class MockAgent(Agent):
 
     def setup(self) -> None:
         super(MockAgent, self).setup()
-        print("Running {} setup method".format(self.__class__.__name__))
+        print(f"Running {self.__class__.__name__} setup method")
 
     def run(self) -> None:
         super(MockAgent, self).run()
-        print("Running {} run method".format(self.__class__.__name__))
+        print(f"Running {self.__class__.__name__} run method")
 
     def teardown(self) -> None:
         super(MockAgent, self).teardown()
-        print("Running {} teardown method".format(self.__class__.__name__))
+        print(f"Running {self.__class__.__name__} teardown method")
 
 
 class TestBaseAgent(TestCase):

@@ -58,7 +58,7 @@ class YChaos:
             "-v",
             "--version",
             action="version",
-            version="v{version} [resilience/vzmi.ychaos]".format(version=__version__),
+            version=f"v{__version__} [resilience/vzmi.ychaos]",
         )
 
         # Verbosity Argument Group
@@ -253,7 +253,7 @@ class App:
 
     def teardown(self, exitcode: int) -> None:
         self.console.line()
-        self.console.log("Exiting with exitcode={}".format(exitcode))
+        self.console.log(f"Exiting with exitcode={exitcode}")
         self.console.rule(
             title=":sunny:",
             style="magenta",

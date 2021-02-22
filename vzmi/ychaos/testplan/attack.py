@@ -56,8 +56,8 @@ class MachineTargetDefinition(TargetDefinition):
         using `hostfiles`. The tool will dynamically validate each of the entry while reading the files.
     """
 
-    blast_radius: float = Field(
-        ..., description="The percentage of targets to be attacked"
+    blast_radius: int = Field(
+        ..., description="The percentage of targets to be attacked", ge=0, le=100
     )
 
     ssh_config: SSHConfig = Field(

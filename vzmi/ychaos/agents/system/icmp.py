@@ -11,6 +11,7 @@ from vzmi.ychaos.agents.agent import (
     AgentPriority,
     TimedAgentConfig,
 )
+from vzmi.ychaos.agents.utils.annotations import log_agent_lifecycle
 from vzmi.ychaos.agents.utils.sysctl import SysCtl
 
 
@@ -36,10 +37,12 @@ class PingDisable(Agent):
         )
         return self._status
 
+    @log_agent_lifecycle
     def setup(self) -> None:
         super(PingDisable, self).setup()
         self.preserved_state.is_ping_disabled = int(SysCtl.get(self.sysctl_var)) == 1
 
+    @log_agent_lifecycle
     def run(self) -> None:
         super(PingDisable, self).run()
         if self.preserved_state.is_ping_disabled:
@@ -50,6 +53,7 @@ class PingDisable(Agent):
         else:
             SysCtl.set(self.sysctl_var, b"1")
 
+    @log_agent_lifecycle
     def teardown(self) -> None:
         super(PingDisable, self).teardown()
         if not self.preserved_state.is_ping_disabled:

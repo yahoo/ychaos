@@ -13,6 +13,7 @@ from vzmi.ychaos.agents.agent import (
     AgentMonitoringDataPoint,
     TimedAgentConfig,
 )
+from vzmi.ychaos.agents.utils.annotations import log_agent_lifecycle
 from vzmi.ychaos.utils.builtins import BuiltinUtils
 from vzmi.ychaos.utils.dependency import DependencyUtils
 
@@ -98,9 +99,11 @@ class CPUBurn(Agent):
         )
         return self._status
 
+    @log_agent_lifecycle
     def setup(self) -> None:
         super(CPUBurn, self).setup()
 
+    @log_agent_lifecycle
     def run(self) -> None:
         super(CPUBurn, self).run()
         end = datetime.now() + timedelta(seconds=self.config.duration)
@@ -111,5 +114,6 @@ class CPUBurn(Agent):
         process_pool = Pool(self.config.effective_cpu_count())
         process_pool.map_async(_burn, (end,) * self.config.effective_cpu_count())
 
+    @log_agent_lifecycle
     def teardown(self) -> None:
         super(CPUBurn, self).teardown()

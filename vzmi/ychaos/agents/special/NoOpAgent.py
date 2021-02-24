@@ -4,6 +4,7 @@ import time
 from queue import LifoQueue
 
 from vzmi.ychaos.agents.agent import Agent, AgentConfig, TimedAgentConfig
+from vzmi.ychaos.agents.utils.annotations import log_agent_lifecycle
 
 
 class NoOpAgent(Agent):  # pragma: no cover
@@ -19,12 +20,15 @@ class NoOpAgent(Agent):  # pragma: no cover
         super(NoOpAgent, self).monitor()
         return self._status
 
+    @log_agent_lifecycle
     def setup(self) -> None:
         super(NoOpAgent, self).setup()
 
+    @log_agent_lifecycle
     def run(self) -> None:
         super(NoOpAgent, self).run()
 
+    @log_agent_lifecycle
     def teardown(self) -> None:
         super(NoOpAgent, self).teardown()
 
@@ -38,6 +42,7 @@ class NoOpTimedAgent(NoOpAgent):  # pragma: no cover
         assert isinstance(config, TimedAgentConfig)
         super(NoOpTimedAgent, self).__init__(config)
 
+    @log_agent_lifecycle
     def run(self) -> None:
         super(NoOpTimedAgent, self).run()
         time.sleep(self.config.duration)

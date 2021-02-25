@@ -1,6 +1,5 @@
 import importlib
 import warnings
-from types import ModuleType
 from typing import Any, Optional, Tuple
 
 from pydantic import validate_arguments
@@ -10,7 +9,7 @@ class DependencyUtils:
     @classmethod
     def import_module(
         cls, name: str, message: str = None, raise_error: bool = True
-    ) -> Optional[ModuleType]:
+    ) -> Optional[Any]:
         """
         Calling this method with a module name is similar to calling
         `import ...`. This can be used to import optional dependencies in the package.

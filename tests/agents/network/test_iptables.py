@@ -46,7 +46,7 @@ class TestIPTablesBlock(TestCase):
         )
 
     def test_run_sets_ip_tables_rules(self):
-        when(os).system(ANY).thenReturn(0)
+        when(os).geteuid().thenReturn(0)
         iptables_block_minion_config = self.iptables_block_minion_config
         agent = IPTablesBlock(iptables_block_minion_config)
         agent.setup()
@@ -79,6 +79,7 @@ class TestIPTablesBlock(TestCase):
         )
 
     def test_run_sets_ip_tables_rules_incoming_port_error(self):
+        when(os).geteuid().thenReturn(0)
         iptables_block_minion_config = self.iptables_block_minion_config
         agent = IPTablesBlock(iptables_block_minion_config)
         self.mock_subprocess_exits_normally(
@@ -92,6 +93,7 @@ class TestIPTablesBlock(TestCase):
             agent.run()
 
     def test_run_sets_ip_tables_rules_destination_port_error(self):
+        when(os).geteuid().thenReturn(0)
         iptables_block_minion_config = self.iptables_block_minion_config
         agent = IPTablesBlock(iptables_block_minion_config)
         self.mock_subprocess_exits_normally(
@@ -111,6 +113,7 @@ class TestIPTablesBlock(TestCase):
             agent.run()
 
     def test_run_sets_ip_tables_rules_incoming_endpoint_error(self):
+        when(os).geteuid().thenReturn(0)
         iptables_block_minion_config = self.iptables_block_minion_config
         agent = IPTablesBlock(iptables_block_minion_config)
         self.mock_subprocess_exits_normally(
@@ -133,6 +136,7 @@ class TestIPTablesBlock(TestCase):
             agent.run()
 
     def test_run_sets_ip_tables_rules_incoming_endpoint_url_error(self):
+        when(os).geteuid().thenReturn(0)
         iptables_block_minion_config = self.iptables_block_minion_config
         agent = IPTablesBlock(iptables_block_minion_config)
         self.mock_subprocess_exits_normally(
@@ -158,6 +162,7 @@ class TestIPTablesBlock(TestCase):
             agent.run()
 
     def test_run_sets_ip_tables_rules_outgoing_endpoint_error(self):
+        when(os).geteuid().thenReturn(0)
         iptables_block_minion_config = self.iptables_block_minion_config
         agent = IPTablesBlock(iptables_block_minion_config)
         self.mock_subprocess_exits_normally(
@@ -186,6 +191,7 @@ class TestIPTablesBlock(TestCase):
             agent.run()
 
     def test_run_sets_ip_tables_rules_outgoing_endpoint_url_error(self):
+        when(os).geteuid().thenReturn(0)
         iptables_block_minion_config = self.iptables_block_minion_config
         agent = IPTablesBlock(iptables_block_minion_config)
         self.mock_subprocess_exits_normally(
@@ -217,6 +223,7 @@ class TestIPTablesBlock(TestCase):
             agent.run()
 
     def test_teardown_drops_ip_tables_rules_error(self):
+        when(os).geteuid().thenReturn(0)
         iptables_block_minion_config = self.iptables_block_minion_config
         agent = IPTablesBlock(iptables_block_minion_config)
         self.mock_subprocess_exits_with_error(ANY)

@@ -19,6 +19,7 @@ from pydantic import (
 from vzmi.ychaos.agents.agent import (
     Agent,
     AgentMonitoringDataPoint,
+    AgentState,
     TimedAgentConfig,
 )
 from vzmi.ychaos.agents.exceptions import AgentError
@@ -287,3 +288,93 @@ class IPTablesBlock(Agent):
 
         if error:
             raise AgentError("Error Occurred while removing IpTable rule")
+
+
+class BlockDNSConfig(TimedAgentConfig):
+    name = "block_dns"
+    desc = "This agent modifies the iptables rules to block traffic to DNS ports"
+
+    is_sudo = True
+
+    iptables_wait: int = Field(
+        description=(
+            "The duration(in secs) for the agent waits to achieve the wait for the iptables command to achieve exclusive lock. "
+            "This corresponds to -w option in iptables command"
+        ),
+        default=3,
+        lt=60,
+        gt=0,
+    )
+
+
+class BlockDNS(Agent):
+
+    DNS_PORT = 53
+
+    @validate_arguments
+    def __init__(self, config: BlockDNSConfig):
+        super(BlockDNS, self).__init__(config)
+
+    def monitor(self) -> LifoQueue:
+        return self._status
+
+    def setup(self) -> None:
+        super(BlockDNS, self).setup()
+
+    @staticmethod
+    def raise_io_error_on_iptables_failure(proc: subprocess.CompletedProcess, message):
+        if proc.returncode != 0:
+            raise IOError(message)
+
+    def run(self):
+        super(BlockDNS, self).run()
+
+        _cmd = f"sudo iptables -I OUTPUT -p udp --dport {self.DNS_PORT} -j DROP -w {shlex.quote(str(self.config.iptables_wait))}".split()
+        proc = subprocess.run(  # nosec
+            _cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        self.raise_io_error_on_iptables_failure(
+            proc, "Error While Adding IPTables Rule: DROP udp port: 53 to OUTPUT chain"
+        )
+
+        _cmd = f"sudo iptables -I OUTPUT -p tcp --dport {self.DNS_PORT} -j DROP -w {shlex.quote(str(self.config.iptables_wait))}".split()
+        proc = subprocess.run(  # nosec
+            _cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        self.raise_io_error_on_iptables_failure(
+            proc, "Error While Adding IpTable Rule: DROP tcp port: 53 to OUTPUT Chain"
+        )
+
+    def teardown(self) -> None:
+        _current_state_temporary = self.current_state
+        super(BlockDNS, self).teardown()
+        error = False
+        if _current_state_temporary in (
+            AgentState.RUNNING,
+            AgentState.ERROR,
+            AgentState.ABORTED,
+        ):
+            _cmd = f"sudo iptables -D OUTPUT -p udp --dport {self.DNS_PORT} -j DROP -w {self.config.iptables_wait}".split()
+            proc = subprocess.run(  # nosec
+                _cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+
+            error = proc.returncode != 0 or error
+
+            _cmd = f"sudo iptables -D OUTPUT -p tcp --dport {self.DNS_PORT} -j DROP -w {self.config.iptables_wait}".split()
+            proc = subprocess.run(  # nosec
+                _cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+
+            error = proc.returncode != 0 or error
+
+        if error:
+            raise AgentError("Error Occurred while removing iptables rule")

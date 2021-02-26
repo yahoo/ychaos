@@ -60,4 +60,4 @@ class Settings:
         elif config == "prod":
             self.__class__.__instance = ProdSettings()
         else:
-            raise Exception("Unknown configuration found")
+            raise AttributeError("Unknown configuration found")

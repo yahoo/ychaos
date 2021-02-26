@@ -78,7 +78,6 @@ class TestPlanValidatorCommand(SubCommand):
         self._exitcode = exitcode
 
     def do_testplans_validation(self):
-        exitcode = 0
         self.console.log("Getting Test plans")
 
         resolved_filepaths = self.resolve_validation_paths()
@@ -119,8 +118,6 @@ class TestPlanValidatorCommand(SubCommand):
                     f":mag: {file} [italic]not found[/italic]",
                     style="indian_red",
                 )
-
-        return exitcode
 
     @classmethod
     def main(cls, args: Namespace) -> Any:

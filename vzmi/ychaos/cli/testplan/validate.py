@@ -7,8 +7,8 @@ from typing import Any, List
 
 from pydantic import ValidationError
 
+from vzmi.ychaos.cli import YChaosSubCommand
 from vzmi.ychaos.testplan.validator import TestPlanValidator
-from vzmi.ychaos.utils.argparse import SubCommand
 from vzmi.ychaos.utils.dependency import DependencyUtils
 
 (Console,) = DependencyUtils.import_from("rich.console", ("Console",))
@@ -17,7 +17,7 @@ from vzmi.ychaos.utils.dependency import DependencyUtils
 __all__ = ["TestPlanValidatorCommand"]
 
 
-class TestPlanValidatorCommand(SubCommand):
+class TestPlanValidatorCommand(YChaosSubCommand):
     """
     Test plan validator subcommand is used to validate whether the testplan
     files adheres to the YChaos Test plan schema.
@@ -39,8 +39,6 @@ class TestPlanValidatorCommand(SubCommand):
     name = "validate"
     help = "Validate YChaos Test plans"
 
-    _exitcode = 0
-
     @classmethod
     def build_parser(cls, parser: ArgumentParser) -> ArgumentParser:
         parser.add_argument(
@@ -53,6 +51,7 @@ class TestPlanValidatorCommand(SubCommand):
         return parser
 
     def __init__(self, **kwargs):
+        super(TestPlanValidatorCommand, self).__init__()
         assert kwargs.pop("cls") == self.__class__
 
         self.app = kwargs.pop("app")
@@ -73,9 +72,6 @@ class TestPlanValidatorCommand(SubCommand):
                 resolved_filepaths.append(input_path)
 
         return resolved_filepaths
-
-    def set_exitcode(self, exitcode=0):
-        self._exitcode = exitcode
 
     def do_testplans_validation(self):
         self.console.log("Getting Test plans")

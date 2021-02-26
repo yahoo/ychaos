@@ -3,7 +3,7 @@ from io import StringIO
 from pathlib import Path
 from typing import Any, Optional
 
-from vzmi.ychaos.utils.argparse import SubCommand
+from vzmi.ychaos.cli import YChaosSubCommand
 from vzmi.ychaos.utils.dependency import DependencyUtils
 
 (Console,) = DependencyUtils.import_from("rich.console", ("Console",))
@@ -12,7 +12,7 @@ from vzmi.ychaos.utils.dependency import DependencyUtils
 __all__ = ["Manual"]
 
 
-class Manual(SubCommand):
+class Manual(YChaosSubCommand):
     """
     Used to print the manual for the entire CLI command.
 
@@ -29,9 +29,8 @@ class Manual(SubCommand):
     name = "manual"
     help = "Print the manual for YChaos CLI"
 
-    _exitcode = 0
-
     def __init__(self, **kwargs):
+        super(Manual, self).__init__()
         assert kwargs.pop("cls") == self.__class__
 
         self.app = kwargs.pop("app")
@@ -50,9 +49,6 @@ class Manual(SubCommand):
         )
 
         return parser
-
-    def set_exitcode(self, exitcode=0):
-        self._exitcode = exitcode
 
     def do_print_manual_entry(self):
         tempfile = StringIO()

@@ -4,13 +4,14 @@
 from argparse import ArgumentParser, Namespace
 from typing import Any
 
+from vzmi.ychaos.cli import YChaosSubCommand
 from vzmi.ychaos.cli.testplan.validate import TestPlanValidatorCommand
-from vzmi.ychaos.utils.argparse import SubCommand, SubCommandParsersAction
+from vzmi.ychaos.utils.argparse import SubCommandParsersAction
 
 __all__ = ["TestPlan"]
 
 
-class TestPlan(SubCommand):
+class TestPlan(YChaosSubCommand):
     """
     ```
     $ ychaos testplan -h

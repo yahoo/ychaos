@@ -4,6 +4,8 @@ extra:
     config_override: false
     doc_owner: Resilience Team
     doc_owner_shortid: resilience-core@verizonmedia.com
+    version:
+        provider: mike
     social:
         - icon: fontawesome/brands/github
           link: https://git.vzbuilders.com/resilience/

@@ -22,6 +22,7 @@ jobs:
          template: pythonv6/documentation
          environment:
              DOCUMENTATION_PUBLISH: False
+             DOWNGRADE_PKGS: ""
          requires: [~pr]
          steps:
              - postinit: pip install -e .[doc_build]
@@ -112,10 +113,17 @@ jobs:
     #         PACKAGE_PUBLISH: False
     #     requires: [python_package]
 
+        # Publish sphinx or mkdocs documentation to github pages of this repo
 
     # Publish sphinx or mkdocs documentation to github pages of this repo
     doc_publish:
-         template: pythonv6/documentation
-         requires: [python_package]
-         steps:
-             - postinit: pip install -e .[doc_build]
+        environment:
+            DOWNGRADE_PKGS: ""
+        template: pythonv6/documentation
+        requires: [python_package]
+        steps:
+            - postinit: pip install -e .[doc_build]
+            - publish_documentation: |
+                VERSION=v`meta get package.version`
+                echo $VERSION
+                mike deploy --push --update-aliases $VERSION latest

@@ -8,21 +8,21 @@ from mockito import verify, any, when, unstub
 
 from vzmi.ychaos.agents.agent import AgentState
 from vzmi.ychaos.agents.exceptions import AgentError
-from vzmi.ychaos.agents.network.iptables import BlockDNSConfig, BlockDNS
+from vzmi.ychaos.agents.network.iptables import DNSBlockConfig, DNSBlock
 
 
 class TestBlockDNSConfig(TestCase):
     def test_block_dns_setup(self):
-        config = BlockDNSConfig()
-        agent = BlockDNS(config)
+        config = DNSBlockConfig()
+        agent = DNSBlock(config)
         agent.setup()
         agent.monitor()  # coverage
 
         self.assertEqual(agent.current_state, AgentState.SETUP)
 
     def test_block_dns_teardown_does_not_modify_iptables_rule_when_in_setup(self):
-        config = BlockDNSConfig()
-        agent = BlockDNS(config)
+        config = DNSBlockConfig()
+        agent = DNSBlock(config)
         agent.setup()
 
         self.assertEqual(agent.current_state, AgentState.SETUP)
@@ -42,8 +42,8 @@ class TestBlockDNSConfig(TestCase):
         )
 
     def test_block_dns_run(self):
-        config = BlockDNSConfig()
-        agent = BlockDNS(config)
+        config = DNSBlockConfig()
+        agent = DNSBlock(config)
         agent.setup()
 
         self.assertEqual(agent.current_state, AgentState.SETUP)
@@ -67,8 +67,8 @@ class TestBlockDNSConfig(TestCase):
         self.assertEqual(agent.current_state, AgentState.RUNNING)
 
     def test_block_dns_run_raises_io_error(self):
-        config = BlockDNSConfig()
-        agent = BlockDNS(config)
+        config = DNSBlockConfig()
+        agent = DNSBlock(config)
         agent.setup()
 
         self.assertEqual(agent.current_state, AgentState.SETUP)
@@ -91,8 +91,8 @@ class TestBlockDNSConfig(TestCase):
             agent.run()
 
     def test_block_dns_teardown_restores_after_running(self):
-        config = BlockDNSConfig()
-        agent = BlockDNS(config)
+        config = DNSBlockConfig()
+        agent = DNSBlock(config)
         agent.setup()
 
         self.assertEqual(agent.current_state, AgentState.SETUP)
@@ -120,8 +120,8 @@ class TestBlockDNSConfig(TestCase):
         )
 
     def test_block_dns_teardown_raises_error_when_failed(self):
-        config = BlockDNSConfig()
-        agent = BlockDNS(config)
+        config = DNSBlockConfig()
+        agent = DNSBlock(config)
         agent.setup()
 
         self.assertEqual(agent.current_state, AgentState.SETUP)

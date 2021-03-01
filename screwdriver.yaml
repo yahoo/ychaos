@@ -25,7 +25,7 @@ jobs:
              DOWNGRADE_PKGS: ""
          requires: [~pr]
          steps:
-             - postinit: pip install -e .[doc_build]
+             - postinit: pip install -e .[debug]
 
     lint_validation:
         template: pythonv6/validate_lint

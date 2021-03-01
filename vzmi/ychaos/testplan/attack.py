@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from pydantic import Field, FilePath, SecretStr, validator
 
-from vzmi.ychaos.agents import AgentType
+from vzmi.ychaos.agents.index import AgentType
 from vzmi.ychaos.testplan import SchemaModel
 from vzmi.ychaos.testplan.common import Secret
 from vzmi.ychaos.utils.builtins import FQDN, AEnum

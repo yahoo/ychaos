@@ -109,7 +109,11 @@
             "enum": [
                 "no_op",
                 "no_op_timed",
-                "cpu_burn"
+                "cpu_burn",
+                "iptables_block",
+                "dns_block",
+                "traffic_block",
+                "server_cert_validation"
             ]
         },
         "AgentExecutionConfig": {

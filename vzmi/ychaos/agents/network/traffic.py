@@ -10,11 +10,10 @@ from typing import List, Optional
 
 from pydantic import Field, validate_arguments
 
-from vzmi.ychaos.agents import TimedAgentConfig
-from vzmi.ychaos.agents.agent import Agent
+from vzmi.ychaos.agents.agent import Agent, TimedAgentConfig
 
 
-class BlockTrafficConfig(TimedAgentConfig):
+class TrafficBlockConfig(TimedAgentConfig):
     name = "traffic_block"
     description = "This minion modifies the the hosts /etc/hosts file to block traffic to certain hostnames"
 
@@ -36,13 +35,13 @@ class BlockTrafficConfig(TimedAgentConfig):
     )
 
 
-class BlockTraffic(Agent):
+class TrafficBlock(Agent):
     LOCALHOST = "127.0.0.1"
     permission = int()
 
     @validate_arguments
-    def __init__(self, config: BlockTrafficConfig):
-        super(BlockTraffic, self).__init__(config)
+    def __init__(self, config: TrafficBlockConfig):
+        super(TrafficBlock, self).__init__(config)
 
         if config.backup_hostsfile is None:
             config.backup_hostsfile = Path(
@@ -50,11 +49,11 @@ class BlockTraffic(Agent):
             )
 
     def monitor(self) -> LifoQueue:
-        super(BlockTraffic, self).monitor()
+        super(TrafficBlock, self).monitor()
         return self._status
 
     def setup(self) -> None:
-        super(BlockTraffic, self).setup()
+        super(TrafficBlock, self).setup()
 
         shutil.copy(self.config.hostsfile, self.config.backup_hostsfile)
 
@@ -65,14 +64,14 @@ class BlockTraffic(Agent):
         Path(self.config.backup_hostsfile).chmod(S_IREAD | S_IRGRP | S_IROTH)
 
     def run(self) -> None:
-        super(BlockTraffic, self).run()
+        super(TrafficBlock, self).run()
         with open(self.config.hostsfile, "a") as hosts_file:
             hosts_file.write("\n")
             for host in self.config.hosts:
                 hosts_file.write(f"{self.LOCALHOST}\t{host}\n")
 
     def teardown(self) -> None:
-        super(BlockTraffic, self).teardown()
+        super(TrafficBlock, self).teardown()
 
         # Restore the permissions for the file and move it to original location
         self.config.backup_hostsfile.chmod(self.permission)

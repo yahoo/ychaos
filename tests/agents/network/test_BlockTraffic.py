@@ -10,7 +10,7 @@ from unittest import TestCase
 
 from mockito import when, unstub
 
-from vzmi.ychaos.agents.network.traffic import BlockTrafficConfig, BlockTraffic
+from vzmi.ychaos.agents.network.traffic import TrafficBlockConfig, TrafficBlock
 
 from tempfile import NamedTemporaryFile
 
@@ -29,13 +29,13 @@ class TestBlockTraffic(TestCase):
             file.write("127.0.0.1	thissitealsodoesnotexist.com\n")
 
     def test_setup_create_backup_file(self):
-        block_traffic_config = BlockTrafficConfig(
+        block_traffic_config = TrafficBlockConfig(
             hosts=["thissitedoesnotexist.com", "thissitealsodoesnotexist.com"],
             hostsfile=self.test_hostsfile,
         )
         self.assertIsNone(block_traffic_config.backup_hostsfile)
 
-        agent = BlockTraffic(block_traffic_config)
+        agent = TrafficBlock(block_traffic_config)
 
         agent.setup()
         self.assertTrue(agent.config.backup_hostsfile.is_file())
@@ -45,13 +45,13 @@ class TestBlockTraffic(TestCase):
             file.write("mockTest")
 
     def test_teardown_resets_the_host_file(self):
-        block_traffic_config = BlockTrafficConfig(
+        block_traffic_config = TrafficBlockConfig(
             hosts=["thissitedoesnotexist.com", "thissitealsodoesnotexist.com"],
             hostsfile=self.test_hostsfile,
         )
         self.assertIsNone(block_traffic_config.backup_hostsfile)
 
-        agent = BlockTraffic(block_traffic_config)
+        agent = TrafficBlock(block_traffic_config)
 
         agent.setup()
         self.assertTrue(agent.config.backup_hostsfile.is_file())
@@ -68,12 +68,12 @@ class TestBlockTraffic(TestCase):
         self.assertTrue(filecmp.cmp(self.test_hostsfile, backup_hostfile_copy.name))
 
     def test_run_modifes_hosts_file(self):
-        block_traffic_config = BlockTrafficConfig(
+        block_traffic_config = TrafficBlockConfig(
             hosts=["testredirect.com"], hostsfile=self.test_hostsfile
         )
         self.assertIsNone(block_traffic_config.backup_hostsfile)
 
-        agent = BlockTraffic(block_traffic_config)
+        agent = TrafficBlock(block_traffic_config)
 
         agent.setup()
         self.assertTrue(agent.config.backup_hostsfile.is_file())

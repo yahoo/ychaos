@@ -84,7 +84,7 @@ plugins:
 
 remote_branch: gh-pages
 remote_name: origin
-repo_name: GitHub
+repo_name: resilience/vzmi.ychaos
 repo_url: https://git.vzbuilders.com/resilience/vzmi.ychaos
 site_name: YChaos - The Resilience Toolkit
 site_url: https://git.vzbuilders.com/pages/resilience/vzmi.ychaos

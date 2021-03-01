@@ -1,10 +1,13 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
+import functools
 import time
 from queue import LifoQueue
 
 from vzmi.ychaos.agents.agent import Agent, AgentConfig, TimedAgentConfig
 from vzmi.ychaos.agents.utils.annotations import log_agent_lifecycle
+
+NoOpAgentConfig = functools.partial(AgentConfig, name="no_op")
 
 
 class NoOpAgent(Agent):  # pragma: no cover
@@ -31,6 +34,9 @@ class NoOpAgent(Agent):  # pragma: no cover
     @log_agent_lifecycle
     def teardown(self) -> None:
         super(NoOpAgent, self).teardown()
+
+
+NoOpTimedAgentConfig = functools.partial(TimedAgentConfig, name="no_op_timed")
 
 
 class NoOpTimedAgent(NoOpAgent):  # pragma: no cover

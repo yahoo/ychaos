@@ -24,7 +24,7 @@ from vzmi.ychaos.agents.agent import (
 )
 from vzmi.ychaos.agents.exceptions import AgentError
 
-__all__ = ["IPTablesBlockConfig", "IPTablesBlock"]
+__all__ = ["IPTablesBlockConfig", "IPTablesBlock", "DNSBlockConfig", "DNSBlock"]
 
 
 class IptablesChain(Enum):
@@ -290,7 +290,7 @@ class IPTablesBlock(Agent):
             raise AgentError("Error Occurred while removing IpTable rule")
 
 
-class BlockDNSConfig(TimedAgentConfig):
+class DNSBlockConfig(TimedAgentConfig):
     name = "block_dns"
     desc = "This agent modifies the iptables rules to block traffic to DNS ports"
 
@@ -307,19 +307,19 @@ class BlockDNSConfig(TimedAgentConfig):
     )
 
 
-class BlockDNS(Agent):
+class DNSBlock(Agent):
 
     DNS_PORT = 53
 
     @validate_arguments
-    def __init__(self, config: BlockDNSConfig):
-        super(BlockDNS, self).__init__(config)
+    def __init__(self, config: DNSBlockConfig):
+        super(DNSBlock, self).__init__(config)
 
     def monitor(self) -> LifoQueue:
         return self._status
 
     def setup(self) -> None:
-        super(BlockDNS, self).setup()
+        super(DNSBlock, self).setup()
 
     @staticmethod
     def raise_io_error_on_iptables_failure(proc: subprocess.CompletedProcess, message):
@@ -327,7 +327,7 @@ class BlockDNS(Agent):
             raise IOError(message)
 
     def run(self):
-        super(BlockDNS, self).run()
+        super(DNSBlock, self).run()
 
         _cmd = f"sudo iptables -I OUTPUT -p udp --dport {self.DNS_PORT} -j DROP -w {shlex.quote(str(self.config.iptables_wait))}".split()
         proc = subprocess.run(  # nosec
@@ -351,7 +351,7 @@ class BlockDNS(Agent):
 
     def teardown(self) -> None:
         _current_state_temporary = self.current_state
-        super(BlockDNS, self).teardown()
+        super(DNSBlock, self).teardown()
         error = False
         if _current_state_temporary in (
             AgentState.RUNNING,

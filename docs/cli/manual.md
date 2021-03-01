@@ -2,12 +2,13 @@
 ```
 usage: ychaos [-h] [-v] [-V] [--debug] [-c {dev,prod}]
               [--text-report TEXT_REPORT] [--html-report HTML_REPORT]
-              {testplan,manual} ...
+              {testplan,manual,agent} ...
 
 positional arguments:
-  {testplan,manual}
+  {testplan,manual,agent}
     testplan            sub command for test plan operations
     manual              Print the manual for YChaos CLI
+    agent               ychaos agent CLI
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -56,5 +57,28 @@ usage: ychaos manual [-h] [-f FILE]
 optional arguments:
   -h, --help            show this help message and exit
   -f FILE, --file FILE  Print YChaos CLI Manual to a file
+
+```
+## ychaos agent
+```
+usage: ychaos agent [-h] {attack} ...
+
+positional arguments:
+  {attack}
+    attack    ychaos agent attack CLI
+
+optional arguments:
+  -h, --help  show this help message and exit
+
+```
+### ychaos agent attack
+```
+usage: ychaos agent attack [-h] -t TESTPLAN
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -t TESTPLAN, --testplan TESTPLAN
+                        The testplan path. This can be relative path from
+                        where the CLI is initiated
 
 ```

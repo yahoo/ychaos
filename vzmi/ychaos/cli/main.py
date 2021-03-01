@@ -9,6 +9,7 @@ from typing import Dict, Iterable, List, Optional, Union
 
 from vzmi.ychaos import __version__
 from vzmi.ychaos.app_logger import AppLogger
+from vzmi.ychaos.cli.agentcli.main import AgentCLI
 from vzmi.ychaos.cli.exceptions import YChaosCLIError
 from vzmi.ychaos.cli.manual import Manual
 from vzmi.ychaos.cli.testplan import TestPlan
@@ -113,6 +114,7 @@ class YChaos:
         # Subcommands
         ychaos_cli_subparsers.add_parser(cls=TestPlan, name=TestPlan.name)
         ychaos_cli_subparsers.add_parser(cls=Manual, name=Manual.name)
+        ychaos_cli_subparsers.add_parser(cls=AgentCLI, name=AgentCLI.name)
 
         args = ychaos_cli.parse_args(program_arguments)
 

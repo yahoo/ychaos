@@ -1,5 +1,6 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
+from vzmi.ychaos.testplan.schema import TestPlan
 
 
 class Coordinator:
@@ -10,5 +11,5 @@ class Coordinator:
     state.
     """
 
-    def __init__(self):
-        raise NotImplementedError()
+    def __init__(self, test_plan: TestPlan):
+        pass

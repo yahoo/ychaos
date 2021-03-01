@@ -74,6 +74,15 @@ class AgentConfig(BaseModel):
         default=True, description="Raise error on state mismatch"
     )
 
+    def get_agent(self):
+        """
+        The Fallback factory method to use where the Agent
+        instance depends on the configuration
+        Returns:
+            An agent subclass of Agent
+        """
+        pass
+
 
 class TimedAgentConfig(AgentConfig):
     """

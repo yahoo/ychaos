@@ -113,7 +113,8 @@
                 "iptables_block",
                 "dns_block",
                 "traffic_block",
-                "server_cert_validation"
+                "server_cert_validation",
+                "contrib"
             ]
         },
         "AgentExecutionConfig": {

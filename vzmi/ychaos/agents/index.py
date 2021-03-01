@@ -3,6 +3,7 @@
 
 from types import SimpleNamespace
 
+from vzmi.ychaos.agents.contrib import ContribAgentConfig
 from vzmi.ychaos.agents.network.iptables import (
     DNSBlock,
     DNSBlockConfig,
@@ -49,4 +50,8 @@ class AgentType(AEnum):
 
     SERVER_CERT_VALIDATION = "server_cert_validation", SimpleNamespace(
         schema=ServerCertValidationConfig, agent_defn=ServerCertValidation
+    )
+
+    CONTRIB = "contrib", SimpleNamespace(
+        schema=ContribAgentConfig, agent_defn=lambda config: config.get_agent()
     )

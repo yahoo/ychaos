@@ -31,6 +31,7 @@ class AttackCommand(YChaosTestplanInputSubCommand):
     help = "ychaos agent attack CLI"
 
     def __init__(self, **kwargs):
+        super(AttackCommand, self).__init__(**kwargs)
         assert kwargs.pop("cls") == self.__class__
         self.app = kwargs.pop("app")
         self.console: Console = self.app.console

@@ -1,37 +1,70 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
-
+from argparse import Namespace
 from pathlib import Path
 from unittest import TestCase
 
-from vzmi.ychaos.cli.main import YChaos
+from vzmi.ychaos.cli.agentcli.attack import AttackCommand
+from vzmi.ychaos.cli.mock import MockApp
 
 
 class TestAgentAttackCLI(TestCase):
+
+    cls = AttackCommand
+
     def setUp(self) -> None:
-        self.test_plans_path = (
+        self.test_plans_directory = (
             Path(__file__).joinpath("../../../resources/testplans").resolve()
         )
 
-    def test_agent_cli_build(self):
-        with self.assertRaises(SystemExit) as _exit:
-            YChaos.main(["agent", "--help"])
-        self.assertEqual(0, _exit.exception.code)
-
     def test_valid_test_plan(self):
-        cmd = f"ychaos agent attack --testplan {self.test_plans_path}/valid/testplan1.json"
-        with self.assertRaises(SystemExit) as _exit:
-            YChaos.main(cmd.split()[1:])
-        self.assertEqual(0, _exit.exception.code)
+        args = Namespace()
+        args.cls = self.cls
+
+        # Required Arguments for TestPlanValidatorCommand
+        args.testplan = self.test_plans_directory.joinpath("valid/testplan1.json")
+
+        # Create a Mocked CLI App
+        app = MockApp(args)
+        args.app = app
+
+        self.assertEqual(0, args.cls.main(args))
 
     def test_invalid_test_plan(self):
-        cmd = f"ychaos agent attack --testplan {self.test_plans_path}/invalid/testplan1.yaml"
-        with self.assertRaises(SystemExit) as _exit:
-            YChaos.main(cmd.split()[1:])
-        self.assertEqual(1, _exit.exception.code)
+        args = Namespace()
+        args.cls = self.cls
+
+        # Required Arguments for TestPlanValidatorCommand
+        args.testplan = self.test_plans_directory.joinpath("invalid/testplan1.yaml")
+
+        # Create a Mocked CLI App
+        app = MockApp(args)
+        args.app = app
+
+        self.assertEqual(1, args.cls.main(args))
 
     def test_invalid_test_plan_path(self):
-        cmd = f"ychaos agent attack --testplan {self.test_plans_path}/invalid/testplan11.yaml"
-        with self.assertRaises(SystemExit) as _exit:
-            YChaos.main(cmd.split()[1:])
-        self.assertEqual(1, _exit.exception.code)
+        args = Namespace()
+        args.cls = self.cls
+
+        # Required Arguments for TestPlanValidatorCommand
+        args.testplan = self.test_plans_directory.joinpath("invalid/invalid_path.yaml")
+
+        # Create a Mocked CLI App
+        app = MockApp(args)
+        args.app = app
+
+        self.assertEqual(1, args.cls.main(args))
+
+    def test_test_plan_path_is_a_directory(self):
+        args = Namespace()
+        args.cls = self.cls
+
+        # Required Arguments for TestPlanValidatorCommand
+        args.testplan = self.test_plans_directory.joinpath("valid/")
+
+        # Create a Mocked CLI App
+        app = MockApp(args)
+        args.app = app
+
+        self.assertEqual(1, args.cls.main(args))

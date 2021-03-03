@@ -114,6 +114,7 @@
                 "dns_block",
                 "traffic_block",
                 "server_cert_validation",
+                "cert_file_validation",
                 "contrib"
             ]
         },

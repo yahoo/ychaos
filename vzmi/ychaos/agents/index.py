@@ -19,6 +19,8 @@ from vzmi.ychaos.agents.special.NoOpAgent import (
 )
 from vzmi.ychaos.agents.system.cpu import CPUBurn, CPUBurnConfig
 from vzmi.ychaos.agents.validation.certificate import (
+    CertificateFileValidation,
+    CertificateFileValidationConfig,
     ServerCertValidation,
     ServerCertValidationConfig,
 )
@@ -48,10 +50,15 @@ class AgentType(AEnum):
         schema=TrafficBlockConfig, agent_defn=TrafficBlock
     )
 
+    # Validation Agents
     SERVER_CERT_VALIDATION = "server_cert_validation", SimpleNamespace(
         schema=ServerCertValidationConfig, agent_defn=ServerCertValidation
     )
+    CERT_FILE_VALIDATION = "cert_file_validation", SimpleNamespace(
+        schema=CertificateFileValidationConfig, agent_defn=CertificateFileValidation
+    )
 
+    # Special Contrib agent
     CONTRIB = "contrib", SimpleNamespace(
         schema=ContribAgentConfig, agent_defn=lambda config: config.get_agent()
     )

@@ -11,6 +11,7 @@ shared:
         # or mkdocs which looks for documentation in docs.
         # By default use [mkdocs](https://www.mkdocs.org/) tool to build documentation from the [docs](docs) directory.
         DOCUMENTATION_FORMATS: mkdocs
+        SD_COVERAGE_PLUGIN_ENABLED: false
 
 jobs:
     # Validation jobs
@@ -59,6 +60,7 @@ jobs:
         template: pythonv6/validate_unittest
         environment:
             TOX_ARGS: --parallel all
+            SD_COVERAGE_PLUGIN_ENABLED: true
         requires: [~pr, ~commit]
         steps:
             - poststore_artifacts: python3 screwdriver/coverage_status.py

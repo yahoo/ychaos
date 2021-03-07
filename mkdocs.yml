@@ -61,6 +61,16 @@ plugins:
           watch:
               - vzmi/ychaos
 
+nav:
+    - YChaos:
+        - Home: index.md
+        - Changelog: changelog.md
+        - Contribution: contribution.md
+        - Project Dependencies: dependencies.md
+        - Code Of Conduct: code_of_conduct.md
+        - Subpackages: subpackages.md
+    - ...
+
 remote_branch: gh-pages
 remote_name: origin
 repo_name: resilience/vzmi.ychaos

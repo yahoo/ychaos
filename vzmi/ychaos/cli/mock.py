@@ -12,11 +12,9 @@ from vzmi.ychaos.utils.dependency import DependencyUtils
 
 class MockApp(App):
     """
-    To be used for Unittest purpose only. This will create a mocked
-    application whose console output will be tracked by a String
-    object.
-
-    This class is not for production usecase.
+    This will create a mocked application similar to [App][vzmi.ychaos.cli.main.App]
+    whose console output will be tracked by a StringIO object for verification. This is not
+    to be used for production.
     """
 
     def __init__(self, args: Namespace):
@@ -28,6 +26,12 @@ class MockApp(App):
         super(MockApp, self).__init__(args)
         self.console = Console(file=StringIO(), width=150)
 
-    def get_console_output(self):
+    def get_console_output(self) -> str:
+        """
+        Returns the entire console output printed by the CLI application during its run
+
+        Returns:
+            String
+        """
         assert isinstance(self.console.file, StringIO)
         return self.console.file.getvalue()

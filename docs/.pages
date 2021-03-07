@@ -1,0 +1,6 @@
+nav:
+    - YChaos: index
+    - CLI: cli
+    - Test Plan: testplan
+    - Agents: agents
+    - Package Documentation: package_docs

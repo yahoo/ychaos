@@ -23,6 +23,7 @@ from vzmi.ychaos.agents.agent import (
     TimedAgentConfig,
 )
 from vzmi.ychaos.agents.exceptions import AgentError
+from vzmi.ychaos.agents.utils.annotations import log_agent_lifecycle
 
 __all__ = ["IPTablesBlockConfig", "IPTablesBlock", "DNSBlockConfig", "DNSBlock"]
 
@@ -62,8 +63,11 @@ class IPTablesBlockConfig(TimedAgentConfig):
         default=list(),
         examples=[[3000, 4443]],
     )
-    ip_table_wait_sec: int = Field(
-        description="Wait for the  lock. To prevent multiple instances of the program from running concurrently, an attempt will be made to obtain an exclusive lock at launch",
+    iptables_wait: int = Field(
+        description=(
+            "Wait for the lock in seconds. To prevent multiple instances of the program from running concurrently, "
+            "an attempt will be made to obtain an exclusive lock at launch"
+        ),
         default=3,
         examples=[500, 450, 120],
         lt=1800,
@@ -114,6 +118,7 @@ class IPTablesBlock(Agent):
         )
         return self._status
 
+    @log_agent_lifecycle
     def setup(self) -> None:
         super(IPTablesBlock, self).setup()
 
@@ -122,6 +127,7 @@ class IPTablesBlock(Agent):
         if proc.returncode != 0:
             raise IOError(message)
 
+    @log_agent_lifecycle
     def run(self) -> None:
         super(IPTablesBlock, self).run()
         for port in self.config.incoming_ports:
@@ -131,7 +137,7 @@ class IPTablesBlock(Agent):
                     IptablesChain.INPUT.value,
                     port,
                     None,
-                    self.config.ip_table_wait_sec,
+                    self.config.iptables_wait,
                 ).split(),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -146,7 +152,7 @@ class IPTablesBlock(Agent):
                     IptablesChain.OUTPUT.value,
                     port,
                     None,
-                    self.config.ip_table_wait_sec,
+                    self.config.iptables_wait,
                 ).split(),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -163,7 +169,7 @@ class IPTablesBlock(Agent):
                         IptablesChain.INPUT.value,
                         endpoint.port,
                         str(endpoint.host),
-                        self.config.ip_table_wait_sec,
+                        self.config.iptables_wait,
                     ).split(),
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
@@ -180,7 +186,7 @@ class IPTablesBlock(Agent):
                         IptablesChain.INPUT.value,
                         None,
                         str(endpoint),
-                        self.config.ip_table_wait_sec,
+                        self.config.iptables_wait,
                     ).split(),
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
@@ -198,7 +204,7 @@ class IPTablesBlock(Agent):
                         IptablesChain.OUTPUT.value,
                         endpoint.port,
                         str(endpoint.host),
-                        self.config.ip_table_wait_sec,
+                        self.config.iptables_wait,
                     ).split(),
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
@@ -215,7 +221,7 @@ class IPTablesBlock(Agent):
                         IptablesChain.OUTPUT.value,
                         None,
                         str(endpoint),
-                        self.config.ip_table_wait_sec,
+                        self.config.iptables_wait,
                     ).split(),
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
@@ -226,6 +232,7 @@ class IPTablesBlock(Agent):
                     f"Error While Adding IpTable Rule: DROP {endpoint} to INPUT Chain",
                 )
 
+    @log_agent_lifecycle
     def teardown(self) -> None:
         super(IPTablesBlock, self).teardown()
         error = False
@@ -236,7 +243,7 @@ class IPTablesBlock(Agent):
                     IptablesChain.INPUT.value,
                     port,
                     None,
-                    self.config.ip_table_wait_sec,
+                    self.config.iptables_wait,
                 ).split(),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -250,7 +257,7 @@ class IPTablesBlock(Agent):
                     IptablesChain.OUTPUT.value,
                     port,
                     None,
-                    self.config.ip_table_wait_sec,
+                    self.config.iptables_wait,
                 ).split(),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -265,7 +272,7 @@ class IPTablesBlock(Agent):
                         IptablesChain.INPUT.value,
                         endpoint.port,
                         str(endpoint.host),
-                        self.config.ip_table_wait_sec,
+                        self.config.iptables_wait,
                     ).split(),
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
@@ -279,7 +286,7 @@ class IPTablesBlock(Agent):
                         IptablesChain.OUTPUT.value,
                         None,
                         str(endpoint),
-                        self.config.ip_table_wait_sec,
+                        self.config.iptables_wait,
                     ).split(),
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
@@ -318,6 +325,7 @@ class DNSBlock(Agent):
     def monitor(self) -> LifoQueue:
         return self._status
 
+    @log_agent_lifecycle
     def setup(self) -> None:
         super(DNSBlock, self).setup()
 
@@ -326,6 +334,7 @@ class DNSBlock(Agent):
         if proc.returncode != 0:
             raise IOError(message)
 
+    @log_agent_lifecycle
     def run(self):
         super(DNSBlock, self).run()
 
@@ -349,6 +358,7 @@ class DNSBlock(Agent):
             proc, "Error While Adding IpTable Rule: DROP tcp port: 53 to OUTPUT Chain"
         )
 
+    @log_agent_lifecycle
     def teardown(self) -> None:
         _current_state_temporary = self.current_state
         super(DNSBlock, self).teardown()

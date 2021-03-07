@@ -29,29 +29,51 @@ from vzmi.ychaos.utils.dependency import DependencyUtils
 class YChaos:
     """
     The YChaos CLI class. The `main` method of this class is the starting point of
-    the CLI which takes in the program arguments.
+    the CLI which takes in the program arguments. See YChaos CLI documentation for
+    more details.
 
     ```
     $ ychaos -h
-    usage: ychaos [-h] [-v] [-V] [-c {dev,prod}] {testplan} ...
+    usage: ychaos [-h] [-v] [-V] [--debug] [-c {dev,prod}]
+                  [--text-report TEXT_REPORT] [--html-report HTML_REPORT]
+                  {testplan,manual,agent} ...
 
     positional arguments:
-      {testplan}
+      {testplan,manual,agent}
         testplan            sub command for test plan operations
+        manual              Print the manual for YChaos CLI
+        agent               ychaos agent CLI
 
     optional arguments:
       -h, --help            show this help message and exit
       -v, --version         show program's version number and exit
-      -V, --verbose         Increase verbosity of logs (INFO)
       -c {dev,prod}, --config {dev,prod}
                             Set YChaos CLI configuration (prod)
+
+    verbosity:
+      -V, --verbose         Increase verbosity of logs (INFO)
+      --debug               Enable debug mode
+
+    reports:
+      --text-report TEXT_REPORT
+                            Generate a text report from the YChaos execution
+      --html-report HTML_REPORT
+                            Generate a HTML report from YChaos execution
     ```
     """
 
     settings = ApplicationSettings.get_instance()
 
     @classmethod
-    def main(cls, program_arguments: list):
+    def main(cls, program_arguments: list) -> None:
+        """
+        All good things begin some place, and that's here.
+        Args:
+            program_arguments: List of Program Arguments
+
+        Returns:
+            None
+        """
         ychaos_cli = ArgumentParser(prog=cls.settings.PROG)
 
         # YChaos CLI version
@@ -207,7 +229,7 @@ class App:
     def manual_entry(self) -> Dict[str, str]:
         """
         Determines the manual entry of the YChaos CLI and returns a program
-        aware dictionary of PROG -> HELP mapping
+        aware dictionary of cli -> usage mapping
 
         Returns:
             Dictionary of command to help message mapping
@@ -219,7 +241,7 @@ class App:
 
         return _tree
 
-    def is_debug_mode(self):
+    def is_debug_mode(self) -> bool:
         """
         Returns if the app was initialized with debug mode
         Returns:

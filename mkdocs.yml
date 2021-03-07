@@ -53,31 +53,10 @@ markdown_extensions:
         emoji_index: !!python/name:materialx.emoji.twemoji
         emoji_generator: !!python/name:materialx.emoji.to_svg
 
-nav:
-    - YChaos:
-        - Home: index.md
-        - Changelog: changelog.md
-        - Contribution: contribution.md
-        - Project Dependencies: dependencies.md
-        - Code Of Conduct: code_of_conduct.md
-    - YChaos CLI:
-        - YChaos CLI: cli/index.md
-        - CLI Usage: cli/manual.md
-    - YChaos Test Plan:
-        - Test Plan: testplan/index.md
-        - Schema: testplan/schema/index.html
-        - Target Specification: testplan/target_spec.md
-    - Package Documentation:
-        - testplan:
-             - schema: package_docs/testplan/schema.md
-             - verification: package_docs/testplan/verification.md
-             - validator: package_docs/testplan/validator.md
-             - common: package_docs/testplan/common.md
-             - attack: package_docs/testplan/attack.md
-
 plugins:
     - search
     - macros
+    - awesome-pages
     - mkdocstrings:
           watch:
               - vzmi/ychaos

@@ -1,0 +1,4 @@
+nav:
+    - Test Plan: index.md
+    - Schema: testplan/schema
+    - Target Specification: target_spec.md

@@ -40,6 +40,12 @@ def _burn(end: datetime) -> None:
 
 
 class CPUBurnConfig(TimedAgentConfig):
+    """
+    Defines the CPU Burn configuration to initiate a CPU burn attack. The framework will
+    attack only a percentage of cores that is defined in the `cores_pct` attribute. By default,
+    `cores_pct` is set to 100, implying all the CPU cores are targeted simultaneously.
+    """
+
     name = "cpu_burn"
     description = "This agent is responsible to consume the CPU resources for the `duration` amount of seconds."
 
@@ -53,11 +59,11 @@ class CPUBurnConfig(TimedAgentConfig):
         le=100,
     )
 
-    def effective_cpu_count(self):
+    def effective_cpu_count(self) -> int:
         """
         Calculates the number of cores to be used from the cores_pct information
         Returns:
-            number of cores that fits in the cores_pct percentage
+            number of cores that fits in the `cores_pct` percentage
         """
         return math.floor(self.cores_pct * cpu_count() / 100)
 

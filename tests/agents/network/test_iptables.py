@@ -40,7 +40,7 @@ class TestIPTablesBlock(TestCase):
         self.iptables_block_minion_config = IPTablesBlockConfig(
             incoming_ports=[9000, 9001],
             destination_ports=[9002, 9003],
-            ip_table_wait_sec=1,
+            iptables_wait=1,
             incoming_endpoints=["203.0.113.0", "https://yahoo.com:443"],
             outgoing_endpoints=["203.0.113.0", "https://yahoo.com:443"],
         )

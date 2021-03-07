@@ -11,6 +11,7 @@ from typing import List, Optional
 from pydantic import Field, validate_arguments
 
 from vzmi.ychaos.agents.agent import Agent, TimedAgentConfig
+from vzmi.ychaos.agents.utils.annotations import log_agent_lifecycle
 
 
 class TrafficBlockConfig(TimedAgentConfig):
@@ -52,6 +53,7 @@ class TrafficBlock(Agent):
         super(TrafficBlock, self).monitor()
         return self._status
 
+    @log_agent_lifecycle
     def setup(self) -> None:
         super(TrafficBlock, self).setup()
 
@@ -63,6 +65,7 @@ class TrafficBlock(Agent):
         self.permission = Path(self.config.backup_hostsfile).lstat().st_mode
         Path(self.config.backup_hostsfile).chmod(S_IREAD | S_IRGRP | S_IROTH)
 
+    @log_agent_lifecycle
     def run(self) -> None:
         super(TrafficBlock, self).run()
         with open(self.config.hostsfile, "a") as hosts_file:
@@ -70,6 +73,7 @@ class TrafficBlock(Agent):
             for host in self.config.hosts:
                 hosts_file.write(f"{self.LOCALHOST}\t{host}\n")
 
+    @log_agent_lifecycle
     def teardown(self) -> None:
         super(TrafficBlock, self).teardown()
 

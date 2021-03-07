@@ -17,7 +17,10 @@ __all__ = ["Manual"]
 
 class Manual(YChaosSubCommand):
     """
-    Used to print the manual for the entire CLI command.
+    Used to print the manual for the entire CLI command. Can be used to
+    auto-generate Markdown docs for the YChaos CLI by passing the `-f/--file`
+    argument. In case, a file is not passed, the markdown is printed on
+    the console.
 
     ```
     $ ychaos manual -h

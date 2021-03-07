@@ -23,6 +23,7 @@ from vzmi.ychaos.agents.agent import (
     AgentMonitoringDataPoint,
     AgentPriority,
 )
+from vzmi.ychaos.agents.utils.annotations import log_agent_lifecycle
 from vzmi.ychaos.utils.builtins import AEnum
 from vzmi.ychaos.utils.dependency import DependencyUtils
 
@@ -58,9 +59,11 @@ class ServerCertValidation(Agent):
     def __init__(self, config: ServerCertValidationConfig):
         super(ServerCertValidation, self).__init__(config)
 
-    def monitor(self):
+    def monitor(self) -> LifoQueue:
+        super(ServerCertValidation, self).monitor()
         return self._status
 
+    @log_agent_lifecycle
     def setup(self) -> None:
         super(ServerCertValidation, self).setup()
 
@@ -76,6 +79,7 @@ class ServerCertValidation(Agent):
             pyopenssl.ssl.get_server_certificate((host, port)),
         )
 
+    @log_agent_lifecycle
     def run(self) -> None:
         for url in self.config.urls:
             if url.port is None:
@@ -110,17 +114,24 @@ class ServerCertValidation(Agent):
                 )
             )
 
+    @log_agent_lifecycle
     def teardown(self) -> None:
         super(ServerCertValidation, self).teardown()
 
 
 class CertificateFileType(AEnum):
+    """
+    Attributes:
+        ASN1: (asn1) ASN1 Certificate format
+        PEM: (pem) PEM Certificate format
+    """
+
     ASN1 = "asn1", SimpleNamespace(binder=pyopenssl.OpenSSL.crypto.FILETYPE_ASN1)  # type: ignore
     PEM = "pem", SimpleNamespace(binder=pyopenssl.OpenSSL.crypto.FILETYPE_PEM)  # type: ignore
 
 
 class CertificateFileConfig(BaseModel):
-    path: FilePath = Field("Path to the file")
+    path: FilePath = Field(..., description="Path to the certificate file")
     type: CertificateFileType = Field(
         default=CertificateFileType.PEM, description="Type of the certificate file"
     )
@@ -155,9 +166,11 @@ class CertificateFileValidation(Agent):
         super(CertificateFileValidation, self).monitor()
         return self._status
 
+    @log_agent_lifecycle
     def setup(self) -> None:
         super(CertificateFileValidation, self).setup()
 
+    @log_agent_lifecycle
     def run(self) -> None:
         super(CertificateFileValidation, self).run()
         for cert_path_config in self.config.paths:
@@ -196,5 +209,6 @@ class CertificateFileValidation(Agent):
                 )
             )
 
+    @log_agent_lifecycle
     def teardown(self) -> None:
         super(CertificateFileValidation, self).teardown()

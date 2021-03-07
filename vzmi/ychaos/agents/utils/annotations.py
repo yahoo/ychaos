@@ -8,12 +8,6 @@ logging = AppLogger.get_logger("agents")
 
 def log_agent_lifecycle(func):
     def annotation(*args, **kwargs):
-        """
-        Logs the lifecycle of the agent
-        Args:
-            *args: args[0] is the agent
-            **kwargs:
-        """
         agent: Agent = args[0]
         logging.info(
             event="agents.lifecycle.start",

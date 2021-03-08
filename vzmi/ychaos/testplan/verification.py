@@ -1,6 +1,6 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
-
+import shlex
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -34,6 +34,9 @@ class PythonModuleVerification(SchemaModel):
         default=list(),
         description="List of arguments to be sent to the script. The arguments in the list will be sent to the script space separated",
     )
+
+    def safe_arguments(self):
+        return [shlex.quote(x) for x in self.arguments]
 
 
 class VerificationType(AEnum):

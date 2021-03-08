@@ -13,6 +13,7 @@ from vzmi.ychaos.cli.agentcli.main import AgentCLI
 from vzmi.ychaos.cli.exceptions import YChaosCLIError
 from vzmi.ychaos.cli.manual import Manual
 from vzmi.ychaos.cli.testplan import TestPlan
+from vzmi.ychaos.cli.verification import VerificationCommand
 from vzmi.ychaos.settings import (
     ApplicationSettings,
     DevSettings,
@@ -137,6 +138,9 @@ class YChaos:
         ychaos_cli_subparsers.add_parser(cls=TestPlan, name=TestPlan.name)
         ychaos_cli_subparsers.add_parser(cls=Manual, name=Manual.name)
         ychaos_cli_subparsers.add_parser(cls=AgentCLI, name=AgentCLI.name)
+        ychaos_cli_subparsers.add_parser(
+            cls=VerificationCommand, name=VerificationCommand.name
+        )
 
         args = ychaos_cli.parse_args(program_arguments)
 

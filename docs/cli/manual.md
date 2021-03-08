@@ -2,13 +2,14 @@
 ```
 usage: ychaos [-h] [-v] [-V] [--debug] [-c {dev,prod}]
               [--text-report TEXT_REPORT] [--html-report HTML_REPORT]
-              {testplan,manual,agent} ...
+              {testplan,manual,agent,verify} ...
 
 positional arguments:
-  {testplan,manual,agent}
+  {testplan,manual,agent,verify}
     testplan            sub command for test plan operations
     manual              Print the manual for YChaos CLI
     agent               ychaos agent CLI
+    verify              Print the manual for YChaos CLI
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -80,5 +81,27 @@ optional arguments:
   -t TESTPLAN, --testplan TESTPLAN
                         The testplan path. This can be relative path from
                         where the CLI is initiated
+
+```
+## ychaos verify
+```
+usage: ychaos verify [-h] -t TESTPLAN -s {steady,chaos,recovered}
+                     [--dump-yaml DUMP_YAML] [--dump-json DUMP_JSON]
+                     [--state-data STATE_DATA]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -t TESTPLAN, --testplan TESTPLAN
+                        The testplan path. This can be relative path from
+                        where the CLI is initiated
+  -s {steady,chaos,recovered}, --state {steady,chaos,recovered}
+                        System state to verify
+  --dump-yaml DUMP_YAML
+                        Store the verification data in YAML format
+  --dump-json DUMP_JSON
+                        Store the verification data in JSON format
+  --state-data STATE_DATA
+                        The path of the verification data state file
+                        (JSON/YAML)
 
 ```

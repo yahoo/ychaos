@@ -3,9 +3,11 @@
 
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
+from typing import Optional
+
 import requests
-from pydantic import validate_arguments
-from requests import Response, Session
+from pydantic import BaseModel, validate_arguments
+from requests import Session
 
 from vzmi.ychaos.core.verification.data import (
     VerificationData,
@@ -18,6 +20,12 @@ from vzmi.ychaos.testplan.verification import HTTPRequestVerification
 
 
 class HTTPRequestVerificationPlugin(BaseVerificationPlugin):
+    class HttpVerificationData(BaseModel):
+        url: str  # Making this string since this is built with only trusted data
+        status_code: Optional[int]
+        latency: Optional[int]
+        error: Optional[str]
+        error_desc: Optional[str]
 
     __verification_type__ = "http_request"
 
@@ -65,24 +73,35 @@ class HTTPRequestVerificationPlugin(BaseVerificationPlugin):
         _rc = 0
         _data = list()
 
-        def get_counter_data(r: Response):
-            return dict(
-                url=r.url,
-                status_code=r.status_code,
-                latency=r.elapsed.microseconds / 1000,
-            )
-
         for _ in range(self.config.count):
             counter_data = list()
 
             for url in self.config.urls:
-                response = self._session.request(self.config.method, url=str(url))
-                if (
-                    response.status_code not in self.config.status_codes
-                    or (response.elapsed.microseconds / 1000) > self.config.latency
-                ):
+                try:
+                    response = self._session.request(
+                        self.config.method,
+                        url=str(url),
+                        timeout=self.config.timeout / 1000,
+                    )
+                    if (
+                        response.status_code not in self.config.status_codes
+                        or (response.elapsed.microseconds / 1000) > self.config.latency
+                    ):
+                        _rc = 1
+                        counter_data.append(
+                            self.HttpVerificationData(
+                                url=response.url,
+                                status_code=response.status_code,
+                                latency=response.elapsed.microseconds / 1000,
+                            ).dict()
+                        )
+                except Exception as e:
                     _rc = 1
-                    counter_data.append(get_counter_data(response))
+                    counter_data.append(
+                        self.HttpVerificationData(
+                            url=str(url), error=e.__class__.__name__, error_desc=str(e)
+                        ).dict()
+                    )
             _data.append(counter_data)
 
         return VerificationStateData(

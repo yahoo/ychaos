@@ -89,6 +89,12 @@ class HTTPRequestVerification(SchemaModel):
         description="The certificate to be sent for HTTP call. The tuple should contain Certificate and Key File path",
     )
 
+    timeout: int = Field(
+        default=10000,
+        description="Timeout in milliseconds at which the HTTP requests will timeout",
+        gt=0,
+    )
+
     @validator("method", pre=True)
     def validate_method(cls, v):
         if v in cls._http_methods:

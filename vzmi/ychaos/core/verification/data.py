@@ -2,7 +2,7 @@
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 import json
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -24,7 +24,7 @@ class VerificationStateData(BaseModel):
         description="The type of verification plugin that ran to record this state data",
     )
 
-    data: Dict[Any, Any] = Field(
+    data: Union[Dict[Any, Any], List[Any]] = Field(
         default=dict(),
         description="Plugin level data that can be consumed by the respective plugin",
     )

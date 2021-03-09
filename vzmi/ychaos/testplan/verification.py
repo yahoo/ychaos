@@ -1,14 +1,16 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
+import functools
 import shlex
 import sys
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-from pydantic import Field, validator
+from pydantic import AnyHttpUrl, Field, SecretStr, validator
 
 from vzmi.ychaos.testplan import SchemaModel, SystemState
+from vzmi.ychaos.testplan.common import Secret
 from vzmi.ychaos.utils.builtins import AEnum, BuiltinUtils
 
 
@@ -39,6 +41,62 @@ class PythonModuleVerification(SchemaModel):
         return [shlex.quote(x) for x in self.arguments]
 
 
+class HTTPRequestVerification(SchemaModel):
+
+    _http_methods = ("GET", "POST", "HEAD", "PATCH", "DELETE")
+
+    count: int = Field(
+        default=1,
+        description="Number of HTTP calls to be sent to each of the URL",
+        ge=1,
+    )
+    latency: int = Field(
+        default=50,
+        description="Expected Latency in ms. A latency below this value indicates successful verification",
+        ge=1,
+    )
+
+    status_codes: List[int] = Field(
+        default_factory=functools.partial(list, range(200, 300)),
+        description="The list of status code which will be the comparison factor for the HTTP responses",
+    )
+
+    urls: List[AnyHttpUrl] = Field(
+        default=list(), description="List of HTTP/s URLs to be requested"
+    )
+    method: str = Field(default="GET", description="HTTP method to be used")
+    headers: Dict[str, Union[SecretStr, Secret]] = Field(
+        default=dict(), description="Headers to be sent with the request"
+    )
+    params: Dict[str, str] = Field(
+        default=dict(), description="Query params to be sent with the request"
+    )
+    verify: bool = Field(
+        default=True, description="Verify the target URL SSL certificates"
+    )
+
+    # Authentication
+    basic_auth: Optional[Tuple[str, Union[SecretStr, Secret]]] = Field(
+        default=None, description="Basic Auth authentication for the HTTP call"
+    )
+    bearer_token: Optional[Union[SecretStr, Secret]] = Field(
+        default=None, description="Bearer token authentication for the HTTP call"
+    )
+
+    # Certificate
+    cert: Tuple[Path, Path] = Field(
+        default=None,
+        description="The certificate to be sent for HTTP call. The tuple should contain Certificate and Key File path",
+    )
+
+    @validator("method", pre=True)
+    def validate_method(cls, v):
+        if v in cls._http_methods:
+            return v
+        else:
+            raise ValueError("Unknown HTTP method")
+
+
 class VerificationType(AEnum):
     """
     Defines the Type of plugin to be used for verification.
@@ -48,6 +106,7 @@ class VerificationType(AEnum):
     # 1. schema : The Schema class of the VerificationType
 
     PYTHON_MODULE = "python_module", SimpleNamespace(schema=PythonModuleVerification)
+    HTTP_REQUEST = "http_request", SimpleNamespace(schema=HTTPRequestVerification)
 
 
 class VerificationConfig(SchemaModel):

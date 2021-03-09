@@ -12,7 +12,12 @@ class BaseVerificationPlugin:
 
     __verification_type__: str
 
-    def __init__(self, config, state_data: VerificationData, **kwargs):
+    def __init__(
+        self,
+        config,
+        state_data: VerificationData = VerificationData.parse_obj(dict()),
+        **kwargs
+    ):
         self.config = config
         self.state_data = state_data
 

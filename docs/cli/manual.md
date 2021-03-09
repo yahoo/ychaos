@@ -9,7 +9,7 @@ positional arguments:
     testplan            sub command for test plan operations
     manual              Print the manual for YChaos CLI
     agent               ychaos agent CLI
-    verify              Print the manual for YChaos CLI
+    verify              The verification subcommand of YChaos
 
 optional arguments:
   -h, --help            show this help message and exit

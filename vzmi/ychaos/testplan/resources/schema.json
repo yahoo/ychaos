@@ -44,7 +44,8 @@
             "title": "VerificationType",
             "description": "Defines the Type of plugin to be used for verification.",
             "enum": [
-                "python_module"
+                "python_module",
+                "http_request"
             ]
         },
         "VerificationConfig": {

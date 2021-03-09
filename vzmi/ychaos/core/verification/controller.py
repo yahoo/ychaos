@@ -9,6 +9,9 @@ from vzmi.ychaos.core.verification.data import (
     VerificationData,
     VerificationStateData,
 )
+from vzmi.ychaos.core.verification.plugins.HTTPRequestVerificationPlugin import (
+    HTTPRequestVerificationPlugin,
+)
 from vzmi.ychaos.core.verification.plugins.PythonModuleVerificationPlugin import (
     PythonModuleVerificationPlugin,
 )
@@ -18,7 +21,10 @@ from vzmi.ychaos.utils.yaml import Dumper
 
 # Enum value to corresponding Plugin Map
 
-VERIFICATION_PLUGIN_MAP = {"python_module": PythonModuleVerificationPlugin}
+VERIFICATION_PLUGIN_MAP = {
+    "python_module": PythonModuleVerificationPlugin,
+    "http_request": HTTPRequestVerificationPlugin,
+}
 
 
 class VerificationController:

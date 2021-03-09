@@ -1,6 +1,12 @@
 # Changelog
 
-# Next release
+## Next release
+
+1. Add System state verification to YChaos. [#60](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/60) by Shashank Sharma
+
+    - Add Python Module Verification Module.
+    - Add HTTP Verification Plugin. [#65](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/65)
+    - Add `verify` subcommand to YChaos CLI. [#61](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/61)
 
 1. Add Chaos Agent Definition to YChaos.
 [#19](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/19) by Shashank Sharma

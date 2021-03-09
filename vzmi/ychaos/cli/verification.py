@@ -19,7 +19,7 @@ __all__ = ["VerificationCommand"]
 class VerificationCommand(YChaosTestplanInputSubCommand):
 
     name = "verify"
-    help = "Print the manual for YChaos CLI"
+    help = "The verification subcommand of YChaos"
 
     def __init__(self, **kwargs):
         super(VerificationCommand, self).__init__()

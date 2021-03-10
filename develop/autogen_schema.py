@@ -15,15 +15,20 @@ print("Auto Generating Schema...")
 
 PKG_RESOURCES = "vzmi.ychaos.testplan.resources"
 AUTOGEN_SCHEMA_FILE = str(resource_filename(PKG_RESOURCES, "schema.json"))
-DOCS_FILE = "docs/testplan/schema/index.html"
+with open(AUTOGEN_SCHEMA_FILE, "w") as autogen_schema:
+    json.dump(TestPlanSchema.schema(), autogen_schema, indent=4)
+    autogen_schema.write("\n")
 
-with open(AUTOGEN_SCHEMA_FILE, "w") as autoGenSchema:
-    json.dump(TestPlanSchema.schema(), autoGenSchema, indent=4)
-    autoGenSchema.write("\n")
+AUTOGEN_SCHEMA_JS_FILE = "docs/testplan/playground/schema.min.js"
+with open(AUTOGEN_SCHEMA_JS_FILE, "w") as autogen_schema_js:
+    schema_json = TestPlanSchema.schema_json()
+    autogen_schema_js.write(f"testplan_schema={schema_json}")
+    autogen_schema_js.write("\n")
 
 print("Done..")
 
 print("Auto Generating Schema Documentation...")
+DOCS_FILE = "docs/testplan/schema/index.html"
 generate_from_filename(
     AUTOGEN_SCHEMA_FILE, DOCS_FILE, config=GenerationConfiguration(minify=False)
 )

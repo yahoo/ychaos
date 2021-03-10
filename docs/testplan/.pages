@@ -1,5 +1,6 @@
 nav:
     - Test Plan: index.md
     - Schema: testplan/schema
+    - Playground: testplan/playground
     - Target Specification: target_spec.md
 title: Testplan

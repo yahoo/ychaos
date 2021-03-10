@@ -1,0 +1,51 @@
+<!--
+  ~ Copyright 2021, Verizon Media
+  ~ Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
+  -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>YChaos Testplan</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script src="http://cdn.jsdelivr.net/g/filesaver.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/yamljs/0.3.0/yaml.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.min.js"></script>
+	<script src="./schema.min.js"></script>
+</head>
+
+<body style="margin: 1em">
+	<button id="submit-json" class="btn btn-primary">Download Testplan (JSON)</button>
+	<button id="submit-yaml" class="btn btn-primary">Download Testplan (YAML)</button>
+	<div id='editor_holder'></div>
+	<script>
+	const editor = new JSONEditor(document.getElementById('editor_holder'), {
+		ajax: true,
+		theme: 'bootstrap4',
+		schema: testplan_schema,
+		iconlib: "fontawesome4",
+		object_layout: "table",
+		disable_array_delete_last_row: true,
+		remove_button_labels: true
+	});
+	document.getElementById('submit-json').addEventListener('click', function() {
+		const blob = new Blob([JSON.stringify(editor.getValue(), null, 4)], {
+			type: "text/plain;charset=utf-8"
+		});
+		saveAs(blob, "testplan.json");
+	});
+	document.getElementById('submit-yaml').addEventListener('click', function() {
+		const blob = new Blob([YAML.stringify(editor.getValue(), 10, 4)], {
+			type: "text/plain;charset=utf-8"
+		});
+		saveAs(blob, "testplan.yaml");
+	});
+	</script>
+</body>
+
+</html>

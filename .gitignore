@@ -82,7 +82,7 @@ __pycache__/
 
 .idea/
 pip-wheel-metadata/
-venv/
+venv*/
 artifacts/
 site/
 

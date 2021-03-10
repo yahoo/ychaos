@@ -64,8 +64,8 @@ class VerificationController:
                 )
                 state_data = plugin.run_verification()
                 data.replace_data(self.current_state, state_data)
-                _verify_list.append(state_data.rc == 0)
-
+                if verification_plugin.strict:
+                    _verify_list.append(state_data.rc == 0)
             else:
                 data.add_data(self.current_state, None)
 

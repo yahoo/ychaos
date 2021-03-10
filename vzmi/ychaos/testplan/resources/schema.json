@@ -85,6 +85,11 @@
                         }
                     ]
                 },
+                "strict": {
+                    "description": "Setting this value to false implies the overall verification does not fail because of the failure of this test.",
+                    "default": true,
+                    "type": "boolean"
+                },
                 "config": {
                     "description": "The verification type configuration",
                     "type": "object"

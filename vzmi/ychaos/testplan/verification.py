@@ -138,6 +138,14 @@ class VerificationConfig(SchemaModel):
 
     type: VerificationType = Field(..., description="The verification type to be used.")
 
+    strict: bool = Field(
+        default=True,
+        description=(
+            "Setting this value to false implies the overall verification"
+            " does not fail because of the failure of this test."
+        ),
+    )
+
     config: Dict[str, Any] = Field(
         ..., description="The verification type configuration"
     )

@@ -161,3 +161,30 @@ class TestVerificationCommand(TestCase):
         args.app = app
 
         self.assertEqual(1, args.cls.main(args))
+
+    def test_verification_for_valid_test_plan_with_invalid_plugin_path_when_not_strict(
+        self,
+    ):
+        args = Namespace()
+        args.cls = self.cls
+
+        temp_testplan_file = NamedTemporaryFile("w+")
+        testplan = TestPlan.load_file(
+            self.testplans_directory.joinpath("valid/testplan1.yaml")
+        )
+        testplan.verification[0].strict = False
+        testplan.export_to_file(temp_testplan_file.name)
+
+        # Required Arguments for VerificationCommand
+        args.testplan = temp_testplan_file.name
+        args.state = "steady"
+
+        # Create a Mocked CLI App
+        app = MockApp(args)
+        args.app = app
+
+        self.assertEqual(0, args.cls.main(args))
+
+        self.assertTrue(
+            "The system is verified to be in steady state" in app.get_console_output()
+        )

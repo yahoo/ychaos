@@ -1,7 +1,7 @@
 version: 4
 shared:
     settings:
-        slack: ['pythonbuildstatus']
+        slack: ['resilience-alerts']
     environment:
         # Filename to contain the generated changelog, the default puts the file in the [docs](docs) directory
         # used by the mkdocs utility.
@@ -62,8 +62,6 @@ jobs:
             TOX_ARGS: --parallel all
             SD_COVERAGE_PLUGIN_ENABLED: true
         requires: [~pr, ~commit]
-        steps:
-            - poststore_artifacts: python3 screwdriver/coverage_status.py
 
     type_validation:
         environment:

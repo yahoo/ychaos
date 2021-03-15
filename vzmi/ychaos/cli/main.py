@@ -5,10 +5,11 @@ import sys
 from argparse import ArgumentParser, Namespace
 from collections import OrderedDict
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Union
+from typing import Any, Dict, Iterable, List, Optional, Union
 
 from vzmi.ychaos import __version__
 from vzmi.ychaos.app_logger import AppLogger
+from vzmi.ychaos.cli import YChaosSubCommand
 from vzmi.ychaos.cli.agentcli.main import AgentCLI
 from vzmi.ychaos.cli.exceptions import YChaosCLIError
 from vzmi.ychaos.cli.manual import Manual
@@ -144,6 +145,9 @@ class YChaos:
 
         args = ychaos_cli.parse_args(program_arguments)
 
+        if not hasattr(args, "cls"):
+            args.cls = YChaosRoot
+
         args.app = App(args, ychaos_cli)
 
         # Start the Application
@@ -186,10 +190,10 @@ class App:
             style="magenta",
         )
 
-        self.print_cli_configuration()
-        self.console.line()
-
-        self.console.log("Starting app")
+        if self.args.cls != YChaosRoot:
+            self.print_cli_configuration()
+            self.console.line()
+            self.console.log("Starting app")
 
     def get_command_tree(self) -> List[str]:
         """
@@ -280,12 +284,13 @@ class App:
         self.console.print_exception(extra_lines=2)
 
     def teardown(self, exitcode: int) -> None:
-        self.console.line()
-        self.console.log(f"Exiting with exitcode={exitcode}")
-        self.console.rule(
-            title=":sunny:",
-            style="magenta",
-        )
+        if self.args.cls != YChaosRoot:
+            self.console.line()
+            self.console.log(f"Exiting with exitcode={exitcode}")
+            self.console.rule(
+                title=":sunny:",
+                style="magenta",
+            )
 
         # Save Reports
         if self.args.text_report:
@@ -293,6 +298,17 @@ class App:
 
         if self.args.html_report:
             self.console.save_html(self.args.html_report)
+
+
+class YChaosRoot(YChaosSubCommand):
+    """
+    The YChaos root command. This class is invoked when the ychaos
+    cli is invoked without any subcommands
+    """
+
+    @classmethod
+    def main(cls, args: Namespace) -> Any:  # pragma: no cover
+        return 0
 
 
 # This is where it all started..

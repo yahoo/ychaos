@@ -13,6 +13,12 @@ class TestYChaosCLI(TestCase):
 
         self.assertEqual(0, _exit.exception.code)
 
+    def test_ychaos_cli_for_no_subcommand(self):
+        with self.assertRaises(SystemExit) as _exit:
+            YChaos.main([])
+
+        self.assertEqual(0, _exit.exception.code)
+
     def test_ychaos_cli_complex_command(self):
         ychaos_command = "ychaos testplan validate tests/resources/testplans/valid/ tests/resources/testplans/valid/testplan4.json"
         with self.assertRaises(SystemExit) as _exit:

@@ -16,7 +16,10 @@ the required dependencies of the project.
 | pydantic             | [LINK](https://github.com/samuelcolvin/pydantic) | MIT                 | [LINK](https://github.com/samuelcolvin/pydantic/blob/master/LICENSE) |
 | rich                 | [LINK](https://github.com/willmcgugan/rich)      | MIT                 | [LINK](https://github.com/willmcgugan/rich/blob/master/LICENSE)      |
 | pyyaml               | [LINK](https://github.com/yaml/pyyaml)           | MIT                 | [LINK](https://github.com/yaml/pyyaml/blob/master/LICENSE)           |
-| psutil               | [LINK](https://github.com/giampaolo/psutil)      | BSD-3-Clause License| [LINK](https://github.com/giampaolo/psutil/blob/master/LICENSE)
+| psutil  *            | [LINK](https://github.com/giampaolo/psutil)      | BSD-3-Clause        | [LINK](https://github.com/giampaolo/psutil/blob/master/LICENSE)
+| pyOpenSSL *          | [LINK](https://github.com/pyca/pyopenssl)        | Apache 2.0          | [LINK](https://github.com/pyca/pyopenssl/blob/main/LICENSE)
+
+^* Optional dependencies
 
 ----
 
@@ -43,10 +46,10 @@ directory,
 
 | Project Dependencies | Project Link                                    | License Type         | License URL                                                         |
 | -------------------- | ----------------------------------------------- | -------------------- | ------------------------------------------------------------------- |
-| callee               | [LINK](https://github.com/Xion/callee)          | BSD-3-Clause         | [LINK](https://github.com/Xion/callee/blob/master/LICENSE)          |
 | mockito              | [LINK](https://github.com/kaste/mockito-python) | MIT                  | [LINK](https://github.com/kaste/mockito-python/blob/master/LICENSE) |
 | pytest               | [LINK](https://github.com/pytest-dev/pytest)    | MIT                  | [LINK](https://github.com/pytest-dev/pytest/blob/master/LICENSE)    |
 | pytest-cov           | [LINK](https://github.com/pytest-dev/pytest-cov)| MIT                  | [LINK](https://github.com/pytest-dev/pytest-cov/blob/master/LICENSE)|
+| cryptography         | [LINK](https://github.com/pyca/cryptography)    | Apache/BSD           | [LINK](https://github.com/pyca/cryptography/blob/main/LICENSE)      |
 
 ### Code styling and validation
 
@@ -65,8 +68,10 @@ directory,
 
 ## Documentation build/publish dependencies
 
-| Project Dependencies | Project Link                                           | License Type | License URL                                                                   |
-| -------------------- | ------------------------------------------------------ | ------------ | ----------------------------------------------------------------------------- |
-| mkdocs               | [LINK](https://github.com/mkdocs/mkdocs)               | BSD-2-Clause | [LINK](https://github.com/mkdocs/mkdocs/blob/master/LICENSE)                  |
-| mkdocs-material      | [LINK](https://github.com/squidfunk/mkdocs-material/)  | MIT          | [LINK](https://github.com/squidfunk/mkdocs-material/blob/master/LICENSE)      |
-| mkdocs-macros-plugin | [LINK](https://github.com/fralau/mkdocs_macros_plugin) | MIT          | [LINK](https://github.com/fralau/mkdocs_macros_plugin/blob/master/LICENSE.md) |
+| Project Dependencies          | Project Link                                                          | License Type | License URL                                                                                |
+| --------------------          | ------------------------------------------------------                | ------------ | -----------------------------------------------------------------------------              |
+| mkdocs                        | [LINK](https://github.com/mkdocs/mkdocs)                              | BSD-2-Clause | [LINK](https://github.com/mkdocs/mkdocs/blob/master/LICENSE)                               |
+| mkdocs-material               | [LINK](https://github.com/squidfunk/mkdocs-material/)                 | MIT          | [LINK](https://github.com/squidfunk/mkdocs-material/blob/master/LICENSE)                   |
+| mkdocs-macros-plugin          | [LINK](https://github.com/fralau/mkdocs_macros_plugin)                | MIT          | [LINK](https://github.com/fralau/mkdocs_macros_plugin/blob/master/LICENSE.md)              |
+| mkdocs-awesome-pages-plugin   | [LINK](https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin)    | MIT          | [LINK](https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin/blob/master/LICENSE.md)  |
+| mike                          | [LINK](https://github.com/jimporter/mike)                             | BSD-3-Clause | [LINK](https://github.com/jimporter/mike)

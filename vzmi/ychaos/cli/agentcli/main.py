@@ -4,24 +4,19 @@
 from argparse import ArgumentParser, Namespace
 
 from vzmi.ychaos.cli import YChaosSubCommand
-from vzmi.ychaos.cli.agentcli.attack import AttackCommand
+from vzmi.ychaos.cli.agentcli.attack import Attack
 from vzmi.ychaos.utils.argparse import SubCommandParsersAction
 from vzmi.ychaos.utils.dependency import DependencyUtils
 
 (Console,) = DependencyUtils.import_from("rich.console", ("Console",))
 
-__all__ = ["AgentCLI"]
+__all__ = ["Agent"]
 
 
-class AgentCLI(YChaosSubCommand):
+class Agent(YChaosSubCommand):
     """
-    Agent subcommand
-
-    usage: ychaos agent {attack}
-
-    optional arguments:
-        attack - To perform Attack
-
+    The Agent subcommand used to operate on YChaos agents. Most of the subcommands
+    under `agent` requires testplan.
     """
 
     name = "agent"
@@ -33,9 +28,7 @@ class AgentCLI(YChaosSubCommand):
             action=SubCommandParsersAction, dest=f"_cmd.{cls.name}"
         )
 
-        test_plan_command_subparser.add_parser(
-            name=AttackCommand.name, cls=AttackCommand
-        )
+        test_plan_command_subparser.add_parser(name=Attack.name, cls=Attack)
         return parser
 
     @classmethod

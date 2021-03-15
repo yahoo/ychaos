@@ -2,7 +2,7 @@
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 
 import sys
-from argparse import ArgumentParser, Namespace
+from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser, Namespace
 from collections import OrderedDict
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Union
@@ -10,11 +10,11 @@ from typing import Any, Dict, Iterable, List, Optional, Union
 from vzmi.ychaos import __version__
 from vzmi.ychaos.app_logger import AppLogger
 from vzmi.ychaos.cli import YChaosSubCommand
-from vzmi.ychaos.cli.agentcli.main import AgentCLI
+from vzmi.ychaos.cli.agentcli.main import Agent
 from vzmi.ychaos.cli.exceptions import YChaosCLIError
 from vzmi.ychaos.cli.manual import Manual
 from vzmi.ychaos.cli.testplan import TestPlan
-from vzmi.ychaos.cli.verification import VerificationCommand
+from vzmi.ychaos.cli.verification import Verification
 from vzmi.ychaos.settings import (
     ApplicationSettings,
     DevSettings,
@@ -76,7 +76,9 @@ class YChaos:
         Returns:
             None
         """
-        ychaos_cli = ArgumentParser(prog=cls.settings.PROG)
+        ychaos_cli = ArgumentParser(
+            prog=cls.settings.PROG, formatter_class=ArgumentDefaultsHelpFormatter
+        )
 
         # YChaos CLI version
         ychaos_cli.add_argument(
@@ -111,6 +113,7 @@ class YChaos:
             choices=["dev", "prod"],
             default="prod",
             help="Set YChaos CLI configuration (prod)",
+            metavar="config",
         )
 
         # Arguments for creating HTML & Text Reports
@@ -121,6 +124,7 @@ class YChaos:
             default=None,
             required=False,
             help="Generate a text report from the YChaos execution",
+            metavar="path",
         )
         report_argument_group.add_argument(
             "--html-report",
@@ -128,6 +132,7 @@ class YChaos:
             default=None,
             required=False,
             help="Generate a HTML report from YChaos execution",
+            metavar="path",
         )
 
         ychaos_cli_subparsers = ychaos_cli.add_subparsers(
@@ -138,10 +143,8 @@ class YChaos:
         # Subcommands
         ychaos_cli_subparsers.add_parser(cls=TestPlan, name=TestPlan.name)
         ychaos_cli_subparsers.add_parser(cls=Manual, name=Manual.name)
-        ychaos_cli_subparsers.add_parser(cls=AgentCLI, name=AgentCLI.name)
-        ychaos_cli_subparsers.add_parser(
-            cls=VerificationCommand, name=VerificationCommand.name
-        )
+        ychaos_cli_subparsers.add_parser(cls=Agent, name=Agent.name)
+        ychaos_cli_subparsers.add_parser(cls=Verification, name=Verification.name)
 
         args = ychaos_cli.parse_args(program_arguments)
 

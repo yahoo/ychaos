@@ -21,20 +21,7 @@ class TestPlanValidatorCommand(YChaosSubCommand):
     """
     Test plan validator subcommand is used to validate whether the testplan
     files adheres to the YChaos Test plan schema.
-
-    ```
-    $ ychaos testplan validate -h
-    usage: ychaos testplan validate [-h] paths [paths ...]
-
-    positional arguments:
-      paths       Space separated list of file/directory paths to validate
-
-    optional arguments:
-      -h, --help  show this help message and exit
-    ```
     """
-
-    __test__ = False
 
     name = "validate"
     help = "Validate YChaos Test plans"
@@ -46,6 +33,7 @@ class TestPlanValidatorCommand(YChaosSubCommand):
             type=Path,
             nargs="+",
             help="Space separated list of file/directory paths to validate",
+            metavar="path",
         )
 
         return parser

@@ -38,6 +38,7 @@ class YChaosTestplanInputSubCommand(YChaosSubCommand, ABC):
             type=Path,
             required=True,
             help="The testplan path. This can be relative path from where the CLI is initiated",
+            metavar="path",
         )
 
         return parser

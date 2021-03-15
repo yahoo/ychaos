@@ -4,13 +4,13 @@ from argparse import Namespace
 from pathlib import Path
 from unittest import TestCase
 
-from vzmi.ychaos.cli.agentcli.attack import AttackCommand
+from vzmi.ychaos.cli.agentcli.attack import Attack
 from vzmi.ychaos.cli.mock import MockApp
 
 
 class TestAgentAttackCLI(TestCase):
 
-    cls = AttackCommand
+    cls = Attack
 
     def setUp(self) -> None:
         self.test_plans_directory = (

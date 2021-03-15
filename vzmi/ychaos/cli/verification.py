@@ -13,16 +13,21 @@ from vzmi.ychaos.utils.dependency import DependencyUtils
 (Console,) = DependencyUtils.import_from("rich.console", ("Console",))
 (Markdown,) = DependencyUtils.import_from("rich.markdown", ("Markdown",))
 
-__all__ = ["VerificationCommand"]
+__all__ = ["Verification"]
 
 
-class VerificationCommand(YChaosTestplanInputSubCommand):
+class Verification(YChaosTestplanInputSubCommand):
+    """
+    The `verify` subcommand of YChaos is used to verify the state of the system. This
+    subcommand requires a valid testplan which can be provided with the -t/--testplan argument.
+    The subcommand also requires a valid state at which the system is verified.
+    """
 
     name = "verify"
     help = "The verification subcommand of YChaos"
 
     def __init__(self, **kwargs):
-        super(VerificationCommand, self).__init__()
+        super(Verification, self).__init__()
         assert kwargs.pop("cls") == self.__class__
 
         self.app = kwargs.pop("app")
@@ -38,27 +43,31 @@ class VerificationCommand(YChaosTestplanInputSubCommand):
 
     @classmethod
     def build_parser(cls, parser: ArgumentParser) -> ArgumentParser:
-        parser = super(VerificationCommand, cls).build_parser(parser)
+        parser = super(Verification, cls).build_parser(parser)
         parser.add_argument(
             "-s",
             "--state",
             choices=[x.value.lower() for x in list(SystemState)],
             help="System state to verify",
-            required=True,
+            default="steady",
+            metavar="state",
         )
 
-        parser.add_argument(
+        report_argument_group = parser.add_argument_group("verification reports")
+        report_argument_group.add_argument(
             "--dump-yaml",
             type=Path,
             help="Store the verification data in YAML format",
             required=False,
+            metavar="path",
         )
 
-        parser.add_argument(
+        report_argument_group.add_argument(
             "--dump-json",
             type=Path,
             help="Store the verification data in JSON format",
             required=False,
+            metavar="path",
         )
 
         parser.add_argument(
@@ -66,6 +75,7 @@ class VerificationCommand(YChaosTestplanInputSubCommand):
             type=Path,
             help="The path of the verification data state file (JSON/YAML)",
             required=False,
+            metavar="path",
         )
 
         return parser
@@ -147,7 +157,7 @@ class VerificationCommand(YChaosTestplanInputSubCommand):
 
     @classmethod
     def main(cls, args: Namespace) -> Any:  # pragma: no cover
-        verification_command = VerificationCommand(**vars(args))
+        verification_command = Verification(**vars(args))
 
         verification_command.verify_system_state()
 

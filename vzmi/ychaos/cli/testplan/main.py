@@ -13,20 +13,8 @@ __all__ = ["TestPlan"]
 
 class TestPlan(YChaosSubCommand):
     """
-    The testplan subcommand. Provides commands to operate on testplan.
+    The testplan sub-command. Provides commands to operate on testplan.
     See Testplan documentation for more details.
-
-    ```
-    $ ychaos testplan -h
-    usage: ychaos testplan [-h] {validate} ...
-
-    positional arguments:
-      {validate}
-        validate  Validate YChaos Test plans
-
-    optional arguments:
-      -h, --help  show this help message and exit
-    ```
     """
 
     name = "testplan"

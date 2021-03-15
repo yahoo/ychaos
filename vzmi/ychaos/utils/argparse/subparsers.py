@@ -3,6 +3,7 @@
 
 from abc import ABC, abstractmethod
 from argparse import (
+    ArgumentDefaultsHelpFormatter,
     ArgumentError,
     ArgumentParser,
     Namespace,
@@ -71,6 +72,8 @@ class SubCommandParsersAction(_SubParsersAction):
         aliases.extend(cls.aliases)
         kwargs.update(dict(aliases=aliases))
         kwargs.setdefault("help", cls.help)
+        kwargs.setdefault("epilog", cls.epilog)
+        kwargs.setdefault("formatter_class", ArgumentDefaultsHelpFormatter)
 
         parser = super(SubCommandParsersAction, self).add_parser(_name, **kwargs)
 
@@ -96,6 +99,7 @@ class SubCommand(ABC):
     name: Optional[str] = None
     help: Optional[str] = None
     aliases: List[str] = list()
+    epilog: Optional[str] = None
 
     @classmethod
     def build_parser(cls, parser: ArgumentParser) -> ArgumentParser:

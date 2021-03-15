@@ -12,26 +12,21 @@ from vzmi.ychaos.utils.dependency import DependencyUtils
 
 (Console,) = DependencyUtils.import_from("rich.console", ("Console",))
 
-__all__ = ["AttackCommand"]
+__all__ = ["Attack"]
 
 
-class AttackCommand(YChaosTestplanInputSubCommand):
+class Attack(YChaosTestplanInputSubCommand):
     """
-    Attack subcommand is used to perform the attack on the host
-
-    usage: ychaos agent attack --testplan file_path
-
-    arguments:
-    -h --help       show this help message and exit
-    -t --testplan   file path which contains testplan
-
+    Agent Attack subcommand is used to perform the attack on the target. This
+    subcommand requires a valid testplan to perforrm the required attack on
+    the target system.
     """
 
     name = "attack"
-    help = "ychaos agent attack CLI"
+    help = "YChaos Agent Attack Subcommand"
 
     def __init__(self, **kwargs):
-        super(AttackCommand, self).__init__(**kwargs)
+        super(Attack, self).__init__(**kwargs)
         assert kwargs.pop("cls") == self.__class__
         self.app = kwargs.pop("app")
         self.console: Console = self.app.console
@@ -42,14 +37,14 @@ class AttackCommand(YChaosTestplanInputSubCommand):
         coordinator = Coordinator(self.test_plan)
 
     def validate_and_load_test_plan(self) -> int:
-        self.test_plan = super(AttackCommand, self).get_validated_test_plan(
+        self.test_plan = super(Attack, self).get_validated_test_plan(
             self.test_plan_path
         )
         return self._exitcode
 
     @classmethod
     def main(cls, args: Namespace):
-        agent = AttackCommand(**vars(args))
+        agent = Attack(**vars(args))
         if not agent.validate_and_load_test_plan():
             agent.start_attack()
         return agent._exitcode

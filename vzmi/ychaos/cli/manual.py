@@ -21,15 +21,6 @@ class Manual(YChaosSubCommand):
     auto-generate Markdown docs for the YChaos CLI by passing the `-f/--file`
     argument. In case, a file is not passed, the markdown is printed on
     the console.
-
-    ```
-    $ ychaos manual -h
-    usage: ychaos manual [-h] [-f FILE]
-
-    optional arguments:
-      -h, --help            show this help message and exit
-      -f FILE, --file FILE  Print YChaos CLI Manual to a file
-    ```
     """
 
     name = "manual"
@@ -52,6 +43,7 @@ class Manual(YChaosSubCommand):
             type=Path,
             help="Print YChaos CLI Manual to a file",
             required=False,
+            metavar="path",
         )
 
         return parser

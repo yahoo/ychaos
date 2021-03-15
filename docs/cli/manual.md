@@ -1,7 +1,7 @@
 # ychaos
 ```
-usage: ychaos [-h] [-v] [-V] [--debug] [-c {dev,prod}]
-              [--text-report TEXT_REPORT] [--html-report HTML_REPORT]
+usage: ychaos [-h] [-v] [-V] [--debug] [-c config] [--text-report path]
+              [--html-report path]
               {testplan,manual,agent,verify} ...
 
 positional arguments:
@@ -14,18 +14,18 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -v, --version         show program's version number and exit
-  -c {dev,prod}, --config {dev,prod}
-                        Set YChaos CLI configuration (prod)
+  -c config, --config config
+                        Set YChaos CLI configuration (prod) (default: prod)
 
 verbosity:
-  -V, --verbose         Increase verbosity of logs (INFO)
-  --debug               Enable debug mode
+  -V, --verbose         Increase verbosity of logs (INFO) (default: 0)
+  --debug               Enable debug mode (default: False)
 
 reports:
-  --text-report TEXT_REPORT
-                        Generate a text report from the YChaos execution
-  --html-report HTML_REPORT
-                        Generate a HTML report from YChaos execution
+  --text-report path    Generate a text report from the YChaos execution
+                        (default: None)
+  --html-report path    Generate a HTML report from YChaos execution (default:
+                        None)
 
 ```
 ## ychaos testplan
@@ -42,10 +42,10 @@ optional arguments:
 ```
 ### ychaos testplan validate
 ```
-usage: ychaos testplan validate [-h] paths [paths ...]
+usage: ychaos testplan validate [-h] path [path ...]
 
 positional arguments:
-  paths       Space separated list of file/directory paths to validate
+  path        Space separated list of file/directory paths to validate
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -53,11 +53,11 @@ optional arguments:
 ```
 ## ychaos manual
 ```
-usage: ychaos manual [-h] [-f FILE]
+usage: ychaos manual [-h] [-f path]
 
 optional arguments:
   -h, --help            show this help message and exit
-  -f FILE, --file FILE  Print YChaos CLI Manual to a file
+  -f path, --file path  Print YChaos CLI Manual to a file (default: None)
 
 ```
 ## ychaos agent
@@ -66,7 +66,7 @@ usage: ychaos agent [-h] {attack} ...
 
 positional arguments:
   {attack}
-    attack    ychaos agent attack CLI
+    attack    YChaos Agent Attack Subcommand
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -74,34 +74,34 @@ optional arguments:
 ```
 ### ychaos agent attack
 ```
-usage: ychaos agent attack [-h] -t TESTPLAN
+usage: ychaos agent attack [-h] -t path
 
 optional arguments:
   -h, --help            show this help message and exit
-  -t TESTPLAN, --testplan TESTPLAN
+  -t path, --testplan path
                         The testplan path. This can be relative path from
-                        where the CLI is initiated
+                        where the CLI is initiated (default: None)
 
 ```
 ## ychaos verify
 ```
-usage: ychaos verify [-h] -t TESTPLAN -s {steady,chaos,recovered}
-                     [--dump-yaml DUMP_YAML] [--dump-json DUMP_JSON]
-                     [--state-data STATE_DATA]
+usage: ychaos verify [-h] -t path [-s state] [--dump-yaml path]
+                     [--dump-json path] [--state-data path]
 
 optional arguments:
   -h, --help            show this help message and exit
-  -t TESTPLAN, --testplan TESTPLAN
+  -t path, --testplan path
                         The testplan path. This can be relative path from
-                        where the CLI is initiated
-  -s {steady,chaos,recovered}, --state {steady,chaos,recovered}
-                        System state to verify
-  --dump-yaml DUMP_YAML
-                        Store the verification data in YAML format
-  --dump-json DUMP_JSON
-                        Store the verification data in JSON format
-  --state-data STATE_DATA
-                        The path of the verification data state file
-                        (JSON/YAML)
+                        where the CLI is initiated (default: None)
+  -s state, --state state
+                        System state to verify (default: steady)
+  --state-data path     The path of the verification data state file
+                        (JSON/YAML) (default: None)
+
+verification reports:
+  --dump-yaml path      Store the verification data in YAML format (default:
+                        None)
+  --dump-json path      Store the verification data in JSON format (default:
+                        None)
 
 ```

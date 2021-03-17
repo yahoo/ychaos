@@ -45,7 +45,8 @@
             "description": "Defines the Type of plugin to be used for verification.",
             "enum": [
                 "python_module",
-                "http_request"
+                "http_request",
+                "sdv4"
             ]
         },
         "VerificationConfig": {

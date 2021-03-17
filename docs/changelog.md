@@ -7,6 +7,7 @@
     - Add Python Module Verification Module.
     - Add HTTP Verification Plugin. [#65](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/65)
     - Add `verify` subcommand to YChaos CLI. [#61](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/61)
+    - Add Screwdriver job verification to YChaos (Beta). [#71](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/71)
 
 1. Add Chaos Agent Definition to YChaos.
 [#19](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/19) by Shashank Sharma

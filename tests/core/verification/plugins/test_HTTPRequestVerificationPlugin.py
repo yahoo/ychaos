@@ -3,7 +3,7 @@
 from unittest import TestCase
 
 import requests
-from mockito import when, mock
+from mockito import when, mock, unstub
 from requests import Response
 
 from vzmi.ychaos.core.verification.plugins.HTTPRequestVerificationPlugin import (
@@ -132,3 +132,6 @@ class TestHTTPVerificationPlugin(TestCase):
                 error_desc="",
             ),
         )
+
+    def tearDown(self) -> None:
+        unstub()

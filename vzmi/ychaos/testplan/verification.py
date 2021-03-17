@@ -103,6 +103,26 @@ class HTTPRequestVerification(SchemaModel):
             raise ValueError("Unknown HTTP method")
 
 
+class SDv4Verification(SchemaModel):
+    pipeline_id: int = Field(
+        ..., description="SDv4 pipeline ID", examples=[123456, 1041241]
+    )
+
+    job_name: str = Field(
+        ...,
+        description="Job name in the pipeline",
+        examples=["test_validation", "state_verification"],
+    )
+
+    sd_api_url: AnyHttpUrl = Field(..., description="SDv4 API URL")
+    sd_api_token: Union[SecretStr, Secret] = Field(
+        ...,
+        description="The Screwdriver pipeline/user access token to be able to start the jon in the pipeline",
+    )
+
+    job_timeout: int = Field(default=3600, description="Job Timeout in seconds")
+
+
 class VerificationType(AEnum):
     """
     Defines the Type of plugin to be used for verification.
@@ -113,6 +133,7 @@ class VerificationType(AEnum):
 
     PYTHON_MODULE = "python_module", SimpleNamespace(schema=PythonModuleVerification)
     HTTP_REQUEST = "http_request", SimpleNamespace(schema=HTTPRequestVerification)
+    SDV4_VERIFICATION = "sdv4", SimpleNamespace(schema=SDv4Verification)
 
 
 class VerificationConfig(SchemaModel):

@@ -5,6 +5,7 @@ from typing import Dict, List, Optional
 
 from pydantic import validate_arguments
 
+from vzmi.ychaos.app_logger import AppLogger
 from vzmi.ychaos.core.verification.data import (
     VerificationData,
     VerificationStateData,
@@ -15,6 +16,9 @@ from vzmi.ychaos.core.verification.plugins.HTTPRequestVerificationPlugin import 
 from vzmi.ychaos.core.verification.plugins.PythonModuleVerificationPlugin import (
     PythonModuleVerificationPlugin,
 )
+from vzmi.ychaos.core.verification.plugins.SDv4VerificationPlugin import (
+    SDv4VerificationPlugin,
+)
 from vzmi.ychaos.testplan import SystemState
 from vzmi.ychaos.testplan.schema import TestPlan
 from vzmi.ychaos.utils.yaml import Dumper
@@ -24,6 +28,7 @@ from vzmi.ychaos.utils.yaml import Dumper
 VERIFICATION_PLUGIN_MAP = {
     "python_module": PythonModuleVerificationPlugin,
     "http_request": HTTPRequestVerificationPlugin,
+    "sdv4": SDv4VerificationPlugin,
 }
 
 
@@ -35,6 +40,9 @@ class VerificationController:
         current_state: SystemState,
         verification_data: List[Dict[SystemState, Optional[VerificationStateData]]],
     ):
+        self.logger = AppLogger.get_logger(self.__class__.__name__)
+        self.logger.bind(event="controller")
+
         self.testplan = testplan
         self.current_state = current_state
 
@@ -59,10 +67,16 @@ class VerificationController:
             time.sleep(verification_plugin.delay_before)
 
             if self.current_state in verification_plugin.states:
+                self.logger.info(
+                    msg=f"Starting {verification_plugin.type.value} verification"
+                )
                 plugin = VERIFICATION_PLUGIN_MAP.get(verification_plugin.type.value)(
                     verification_plugin.config, data
                 )
                 state_data = plugin.run_verification()
+                self.logger.info(
+                    msg=f"Completed {verification_plugin.type.value} verification"
+                )
                 data.replace_data(self.current_state, state_data)
                 if verification_plugin.strict:
                     _verify_list.append(state_data.rc == 0)

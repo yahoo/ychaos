@@ -123,7 +123,7 @@ class Verification(YChaosTestplanInputSubCommand):
             testplan, self.state, state_data
         )
 
-        self.console.log(f"Running {self.state.value.lower()} state verification")
+        self.console.log(f"Running {self.state.value.lower()} state verification..")
         is_verified = verification_controller.execute()
 
         self.set_exitcode(int(not is_verified))

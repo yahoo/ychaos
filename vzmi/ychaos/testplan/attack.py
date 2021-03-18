@@ -2,6 +2,7 @@
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 import getpass
 import re
+from enum import Enum
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Union
@@ -174,6 +175,15 @@ class TargetType(AEnum):
     # Registers some virtual machines, Baremetals etc.
 
 
+class AttackMode(Enum):
+    """
+    Defines the type of execution mode for executing the configured Agents
+    """
+
+    CONCURRENT = "concurrent"
+    SEQUENTIAL = "sequential"
+
+
 class AgentExecutionConfig(SchemaModel):
 
     type: AgentType = Field(
@@ -218,6 +228,11 @@ class AttackConfig(SchemaModel):
             "Defines the targets for running the agents."
             "This can be set to null to imply that the framework should run all the agents within the same system where the executor has been invoked"
         ),
+    )
+
+    mode: AttackMode = Field(
+        default=AttackMode.SEQUENTIAL,
+        description="Define the execution mode for the attack",
     )
 
     agents: List[AgentExecutionConfig] = Field(

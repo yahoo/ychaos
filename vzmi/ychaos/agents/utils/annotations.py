@@ -13,7 +13,7 @@ def log_agent_lifecycle(func):
             event="agents.lifecycle.start",
             agent=agent.config.name,
             method=func.__name__,
-            state=agent.current_state,
+            state=agent.current_state.name,
         )
         try:
             _return_val = func(*args, **kwargs)
@@ -24,7 +24,7 @@ def log_agent_lifecycle(func):
                 event="agents.lifecycle.end",
                 agent=agent.config.name,
                 method=func.__name__,
-                state=agent.current_state,
+                state=agent.current_state.name,
             )
         return _return_val
 

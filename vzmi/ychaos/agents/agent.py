@@ -18,6 +18,7 @@ from vzmi.ychaos.utils.builtins import BuiltinUtils
 
 
 class AgentState(IntEnum):
+    SKIPPED = -3
     ABORTED = -2
     ERROR = -1
     UNDEFINED = 0
@@ -26,6 +27,7 @@ class AgentState(IntEnum):
     RUNNING = 3
     COMPLETED = 4
     TEARDOWN = 5
+    DONE = 6
 
 
 class AgentPriority(IntEnum):
@@ -74,6 +76,10 @@ class AgentConfig(BaseModel):
         default=True, description="Raise error on state mismatch"
     )
 
+    start_delay: int = Field(
+        default=10, description="Give a delay of few seconds before running this agent"
+    )
+
     def get_agent(self):
         """
         The Fallback factory method to use where the Agent
@@ -92,10 +98,6 @@ class TimedAgentConfig(AgentConfig):
     duration: int = Field(
         default=300,
         description="The duration for which this agent should run",
-    )
-
-    start_delay: int = Field(
-        default=10, description="Give a delay of some seconds before running this agent"
     )
 
 
@@ -135,7 +137,7 @@ class Agent(ABC):
         self._status = LifoQueue()
         self._state_history = list()
 
-        self.preserved_state = SimpleNamespace()
+        self.preserved_state = SimpleNamespace(has_error=False, is_aborted=False)
         self.advance_state(AgentState.INIT)
 
     @abstractmethod
@@ -285,9 +287,12 @@ class Agent(ABC):
             self.run()
         except Exception as e:
             self.exception.put(e)
+            self.advance_state(AgentState.ERROR)
 
     def __teardown_exc_wrapper(self):
         try:
             self.teardown()
+            self.advance_state(AgentState.DONE)
         except Exception as e:
             self.exception.put(e)
+            self.advance_state(AgentState.ERROR)

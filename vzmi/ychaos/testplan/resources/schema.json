@@ -110,6 +110,14 @@
                 "machine"
             ]
         },
+        "AttackMode": {
+            "title": "AttackMode",
+            "description": "Defines the type of execution mode for executing the configured Agents",
+            "enum": [
+                "concurrent",
+                "sequential"
+            ]
+        },
         "AgentType": {
             "title": "AgentType",
             "description": "An enumeration.",
@@ -172,6 +180,15 @@
                     "description": "Defines the targets for running the agents.This can be set to null to imply that the framework should run all the agents within the same system where the executor has been invoked",
                     "default": {},
                     "type": "object"
+                },
+                "mode": {
+                    "description": "Define the execution mode for the attack",
+                    "default": "sequential",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/AttackMode"
+                        }
+                    ]
                 },
                 "agents": {
                     "description": "List of agents to be executed on the Target. Each of the item of execution configuration will infer a type of agent and a configuration of the agent",

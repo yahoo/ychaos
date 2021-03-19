@@ -44,12 +44,13 @@ directory,
 
 ### Unittest
 
-| Project Dependencies | Project Link                                    | License Type         | License URL                                                         |
-| -------------------- | ----------------------------------------------- | -------------------- | ------------------------------------------------------------------- |
-| mockito              | [LINK](https://github.com/kaste/mockito-python) | MIT                  | [LINK](https://github.com/kaste/mockito-python/blob/master/LICENSE) |
-| pytest               | [LINK](https://github.com/pytest-dev/pytest)    | MIT                  | [LINK](https://github.com/pytest-dev/pytest/blob/master/LICENSE)    |
-| pytest-cov           | [LINK](https://github.com/pytest-dev/pytest-cov)| MIT                  | [LINK](https://github.com/pytest-dev/pytest-cov/blob/master/LICENSE)|
-| cryptography         | [LINK](https://github.com/pyca/cryptography)    | Apache/BSD           | [LINK](https://github.com/pyca/cryptography/blob/main/LICENSE)      |
+| Project Dependencies | Project Link                                           | License Type         | License URL                                                                |
+| -------------------- | -----------------------------------------------        | -------------------- | -------------------------------------------------------------------        |
+| mockito              | [LINK](https://github.com/kaste/mockito-python)        | MIT                  | [LINK](https://github.com/kaste/mockito-python/blob/master/LICENSE)        |
+| pytest               | [LINK](https://github.com/pytest-dev/pytest)           | MIT                  | [LINK](https://github.com/pytest-dev/pytest/blob/master/LICENSE)           |
+| pytest-cov           | [LINK](https://github.com/pytest-dev/pytest-cov)       | MIT                  | [LINK](https://github.com/pytest-dev/pytest-cov/blob/master/LICENSE)       |
+| pytest-timeout       | [LINK](https://github.com/pytest-dev/pytest-timeout)   | MIT                  | [LINK](https://github.com/pytest-dev/pytest-timeout/blob/master/LICENSE)   |
+| cryptography         | [LINK](https://github.com/pyca/cryptography)           | Apache/BSD           | [LINK](https://github.com/pyca/cryptography/blob/main/LICENSE)             |
 
 ### Code styling and validation
 

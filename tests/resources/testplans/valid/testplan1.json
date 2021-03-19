@@ -13,7 +13,10 @@
         "target_type": "self",
         "agents": [
             {
-                "type": "no_op"
+                "type": "no_op",
+                "config": {
+                    "start_delay": 0
+                }
             }
         ]
     }

@@ -75,7 +75,7 @@ class FQDN(str):
     @classmethod
     def validate(cls, fqdn: str):
         if len(fqdn) > 255:
-            return False
+            raise ValueError(f"{fqdn} is not a valid FQDN")
         fqdn = fqdn[:-1] if fqdn[-1] == "." else fqdn
         allowed = re.compile(cls._regex, re.IGNORECASE)
         if all(allowed.match(x) for x in fqdn.split(".")):

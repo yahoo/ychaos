@@ -38,7 +38,8 @@ class Secret(SchemaModel):
         default=SecretType.ENV, description="defines the type of secret to be fetched. "
     )
     id: Any = Field(
-        default="The public identifier data which can be used to fetch the secret"
+        ...,
+        description="The public identifier data which can be used to fetch the secret",
     )
 
     def get_secret_value(self):

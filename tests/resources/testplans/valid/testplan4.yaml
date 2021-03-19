@@ -1,5 +1,5 @@
 ---
-description: A valid mock testplan file
+description: A valid mock testplan file with 4 agents
 verification:
 - states:
   - CHAOS
@@ -12,14 +12,14 @@ attack:
   agents:
   - type: no_op
     config:
-      start_delay: 1
+      start_delay: 0
   - type: no_op_timed
     config:
       duration: 1
       start_delay: 1
   - type: no_op
     config:
-      start_delay: 2
+      start_delay: 0
   - type: no_op_timed
     config:
       duration: 1

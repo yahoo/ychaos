@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from unittest import TestCase
 
-from mockito import when, unstub
+from mockito import when, unstub, ANY
 
 from vzmi.ychaos.agents.agent import AgentState
 from vzmi.ychaos.agents.attack_report_schema import AttackReport
@@ -21,8 +21,12 @@ class TestCoordinator(TestCase):
             Path(__file__).joinpath("../../resources/testplans").resolve()
         )
         self.test_plan = TestPlan.load_file(
-            self.test_plans_directory.joinpath("valid/testplan_two_agents.yaml")
+            self.test_plans_directory.joinpath("valid/testplan4.yaml")
         )
+
+        # Avoid slow UTs
+        when(time).sleep(ANY).thenReturn(None)
+        Coordinator.DEFAULT_DURATION = 1
 
     def tearDown(self) -> None:
         unstub()
@@ -54,7 +58,7 @@ class TestCoordinator(TestCase):
         coordinator = Coordinator(test_plan)
         configured_agents = coordinator.configure_agent_in_test_plan()
         self.assertEqual(len(configured_agents), len(test_plan.attack.agents))
-        agents_with_same_start_delay = {1: [], 2: []}
+        agents_with_same_start_delay = {0: [], 1: []}
         for i in range(len(configured_agents)):
             self.assertEqual(
                 (
@@ -82,7 +86,6 @@ class TestCoordinator(TestCase):
                 if agent:
                     self.assertEqual(id(configured_agent), id(agent))
                     break
-                time.sleep(1)
             else:
                 self.fail(
                     f"Failed to get Agent:{configured_agent.agent.config.name} for attack"
@@ -105,7 +108,6 @@ class TestCoordinator(TestCase):
                         break
                 else:
                     break
-                time.sleep(1)
 
         if not configured_agents[1].agent.exception.empty():
             self.assertIsInstance(configured_agents[1].agent.exception.get(), IOError)
@@ -138,7 +140,7 @@ class TestCoordinator(TestCase):
         self.assertFalse(coordinator.get_next_agent_for_teardown())
         coordinator.configured_agents[1].agent.advance_state(AgentState.RUNNING)
         while datetime.now(timezone.utc) <= coordinator.configured_agents[1].end_time:
-            time.sleep(1)
+            pass
 
         self.assertEqual(
             id(coordinator.get_next_agent_for_teardown()),
@@ -204,6 +206,7 @@ class TestCoordinator(TestCase):
     def test_start_attack_successfully(self):
         test_plan = self.test_plan.copy()
         test_plan.attack.mode = AttackMode.CONCURRENT
+        test_plan.attack.agents = test_plan.attack.agents[-1:]
         coordinator = Coordinator(test_plan)
         coordinator.configure_agent_in_test_plan()
         coordinator.start_attack()
@@ -216,6 +219,7 @@ class TestCoordinator(TestCase):
     def test_start_attack_failed_test(self):
         test_plan = self.test_plan.copy()
         test_plan.attack.mode = AttackMode.CONCURRENT
+        test_plan.attack.agents = test_plan.attack.agents[-1:]
         coordinator = Coordinator(test_plan)
         coordinator.configure_agent_in_test_plan()
         coordinator.configured_agents[-1].agent.exception.put(Exception("testing"))
@@ -223,10 +227,7 @@ class TestCoordinator(TestCase):
         self.assertTrue(coordinator.get_exit_status())
         report = coordinator.generate_attack_report()
         report = AttackReport(**report)
-        self.assertEqual(report.agents[0].status, AgentState.SKIPPED.name)
-        self.assertEqual(report.agents[1].status, AgentState.SKIPPED.name)
-        self.assertEqual(report.agents[2].status, AgentState.SKIPPED.name)
-        self.assertEqual(report.agents[3].status, AgentState.ERROR.name)
+        self.assertEqual(report.agents[0].status, AgentState.ERROR.name)
 
         self.assertEqual(len(coordinator.get_all_exceptions()), 1)
         self.assertIsInstance(coordinator.get_all_exceptions()[0], Exception)

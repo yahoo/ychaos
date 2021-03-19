@@ -19,7 +19,17 @@ class TestHTTPVerificationPlugin(TestCase):
                 "https://ychaos.yahoo.com",
             ],
             count=1,
+            method="GET",
         )
+
+    def test_plugin_for_unknown_http_method(self):
+        with self.assertRaises(ValueError):
+            HTTPRequestVerification(
+                urls=[
+                    "https://ychaos.yahoo.com",
+                ],
+                method="UNKNOWN",
+            )
 
     def test_plugin_init(self):
         verification_plugin = HTTPRequestVerificationPlugin(self.verification_config)

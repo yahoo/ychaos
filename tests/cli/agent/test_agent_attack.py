@@ -4,6 +4,7 @@ from argparse import Namespace
 from pathlib import Path
 from unittest import TestCase
 
+from vzmi.ychaos.agents.coordinator import Coordinator
 from vzmi.ychaos.cli.agentcli.attack import Attack
 from vzmi.ychaos.cli.mock import MockApp
 
@@ -16,6 +17,7 @@ class TestAgentAttackCLI(TestCase):
         self.test_plans_directory = (
             Path(__file__).joinpath("../../../resources/testplans").resolve()
         )
+        Coordinator.DEFAULT_DURATION = 1
 
     def test_valid_test_plan(self):
         args = Namespace()

@@ -117,13 +117,7 @@ jobs:
 
     # Publish sphinx or mkdocs documentation to github pages of this repo
     doc_publish:
-        environment:
-            DOWNGRADE_PKGS: ""
         template: pythonv6/documentation
         requires: [python_package]
         steps:
             - postinit: pip install -e .[doc_build]
-            - publish_documentation: |
-                VERSION=v`meta get package.version`
-                echo $VERSION
-                mike deploy --push --update-aliases $VERSION latest

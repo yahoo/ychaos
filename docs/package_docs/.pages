@@ -1,4 +1,5 @@
 nav:
     - vzmi.ychaos.testplan: testplan
     - vzmi.ychaos.agents: agents
+    - vzmi.ychaos.core: core
 title: Package Documentation

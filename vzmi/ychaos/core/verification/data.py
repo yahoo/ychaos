@@ -55,7 +55,7 @@ class VerificationData(BaseModel):
     def add_data(
         self,
         system_state: SystemState,
-        state_data: VerificationStateData,
+        state_data: Optional[VerificationStateData],
         overwrite=False,
     ):
         if overwrite:

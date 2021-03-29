@@ -20,7 +20,7 @@ class YChaosSubCommand(SubCommand, ABC):
     _exitcode = 0
 
     def __init__(self, **kwargs):
-        pass
+        pass  # Abstract method
 
     def set_exitcode(self, exitcode=0):
         self._exitcode = exitcode
@@ -68,3 +68,18 @@ class YChaosTestplanInputSubCommand(YChaosSubCommand, ABC):
                 style="indian_red",
             )
         return None
+
+
+class YChaosCLIHook(ABC):
+    """
+    The Base CLI Hook. Implement the `__call__` method with appropriate signature
+    for each of the hook type. The `__call__` method gets called from the EventHook
+    methods whenever an event is occurred.
+    """
+
+    def __init__(self, app, *args, **kwargs):
+        self.app = app
+        self.console = app.console
+
+        # Determines if this hooks is active and callable.
+        self.active = True

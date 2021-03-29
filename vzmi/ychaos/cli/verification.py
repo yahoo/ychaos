@@ -1,13 +1,15 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
-
+from abc import ABC
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from typing import Any, Optional
 
-from vzmi.ychaos.cli import YChaosTestplanInputSubCommand
+from vzmi.ychaos.cli import YChaosCLIHook, YChaosTestplanInputSubCommand
 from vzmi.ychaos.core.verification.controller import VerificationController
+from vzmi.ychaos.core.verification.data import VerificationStateData
 from vzmi.ychaos.testplan import SystemState
+from vzmi.ychaos.testplan.verification import VerificationConfig
 from vzmi.ychaos.utils.dependency import DependencyUtils
 
 (Console,) = DependencyUtils.import_from("rich.console", ("Console",))
@@ -119,11 +121,47 @@ class Verification(YChaosTestplanInputSubCommand):
             if self._exitcode != 0:
                 return
 
+        # section Hooks
+        class VerificationHook(YChaosCLIHook, ABC):
+            def __init__(self, app, state: SystemState):
+                super(VerificationHook, self).__init__(app)
+                self.state = state
+
+        class OnEachPluginStartHook(VerificationHook):
+            def __call__(self, index: int, config: VerificationConfig):
+                self.console.log(
+                    f"Running [i]{self.state.value.lower()}[/i] state verification of type={config.type.value}[{index}]"
+                )
+
+        class OnEachPluginEndHook(VerificationHook):
+            def __call__(
+                self,
+                index: int,
+                config: VerificationConfig,
+                verified_state_data: VerificationStateData,
+            ):
+                self.console.log(
+                    (
+                        f"Completed [i]{self.state.value.lower()}[/i] state verification of type={config.type.value};"
+                        f" verified={verified_state_data.rc==0}"
+                    )
+                )
+
+        # end section
+
         verification_controller = VerificationController(
             testplan, self.state, state_data
         )
+        verification_controller.register_hook(
+            "on_each_plugin_start", OnEachPluginStartHook(self.app, self.state)
+        )
+        verification_controller.register_hook(
+            "on_each_plugin_end", OnEachPluginEndHook(self.app, self.state)
+        )
 
-        self.console.log(f"Running {self.state.value.lower()} state verification..")
+        self.console.log(
+            f"Starting [i]{self.state.value.lower()}[/i] state verification."
+        )
         is_verified = verification_controller.execute()
 
         self.set_exitcode(int(not is_verified))

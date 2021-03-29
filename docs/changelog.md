@@ -2,6 +2,9 @@
 
 ## Next release
 
+1. Introduce Event Hooks for circling back useful information from core components to client 
+code (CLI). [#80](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/80) by Shashank Sharma
+
 1. Add System state verification to YChaos. [#60](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/60) by Shashank Sharma
 
     - Add Python Module Verification Module.
@@ -35,6 +38,3 @@
     - Add Logging module for YChaos. [#33](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/33) by Vijay Babu
     - Add Log Agent Lifecycle decorator. [#40](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/40) by Shashank Sharma
     - Setup versioned documentation using Mike. [#52](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/52) by Shashank Sharma
-    
-
-

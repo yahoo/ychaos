@@ -3,7 +3,7 @@
 
 import re
 from enum import Enum
-from types import SimpleNamespace
+from types import DynamicClassAttribute, SimpleNamespace
 from typing import Any, Iterable, List, Optional, Type, TypeVar
 
 T = TypeVar("T")
@@ -63,6 +63,11 @@ class AEnum(Enum):
         obj._value_ = value
         obj.metadata = metadata
         return obj
+
+    @DynamicClassAttribute
+    def value(self) -> str:
+        # mypy causes issues without this
+        return self._value_
 
 
 class FQDN(str):

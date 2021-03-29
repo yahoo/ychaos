@@ -2,6 +2,8 @@
 
 ## Next release
 
+1. Allow custom log file via CLI. [#83](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/83) by Shashank Sharma
+
 1. Introduce Event Hooks for circling back useful information from core components to client 
 code (CLI). [#80](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/80) by Shashank Sharma
 

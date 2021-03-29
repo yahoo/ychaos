@@ -73,6 +73,5 @@ directory,
 | --------------------          | ------------------------------------------------------                | ------------ | -----------------------------------------------------------------------------              |
 | mkdocs                        | [LINK](https://github.com/mkdocs/mkdocs)                              | BSD-2-Clause | [LINK](https://github.com/mkdocs/mkdocs/blob/master/LICENSE)                               |
 | mkdocs-material               | [LINK](https://github.com/squidfunk/mkdocs-material/)                 | MIT          | [LINK](https://github.com/squidfunk/mkdocs-material/blob/master/LICENSE)                   |
-| mkdocs-macros-plugin          | [LINK](https://github.com/fralau/mkdocs_macros_plugin)                | MIT          | [LINK](https://github.com/fralau/mkdocs_macros_plugin/blob/master/LICENSE.md)              |
 | mkdocs-awesome-pages-plugin   | [LINK](https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin)    | MIT          | [LINK](https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin/blob/master/LICENSE.md)  |
-| mike                          | [LINK](https://github.com/jimporter/mike)                             | BSD-3-Clause | [LINK](https://github.com/jimporter/mike)
+| mike                          | [LINK](https://github.com/jimporter/mike)                             | BSD-3-Clause | [LINK](https://github.com/jimporter/mike)                                                  |

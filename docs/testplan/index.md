@@ -2,7 +2,7 @@ The test plan is a structured document in JSON/YAML format that
 represents the configuration for the attack. It consists of various
 properties starting from verification to the attack that is to be performed.
 
-The test plan follows a Schema which is available [here]({{ data.git.schema_link }}).
+The test plan follows a Schema which is available [here](https://git.vzbuilders.com/resilience/vzmi.ychaos/blob/master/vzmi/ychaos/testplan/resources/schema.json).
 You can also view a human readable documentation of the schema by visiting [here](schema/index.html)
 
 ## Validation

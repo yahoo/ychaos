@@ -16,11 +16,6 @@ extra:
         - icon: fontawesome/brands/yahoo
           link: mailto://resilience-core@verizonmedia.com
           name: Mail Resilience Team
-    data:
-        git:
-            schema_link: "https://git.vzbuilders.com/resilience/vzmi.ychaos/blob/master/vzmi/ychaos/testplan/resources/schema.json"
-        general:
-            todo: "This part of the documentation is under development. Stay tuned.."
 
 extra_css: []
 
@@ -55,7 +50,6 @@ markdown_extensions:
 
 plugins:
     - search
-    - macros
     - awesome-pages
     - mkdocstrings:
           watch:

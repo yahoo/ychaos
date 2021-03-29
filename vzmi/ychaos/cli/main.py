@@ -1,6 +1,6 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
-
+import os
 import sys
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser, Namespace
 from collections import OrderedDict
@@ -134,6 +134,17 @@ class YChaos:
             help="Generate a HTML report from YChaos execution",
             metavar="path",
         )
+        report_argument_group.add_argument(
+            "--log-file",
+            type=Path,
+            default=os.getenv("YCHAOS_LOG_FILE"),
+            required=False,
+            help=(
+                "The file to store application logs. "
+                "Setting `YCHAOS_LOG_FILE` environment variable instead of this argument is also valid."
+            ),
+            metavar="path",
+        )
 
         ychaos_cli_subparsers = ychaos_cli.add_subparsers(
             action=SubCommandParsersAction,
@@ -184,7 +195,10 @@ class App:
 
         self.cli = cli
 
-        AppLogger()  # Initializes the AppLogger
+        if args.log_file:
+            self.settings.LOG_FILE_PATH = args.log_file
+
+        AppLogger()
 
     def start(self) -> None:
         self.console.clear()

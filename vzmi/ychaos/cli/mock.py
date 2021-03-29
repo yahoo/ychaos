@@ -22,6 +22,8 @@ class MockApp(App):
             args.config = "dev"
         if "verbose" not in args:
             args.verbose = 0
+        if "log_file" not in args:
+            args.log_file = None
 
         super(MockApp, self).__init__(args)
         self.console = Console(file=StringIO(), width=150)

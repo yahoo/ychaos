@@ -1,7 +1,7 @@
 # ychaos
 ```
 usage: ychaos [-h] [-v] [-V] [--debug] [-c config] [--text-report path]
-              [--html-report path]
+              [--html-report path] [--log-file path]
               {testplan,manual,agent,verify} ...
 
 positional arguments:
@@ -26,6 +26,9 @@ reports:
                         (default: None)
   --html-report path    Generate a HTML report from YChaos execution (default:
                         None)
+  --log-file path       The file to store application logs. Setting
+                        `YCHAOS_LOG_FILE` environment variable instead of this
+                        argument is also valid. (default: None)
 
 ```
 ## ychaos testplan

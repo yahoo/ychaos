@@ -1,6 +1,6 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
-import tempfile
+from pathlib import Path
 from typing import Optional, Union
 
 from pydantic import BaseModel
@@ -17,8 +17,7 @@ class ApplicationSettings(BaseModel):
     PROG = "ychaos"
 
     COMMAND_IDENTIFIER = "_cmd.{}"
-    LOG_FILE_PATH = tempfile.gettempdir()
-    LOG_FILE_NAME_SUFFIX = ".log"
+    LOG_FILE_PATH: Optional[Path] = None
 
     @classmethod
     def get_instance(cls):

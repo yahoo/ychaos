@@ -3,13 +3,13 @@
 from vzmi.ychaos.agents.agent import Agent
 from vzmi.ychaos.app_logger import AppLogger
 
-logging = AppLogger.get_logger("agents")
-
 
 def log_agent_lifecycle(func):
+    logger = AppLogger.get_logger("agents")
+
     def annotation(*args, **kwargs):
         agent: Agent = args[0]
-        logging.info(
+        logger.info(
             event="agents.lifecycle.start",
             agent=agent.config.name,
             method=func.__name__,
@@ -20,7 +20,7 @@ def log_agent_lifecycle(func):
         except Exception as e:
             raise e from None
         finally:
-            logging.info(
+            logger.info(
                 event="agents.lifecycle.end",
                 agent=agent.config.name,
                 method=func.__name__,

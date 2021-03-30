@@ -77,13 +77,16 @@ optional arguments:
 ```
 ### ychaos agent attack
 ```
-usage: ychaos agent attack [-h] -t path
+usage: ychaos agent attack [-h] -t path [--attack-report-yaml path]
 
 optional arguments:
   -h, --help            show this help message and exit
   -t path, --testplan path
                         The testplan path. This can be relative path from
                         where the CLI is initiated (default: None)
+  --attack-report-yaml path
+                        File Path to store attack report in YAML format
+                        (default: None)
 
 ```
 ## ychaos verify

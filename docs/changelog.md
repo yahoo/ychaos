@@ -40,3 +40,6 @@ code (CLI). [#80](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/80) by 
     - Add Logging module for YChaos. [#33](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/33) by Vijay Babu
     - Add Log Agent Lifecycle decorator. [#40](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/40) by Shashank Sharma
     - Setup versioned documentation using Mike. [#52](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/52) by Shashank Sharma
+    
+8. Add Coordinator module [#74](https://jira.vzbuilders.com/browse/IDENTITY-31943) by Vijay Babu
+    - Attack report. [#85](https://jira.vzbuilders.com/browse/IDENTITY-33345)

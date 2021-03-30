@@ -1,7 +1,6 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
-import json
-from argparse import Namespace
+from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from typing import Optional
 
@@ -9,6 +8,7 @@ from vzmi.ychaos.agents.coordinator import Coordinator
 from vzmi.ychaos.cli import YChaosTestplanInputSubCommand
 from vzmi.ychaos.testplan.schema import TestPlan
 from vzmi.ychaos.utils.dependency import DependencyUtils
+from vzmi.ychaos.utils.yaml import Dumper
 
 (Console,) = DependencyUtils.import_from("rich.console", ("Console",))
 (Table, Column) = DependencyUtils.import_from("rich.table", ("Table", "Column"))
@@ -26,12 +26,28 @@ class Attack(YChaosTestplanInputSubCommand):
     name = "attack"
     help = "YChaos Agent Attack Subcommand"
 
+    @classmethod
+    def build_parser(cls, parser: ArgumentParser) -> ArgumentParser:
+        super(Attack, cls).build_parser(parser)
+        parser.add_argument(
+            "--attack-report-yaml",
+            type=Path,
+            help="File Path to store attack report in YAML format",
+            default=None,
+            metavar="path",
+        )
+        return parser
+
     def __init__(self, **kwargs):
         super(Attack, self).__init__(**kwargs)
         assert kwargs.pop("cls") == self.__class__
         self.app = kwargs.pop("app")
         self.console = self.app.console
         self.test_plan_path: Path = kwargs.pop("testplan")
+        self.attack_report_yaml_path: Optional[Path] = kwargs.pop("attack_report_yaml")
+        if self.attack_report_yaml_path and not self.attack_report_yaml_path.is_file():
+            self.console.log(f"{self.attack_report_yaml_path} is not a valid file path")
+            self.set_exitcode(1)
         self.test_plan: Optional[TestPlan] = None
         self.coordinator: Optional[Coordinator] = None
 
@@ -72,24 +88,41 @@ class Attack(YChaosTestplanInputSubCommand):
             except Exception:
                 self.console.print_exception()
 
+    def dump_attack_report(self):
+        if self.attack_report_yaml_path:
+            import yaml
+
+            with open(
+                self.attack_report_yaml_path,
+                "w",
+            ) as fp:
+                yaml.dump(
+                    self.coordinator.generate_attack_report(),
+                    fp,
+                    default_flow_style=False,
+                    sort_keys=False,
+                    Dumper=Dumper,
+                    indent=4,
+                )
+            self.console.log(f"Attack report stored at {self.attack_report_yaml_path}")
+
     @classmethod
     def main(cls, args: Namespace):
         agent = Attack(**vars(args))
+        if agent._exitcode:
+            return agent._exitcode
         if not agent.validate_and_load_test_plan():
             agent.configure_attack()
-            agent.console.log("Starting The Attack")
+            agent.console.log("Starting the attack")
             assert agent.coordinator is not None
             agent.coordinator.start_attack()
-            agent.console.log("Attack Completed")
-            agent.console.log(
-                json.dumps(agent.coordinator.generate_attack_report(), indent=4)
-            )
+            agent.console.log("Attack completed")
 
             agent.print_all_errors()
 
-            if not agent._exitcode:
-                agent.set_exitcode(agent.coordinator.get_exit_status())
+            agent.dump_attack_report()
 
-            if agent._exitcode:
-                agent.console.log("Attack Failed")
+            if agent._exitcode or agent.coordinator.get_exit_status():
+                agent.console.log("Attack failed")
+                agent.set_exitcode(1)
         return agent._exitcode

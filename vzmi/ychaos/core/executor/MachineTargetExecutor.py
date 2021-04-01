@@ -1,5 +1,6 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
+import json
 import random
 from types import SimpleNamespace
 from typing import Any
@@ -157,6 +158,7 @@ class MachineTargetExecutor(BaseExecutor):
                     ],
                 ),
                 dict(
+                    name="Create a virtual environment and install ychaos[agents]",
                     action=dict(
                         module="pip",
                         chdir="{{result_pwd.stdout}}",
@@ -175,9 +177,72 @@ class MachineTargetExecutor(BaseExecutor):
                         ansible_python_interpreter="{{result_which_python3.stdout}}"
                     ),
                 ),
-                # TODO: Run Agent attack command
-                # TODO: Copy log & result files
-                # TODO: Delete Virtual environment directory
+                dict(
+                    name="Create a workspace directory for storing local report files",
+                    action=dict(
+                        module="file",
+                        path="{{result_pwd.stdout}}/ychaos_ws",
+                        state="directory",
+                        mode="0755",
+                        register="result_create_workspace",
+                    ),
+                ),
+                dict(
+                    name="Copy testplan from local to remote",
+                    action=dict(
+                        module="copy",
+                        content=json.dumps(
+                            self.testplan.to_serialized_dict(), indent=4
+                        ),
+                        dest="{{result_create_workspace.dest}}/testplan.json",
+                        register="result_testplan_file",
+                    ),
+                ),
+                dict(
+                    name="Run YChaos Agent",
+                    action=dict(
+                        module="shell",
+                        cmd="ychaos agent attack --testplan {{result_testplan_file.dest}} --attack-report-yaml {{result_create_workspace.dest}}/attack_report.yaml",
+                    ),
+                ),
+                dict(
+                    name="Zip workspace directory",
+                    action=dict(
+                        module="community.general.archive",
+                        path="{{result_create_workspace.dest}}",
+                        dest="{{result_create_workspace.dest}}/ychaos.zip",
+                        format="zip",
+                    ),
+                ),
+                dict(
+                    name="Copy Workspace directory to local",
+                    action=dict(
+                        module="fetch",
+                        src="{{result_create_workspace.dest}}/ychaos.zip",
+                        dest=str(
+                            self.testplan.attack.get_target_config().report_dir.resolve()
+                        )
+                        + "/ychaos_{{inventory_hostname}}.zip",
+                    ),
+                ),
+                dict(
+                    name="Delete YChaos Workspace on host",
+                    action=dict(
+                        module="file",
+                        path="{{result_create_workspace.dest}}",
+                        state="absent",
+                        recurse="yes",
+                    ),
+                ),
+                dict(
+                    name="Delete Virtual environment",
+                    action=dict(
+                        module="file",
+                        path="{{result_pip.virtualenv}}",
+                        state="absent",
+                        recurse="yes",
+                    ),
+                ),
             ],
         )
 
@@ -188,6 +253,13 @@ class MachineTargetExecutor(BaseExecutor):
             self.ansible_context.play_source,
             variable_manager=self.ansible_context.variable_manager,
             loader=self.ansible_context.loader,
+        )
+
+        # Create Report Directory
+        import os
+
+        os.makedirs(
+            self.testplan.attack.get_target_config().report_dir.resolve(), exist_ok=True
         )
 
         try:

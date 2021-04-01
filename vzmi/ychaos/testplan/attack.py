@@ -101,6 +101,11 @@ class MachineTargetDefinition(TargetDefinition):
         ),
     )
 
+    report_dir: Path = Field(
+        default=".",
+        description="The report directory to store remote execution files. Defaults to current directory",
+    )
+
     def iterate_hostfiles(self):
         for file in self.hostfiles:
             for host in file.read_text().strip().splitlines():

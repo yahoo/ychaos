@@ -101,7 +101,7 @@ class TestPlan(TestPlanSchema):
         exclude_none: bool = False,
         encoder: Optional[Callable[[Any], Any]] = None,
         **dumps_kwargs: Any,
-    ) -> str:
+    ) -> dict:
         return json.loads(
             self.json(
                 include=include,

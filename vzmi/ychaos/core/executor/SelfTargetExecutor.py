@@ -6,3 +6,6 @@ from vzmi.ychaos.core.executor.BaseExecutor import BaseExecutor
 class SelfTargetExecutor(BaseExecutor):
 
     __target_type__ = "self"
+
+    def execute(self):
+        pass

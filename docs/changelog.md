@@ -2,6 +2,9 @@
 
 ## Next release
 
+1. Add Machine Target Executor to connect to targets and execute attack (_Phase 1_)
+[#91](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/91) by Shashank Sharma
+
 1. Add Coordinator module [#74](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/74) by Vijay Babu
 
     - Attack report. [#85](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/85)

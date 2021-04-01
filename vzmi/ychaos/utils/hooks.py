@@ -1,6 +1,6 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, Tuple
 
 
 class InvalidEventHookError(KeyError):
@@ -9,7 +9,7 @@ class InvalidEventHookError(KeyError):
 
 class EventHook(object):
 
-    __hook_events__: List[str] = list()
+    __hook_events__: Tuple[str, ...] = tuple()
     # Lists the valid hooks that can be registered for this particular class.
     # The `register_hook` method checks this list for the hooks that are being registered.
 

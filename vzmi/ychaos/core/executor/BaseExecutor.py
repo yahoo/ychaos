@@ -1,16 +1,20 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
+from abc import ABC, abstractmethod
+
 from vzmi.ychaos.core.exceptions.executor_errors import (
     YChaosTargetConfigConditionFailedError,
 )
 from vzmi.ychaos.testplan.schema import TestPlan
+from vzmi.ychaos.utils.hooks import EventHook
 
 
-class BaseExecutor:
+class BaseExecutor(EventHook, ABC):
 
     __target_type__: str
 
     def __init__(self, testplan: TestPlan, *args, **kwargs):
+        super(BaseExecutor, self).__init__()
         self.testplan = testplan
         self._validate_target_config()
 
@@ -32,3 +36,7 @@ class BaseExecutor:
             raise YChaosTargetConfigConditionFailedError(
                 "Target configuration is not processable for this executor"
             )
+
+    @abstractmethod
+    def execute(self):
+        pass  # Implement in Executors

@@ -6,7 +6,7 @@ from vzmi.ychaos.utils.hooks import EventHook, InvalidEventHookError
 
 
 class MockEventHook(EventHook):
-    __hook_events__ = ["on_valid_hooks"]
+    __hook_events__ = ("on_valid_hooks",)
 
     def mocked_method_that_calls_valid_hooks(self):
         self.execute_hooks("on_valid_hooks")

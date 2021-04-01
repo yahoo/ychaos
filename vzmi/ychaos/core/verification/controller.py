@@ -89,12 +89,12 @@ class VerificationController(EventHook):
     of this is to register a hook to print information on CLI.
     """
 
-    __hook_events__ = [
+    __hook_events__ = (
         "on_start",
         "on_each_plugin_start",
         "on_each_plugin_end",
         "on_end",
-    ]
+    )
 
     @validate_arguments
     def __init__(

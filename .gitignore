@@ -89,3 +89,5 @@ site/
 .pytype/
 
 .pytest_cache/
+
+docs/testplan/playground/schema.min.js

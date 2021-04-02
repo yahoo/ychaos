@@ -19,12 +19,6 @@ with open(AUTOGEN_SCHEMA_FILE, "w") as autogen_schema:
     json.dump(TestPlanSchema.schema(), autogen_schema, indent=4)
     autogen_schema.write("\n")
 
-AUTOGEN_SCHEMA_JS_FILE = "docs/testplan/playground/schema.min.js"
-with open(AUTOGEN_SCHEMA_JS_FILE, "w") as autogen_schema_js:
-    schema_json = TestPlanSchema.schema_json()
-    autogen_schema_js.write(f"testplan_schema={schema_json}")
-    autogen_schema_js.write("\n")
-
 print("Done..")
 
 print("Auto Generating Schema Documentation...")

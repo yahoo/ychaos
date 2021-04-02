@@ -27,6 +27,7 @@ jobs:
          requires: [~pr]
          steps:
              - postinit: pip install -e .[doc_build]
+             - prepublish_documentation: python3 screwdriver/autogen_docs.py
 
     lint_validation:
         template: python-2104/validate_lint
@@ -122,4 +123,5 @@ jobs:
         template: python-2104/documentation
         requires: [python_package]
         steps:
+            - prepublish_documentation: python3 screwdriver/autogen_docs.py
             - postinit: pip install -e .[doc_build]

@@ -16,11 +16,11 @@ shared:
 jobs:
     # Validation jobs
     dependency_validation:
-        template: pythonv6/validate_dependencies
+        template: python-2104/validate_dependencies
         requires: [~pr, ~commit]
 
     doc_validation:
-         template: pythonv6/documentation
+         template: python-2104/documentation
          environment:
              DOCUMENTATION_PUBLISH: False
              DOWNGRADE_PKGS: ""
@@ -29,35 +29,37 @@ jobs:
              - postinit: pip install -e .[doc_build]
 
     lint_validation:
-        template: pythonv6/validate_lint
+        template: python-2104/validate_lint
         requires: [~pr, ~commit]
 
     package_validation:
-        template: pythonv6/package_python
+        template: python-2104/package_python
         environment:
             PACKAGE_PYTHON_PUBLISH: False
         requires: [~pr]
 
     security_validation:
-        template: pythonv6/validate_security
+        environment:
+            SECURITY_BANDIT_CONFIG_ARGS: "-s B101"
+        template: python-2104/validate_security
         requires: [~pr, ~commit]
 
     # Style validation using `flake8`
     style_validation:
-        template: pythonv6/validate_style
+        template: python-2104/validate_style
         requires: [~pr, ~commit]
         steps:
             - validate_code: pypirun flake8 flake8 vzmi/ychaos
 
     # Code Format Validation using `black`
     code_format_validation:
-        template: pythonv6/validate_style
+        template: python-2104/validate_style
         requires: [~pr, ~commit]
         steps:
             - validate_code: pypirun black black --check vzmi/ tests/ setup.py
 
     test_validation:
-        template: pythonv6/validate_unittest
+        template: python-2104/validate_unittest
         environment:
             TOX_ARGS: --parallel all
             SD_COVERAGE_PLUGIN_ENABLED: true
@@ -66,17 +68,17 @@ jobs:
     type_validation:
         environment:
             PYPIRUN_ARGS: '--upgrade_pip'
-        template: pythonv6/validate_type
+        template: python-2104/validate_type
         requires: [~pr, ~commit]
 
     # Package auto-versioning, this must run before generating a package for publishing
     version:
-        template: pythonv6/version
+        template: python-2104/version
         requires: [dependency_validation, lint_validation, style_validation, type_validation, security_validation, test_validation, code_format_validation]
 
     # Python packaging
     python_package:
-        template: pythonv6/package_python
+        template: python-2104/package_python
         requires: [version]
         steps:
             - posttag_release: python3 screwdriver/label_build.py
@@ -90,13 +92,13 @@ jobs:
     # deployment packaging type.
 
     # docker_package:
-    #      template: pythonv6/docker_pythonapp
+    #      template: python-2104/docker_pythonapp
     #      environment:
     #         PACKAGE_PUBLISH: False
     #      requires: [python_package]
 
     # yinst_rh7_package:
-    #     template: pythonv6/package_yinst
+    #     template: python-2104/package_yinst
     #     environment:
     #         PACKAGE_PUBLISH: False
     #     image: docker-registry.ops.yahoo.com:4443/python/ylinux7
@@ -107,7 +109,7 @@ jobs:
     # fail with permission errors.
 
     # rpm_rh7_package:
-    #     template: pythonv6/package_rpm
+    #     template: python-2104/package_rpm
     #    image: docker-registry.ops.yahoo.com:4443/python/ylinux7
     #     environment:
     #         PACKAGE_PUBLISH: False
@@ -117,7 +119,7 @@ jobs:
 
     # Publish sphinx or mkdocs documentation to github pages of this repo
     doc_publish:
-        template: pythonv6/documentation
+        template: python-2104/documentation
         requires: [python_package]
         steps:
             - postinit: pip install -e .[doc_build]

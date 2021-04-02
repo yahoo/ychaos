@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from unittest import TestCase
 
-from mockito import when, unstub, ANY
+from mockito import ANY, unstub, when
 
 from vzmi.ychaos.agents.agent import AgentState
 from vzmi.ychaos.agents.attack_report_schema import AttackReport

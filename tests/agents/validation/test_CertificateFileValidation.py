@@ -1,12 +1,12 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
 from vzmi.ychaos.agents.validation.certificate import (
-    CertificateFileValidationConfig,
     CertificateFileValidation,
+    CertificateFileValidationConfig,
 )
 
 

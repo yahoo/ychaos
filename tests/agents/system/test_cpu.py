@@ -4,10 +4,10 @@ import multiprocessing
 from datetime import datetime, timedelta
 from unittest import TestCase
 
-from mockito import when, unstub
+from mockito import unstub, when
 
 from vzmi.ychaos.agents.agent import AgentState
-from vzmi.ychaos.agents.system.cpu import _burn, CPUBurnConfig, CPUBurn
+from vzmi.ychaos.agents.system.cpu import CPUBurn, CPUBurnConfig, _burn
 from vzmi.ychaos.utils.dependency import DependencyUtils
 
 

@@ -3,7 +3,7 @@
 from unittest import TestCase
 
 import requests
-from mockito import when, mock, unstub
+from mockito import mock, unstub, when
 from requests import Response
 
 from vzmi.ychaos.core.verification.plugins.HTTPRequestVerificationPlugin import (

@@ -2,11 +2,11 @@
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 
 import argparse
-from argparse import Namespace, ArgumentParser
+from argparse import ArgumentParser, Namespace
 from typing import Any
 from unittest import TestCase
 
-from vzmi.ychaos.utils.argparse import SubCommandParsersAction, SubCommand
+from vzmi.ychaos.utils.argparse import SubCommand, SubCommandParsersAction
 
 
 class SubCommandMock(SubCommand):

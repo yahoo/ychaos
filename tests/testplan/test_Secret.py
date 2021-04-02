@@ -3,7 +3,7 @@
 import os
 from unittest import TestCase
 
-from mockito import when, unstub
+from mockito import unstub, when
 
 from vzmi.ychaos.testplan.common import Secret
 

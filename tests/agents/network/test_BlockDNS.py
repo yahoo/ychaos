@@ -4,11 +4,11 @@ import os
 import subprocess
 from unittest import TestCase
 
-from mockito import verify, any, when, unstub
+from mockito import any, unstub, verify, when
 
 from vzmi.ychaos.agents.agent import AgentState
 from vzmi.ychaos.agents.exceptions import AgentError
-from vzmi.ychaos.agents.network.iptables import DNSBlockConfig, DNSBlock
+from vzmi.ychaos.agents.network.iptables import DNSBlock, DNSBlockConfig
 
 
 class TestBlockDNSConfig(TestCase):

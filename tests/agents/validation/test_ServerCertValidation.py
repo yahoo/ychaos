@@ -4,8 +4,8 @@ from unittest import TestCase
 
 from vzmi.ychaos.agents.agent import AgentMonitoringDataPoint
 from vzmi.ychaos.agents.validation.certificate import (
-    ServerCertValidationConfig,
     ServerCertValidation,
+    ServerCertValidationConfig,
 )
 
 

@@ -2,8 +2,9 @@
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 import tempfile
 from unittest import TestCase
-from vzmi.ychaos.settings import DevSettings, ProdSettings, Settings
+
 from vzmi.ychaos.app_logger import AppLogger
+from vzmi.ychaos.settings import DevSettings, ProdSettings, Settings
 from vzmi.ychaos.utils.logging import StructLogger
 
 

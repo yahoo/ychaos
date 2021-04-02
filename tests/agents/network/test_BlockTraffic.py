@@ -5,14 +5,13 @@ import filecmp
 import os
 import shutil
 from pathlib import Path
-from stat import S_IWUSR, S_IREAD, S_IWRITE, S_IRGRP, S_IROTH
+from stat import S_IREAD, S_IRGRP, S_IROTH, S_IWRITE, S_IWUSR
+from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
-from mockito import when, unstub
+from mockito import unstub, when
 
-from vzmi.ychaos.agents.network.traffic import TrafficBlockConfig, TrafficBlock
-
-from tempfile import NamedTemporaryFile
+from vzmi.ychaos.agents.network.traffic import TrafficBlock, TrafficBlockConfig
 
 
 class TestBlockTraffic(TestCase):

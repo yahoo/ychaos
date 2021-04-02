@@ -12,14 +12,14 @@ from pkg_resources import resource_filename
 from vzmi.ychaos.testplan import SystemState
 from vzmi.ychaos.testplan.attack import (
     AttackConfig,
-    TargetType,
     MachineTargetDefinition,
     SSHConfig,
+    TargetType,
 )
 from vzmi.ychaos.testplan.schema import TestPlan, TestPlanSchema
 from vzmi.ychaos.testplan.verification import (
-    VerificationConfig,
     PythonModuleVerification,
+    VerificationConfig,
 )
 
 

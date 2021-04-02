@@ -12,6 +12,7 @@ function sort_imports() {
     echo "==============================================="
     echo "Sorting imports"
     isort -m 3 --tc vzmi/ || { echo "Sorting imports failed" ; exit 1; }
+    isort -m 3 --tc tests/ || { echo "Sorting imports failed" ; exit 1; }
     echo "Sorting imports complete"
 }
 

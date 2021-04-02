@@ -4,7 +4,7 @@ import time
 from unittest import TestCase
 
 import requests
-from mockito import when, mock, ANY, unstub
+from mockito import ANY, mock, unstub, when
 from requests import Response
 
 from vzmi.ychaos.core.verification.plugins.SDv4VerificationPlugin import (

@@ -6,11 +6,6 @@ from pkg_resources import resource_filename
 
 from vzmi.ychaos.testplan.schema import TestPlanSchema
 
-from json_schema_for_humans.generate import (
-    GenerationConfiguration,
-    generate_from_filename,
-)
-
 print("Auto Generating Schema...")
 
 PKG_RESOURCES = "vzmi.ychaos.testplan.resources"
@@ -19,11 +14,4 @@ with open(AUTOGEN_SCHEMA_FILE, "w") as autogen_schema:
     json.dump(TestPlanSchema.schema(), autogen_schema, indent=4)
     autogen_schema.write("\n")
 
-print("Done..")
-
-print("Auto Generating Schema Documentation...")
-DOCS_FILE = "docs/testplan/schema/index.html"
-generate_from_filename(
-    AUTOGEN_SCHEMA_FILE, DOCS_FILE, config=GenerationConfiguration(minify=False)
-)
 print("Done..")

@@ -12,6 +12,7 @@ from vzmi.ychaos.app_logger import AppLogger
 from vzmi.ychaos.cli import YChaosSubCommand
 from vzmi.ychaos.cli.agentcli.main import Agent
 from vzmi.ychaos.cli.exceptions import YChaosCLIError
+from vzmi.ychaos.cli.execute import Execute
 from vzmi.ychaos.cli.manual import Manual
 from vzmi.ychaos.cli.testplan import TestPlan
 from vzmi.ychaos.cli.verification import Verification
@@ -156,6 +157,7 @@ class YChaos:
         ychaos_cli_subparsers.add_parser(cls=Manual, name=Manual.name)
         ychaos_cli_subparsers.add_parser(cls=Agent, name=Agent.name)
         ychaos_cli_subparsers.add_parser(cls=Verification, name=Verification.name)
+        ychaos_cli_subparsers.add_parser(cls=Execute, name=Execute.name)
 
         args = ychaos_cli.parse_args(program_arguments)
 

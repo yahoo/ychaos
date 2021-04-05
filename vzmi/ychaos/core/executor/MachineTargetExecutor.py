@@ -5,6 +5,8 @@ import random
 from types import SimpleNamespace
 from typing import Any
 
+from ansible.executor.task_result import TaskResult
+
 from vzmi.ychaos.app_logger import AppLogger
 from vzmi.ychaos.core.executor.BaseExecutor import BaseExecutor
 from vzmi.ychaos.testplan.attack import MachineTargetDefinition
@@ -50,18 +52,15 @@ class YChaosAnsibleResultCallback(CallbackBase, EventHook):
         self.hosts_unreachable = dict()
         self.hosts_failed = dict()
 
-    def v2_runner_on_unreachable(self, result):
+    def v2_runner_on_unreachable(self, result: TaskResult):
         self.hosts_unreachable[result._host.get_name()] = result
         self.execute_hooks("on_target_unreachable", result)
 
-    def v2_runner_on_ok(self, result):
+    def v2_runner_on_ok(self, result: TaskResult):
         self.hosts_passed[result._host.get_name()] = result
         self.execute_hooks("on_target_passed", result)
 
-    def v2_runner_on_failed(self, result, ignore_errors=False):
-        super(YChaosAnsibleResultCallback, self).v2_runner_on_failed(
-            result, ignore_errors
-        )
+    def v2_runner_on_failed(self, result: TaskResult, ignore_errors=False):
         self.hosts_failed[result._host.get_name()] = result
         self.execute_hooks("on_target_failed", result)
 
@@ -78,6 +77,7 @@ class MachineTargetExecutor(BaseExecutor):
     __target_type__ = "machine"
 
     __hook_events__ = (
+        "on_no_targets_found",
         "on_start",
         "on_target_unreachable",
         "on_target_failed",
@@ -140,6 +140,7 @@ class MachineTargetExecutor(BaseExecutor):
             connection="ssh",
             strategy="free",
             gather_facts="no",
+            ignore_unreachable="no",
             tasks=[
                 dict(
                     name="Check current working directory",
@@ -159,43 +160,43 @@ class MachineTargetExecutor(BaseExecutor):
                 ),
                 dict(
                     name="Create a virtual environment and install ychaos[agents]",
+                    register="result_pip",
                     action=dict(
                         module="pip",
                         chdir="{{result_pwd.stdout}}",
                         name="vzmi.ychaos[agents]",
                         virtualenv="ychaos_env",
                         virtualenv_python="python3",
-                        register="result_pip",
-                        failed_when=[
-                            # Failed in these following reasons
-                            # 1. pip not installed
-                            # 2. Unable to install required packages
-                            "result_pip.rc != 0"
-                        ],
                     ),
+                    failed_when=[
+                        # Failed in these following reasons
+                        # 1. pip not installed
+                        # 2. Unable to install required packages
+                        "result_pip.rc != 0"
+                    ],
                     vars=dict(
                         ansible_python_interpreter="{{result_which_python3.stdout}}"
                     ),
                 ),
                 dict(
                     name="Create a workspace directory for storing local report files",
+                    register="result_create_workspace",
                     action=dict(
                         module="file",
                         path="{{result_pwd.stdout}}/ychaos_ws",
                         state="directory",
                         mode="0755",
-                        register="result_create_workspace",
                     ),
                 ),
                 dict(
                     name="Copy testplan from local to remote",
+                    register="result_testplan_file",
                     action=dict(
                         module="copy",
                         content=json.dumps(
                             self.testplan.to_serialized_dict(), indent=4
                         ),
                         dest="{{result_create_workspace.dest}}/testplan.json",
-                        register="result_testplan_file",
                     ),
                 ),
                 dict(
@@ -249,6 +250,10 @@ class MachineTargetExecutor(BaseExecutor):
     def execute(self):
         self.prepare()
 
+        if len(self.target_hosts) == 0:
+            self.execute_hooks("on_no_targets_found")
+            return
+
         play = Play().load(
             self.ansible_context.play_source,
             variable_manager=self.ansible_context.variable_manager,
@@ -264,9 +269,7 @@ class MachineTargetExecutor(BaseExecutor):
 
         try:
             self.execute_hooks("on_start")
-
             result = self.ansible_context.tqm.run(play)
-
             self.execute_hooks("on_end", result)
         except Exception as e:
             print(e)

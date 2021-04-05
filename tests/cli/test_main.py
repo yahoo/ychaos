@@ -50,7 +50,7 @@ class TestYChaosCLI(TestCase):
         self.assertEqual(1, _exit.exception.code)
 
     def test_ychaos_cli_manual_command_directory(self):
-        ychaos_command = "ychaos manual --file vzmi/"
+        ychaos_command = "ychaos manual --file /tmp"
 
         with self.assertRaises(SystemExit) as _exit:
             YChaos.main(ychaos_command.split()[1:])

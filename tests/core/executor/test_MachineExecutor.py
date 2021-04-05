@@ -3,7 +3,7 @@
 from pathlib import Path
 from unittest import TestCase
 
-from mockito import mock, unstub
+from mockito import mock, unstub, ANY, when
 
 from vzmi.ychaos.core.exceptions.executor_errors import (
     YChaosTargetConfigConditionFailedError,
@@ -105,6 +105,36 @@ class TestMachineExecutor(TestCase):
 
         executor.register_hook("on_target_unreachable", mock_hook_target_unreachable)
         executor.register_hook("on_target_passed", MockHookForTargetPassed())
+
+        executor.prepare()
+        executor.ansible_context.tqm = mock()
+        when(executor.ansible_context.tqm).play(ANY).thenAnswer(
+            mock_hook_target_unreachable()
+        )
+
+        executor.execute()
+        self.assertTrue(mock_hook_target_unreachable.test_value)
+
+    def test_machine_executor_execute_with_no_target_hosts(self):
+        mock_valid_testplan = TestPlan.load_file(
+            self.testplans_directory.joinpath("valid/testplan2.yaml")
+        )
+        mock_valid_testplan.attack.target_config["blast_radius"] = 0
+        executor = MachineTargetExecutor(mock_valid_testplan)
+
+        class MockHookForNoTargetFound:
+            # Always gets called for UT
+
+            def __init__(self):
+                self.test_value = False
+
+            def __call__(self, *args, **kwargs):
+                # Toggle the test value and assert this method is called
+                self.test_value = True
+
+        mock_hook_target_unreachable = MockHookForNoTargetFound()
+
+        executor.register_hook("on_no_targets_found", mock_hook_target_unreachable)
 
         executor.execute()
         self.assertTrue(mock_hook_target_unreachable.test_value)

@@ -20,7 +20,7 @@ class Agent(YChaosSubCommand):
     """
 
     name = "agent"
-    help = "ychaos agent CLI"
+    help = "The agent subcommand of YChaos"
 
     @classmethod
     def build_parser(cls, parser: ArgumentParser) -> ArgumentParser:

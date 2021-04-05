@@ -2,14 +2,15 @@
 ```
 usage: ychaos [-h] [-v] [-V] [--debug] [-c config] [--text-report path]
               [--html-report path] [--log-file path]
-              {testplan,manual,agent,verify} ...
+              {testplan,manual,agent,verify,execute} ...
 
 positional arguments:
-  {testplan,manual,agent,verify}
+  {testplan,manual,agent,verify,execute}
     testplan            sub command for test plan operations
     manual              Print the manual for YChaos CLI
-    agent               ychaos agent CLI
+    agent               The agent subcommand of YChaos
     verify              The verification subcommand of YChaos
+    execute             The execute subcommand of YChaos
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -109,5 +110,16 @@ verification reports:
                         None)
   --dump-json path      Store the verification data in JSON format (default:
                         None)
+
+```
+## ychaos execute
+```
+usage: ychaos execute [-h] -t path
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -t path, --testplan path
+                        The testplan path. This can be relative path from
+                        where the CLI is initiated (default: None)
 
 ```

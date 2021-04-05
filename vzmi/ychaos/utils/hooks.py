@@ -1,5 +1,6 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
+import collections
 from typing import Callable, Dict, List, Tuple
 
 
@@ -17,9 +18,7 @@ class EventHook(object):
         """
         Initializes an event hook object
         """
-        self.hooks: Dict[str, List[Callable]] = dict.fromkeys(
-            self.__hook_events__, list()
-        )
+        self.hooks: Dict[str, List[Callable]] = collections.defaultdict(list)
 
     def register_hook(self, event_name: str, hook: Callable) -> None:
         """

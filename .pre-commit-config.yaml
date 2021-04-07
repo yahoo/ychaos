@@ -1,0 +1,11 @@
+repos:
+    -   repo: local
+        hooks:
+            -   id: build
+                name: build
+                entry: bash -c 'make build'
+                stages:
+                    - push
+                language: system
+                pass_filenames: false
+                verbose: true

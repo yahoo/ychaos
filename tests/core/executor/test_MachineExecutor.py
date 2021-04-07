@@ -3,7 +3,7 @@
 from pathlib import Path
 from unittest import TestCase
 
-from mockito import mock, unstub, ANY, when
+from mockito import ANY, mock, unstub, when
 
 from vzmi.ychaos.core.exceptions.executor_errors import (
     YChaosTargetConfigConditionFailedError,

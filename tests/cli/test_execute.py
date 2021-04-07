@@ -6,7 +6,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
-from mockito import when, unstub
+from mockito import unstub, when
 
 from vzmi.ychaos.cli.execute import Execute
 from vzmi.ychaos.cli.mock import MockApp

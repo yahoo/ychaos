@@ -5,3 +5,6 @@ function install_and_upgrade() {
 }
 
 install_and_upgrade
+
+# Install Git Hooks
+pre-commit install -t pre-push

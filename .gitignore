@@ -95,3 +95,4 @@ docs/testplan/playground/schema.min.js
 docs/testplan/schema/*.html
 docs/testplan/schema/*.css
 docs/testplan/schema/*.js
+docs/cli/manual.md

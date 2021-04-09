@@ -1,5 +1,6 @@
 nav:
     - agent: agent.md
+    - coordinator: coordinator.md
     - contrib: contrib.md
     - system: system
     - network: network

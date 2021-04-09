@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Optional
 
 from vzmi.ychaos.agents.coordinator import Coordinator
-from vzmi.ychaos.cli import YChaosTestplanInputSubCommand
+from vzmi.ychaos.cli import YChaosCLIHook, YChaosTestplanInputSubCommand
 from vzmi.ychaos.testplan.schema import TestPlan
 from vzmi.ychaos.utils.dependency import DependencyUtils
 from vzmi.ychaos.utils.yaml import Dumper
@@ -59,6 +59,54 @@ class Attack(YChaosTestplanInputSubCommand):
 
     def configure_attack(self):
         self.coordinator = Coordinator(self.test_plan)
+
+        class OnAttackStart(YChaosCLIHook):
+            def __init__(self, app):
+                super(OnAttackStart, self).__init__(app)
+
+            def __call__(self):
+                self.console.log("Attack Started")
+
+        class OnAttackCompleted(YChaosCLIHook):
+            def __init__(self, app):
+                super(OnAttackCompleted, self).__init__(app)
+
+            def __call__(self):
+                self.console.log("Attack Ended")
+
+        class OnAgentStart(YChaosCLIHook):
+            def __init__(self, app):
+                super(OnAgentStart, self).__init__(app)
+
+            def __call__(self, agent_name: str):
+                self.console.log(f"Agent: {agent_name} - Started")
+
+        class OnAgentTeardown(YChaosCLIHook):
+            def __init__(self, app):
+                super(OnAgentTeardown, self).__init__(app)
+
+            def __call__(self, agent_name: str):
+                self.console.log(f"Agent: {agent_name} - Teardown started")
+
+        class OnAgentStop(YChaosCLIHook):
+            def __init__(self, app):
+                super(OnAgentStop, self).__init__(app)
+
+            def __call__(self, agent_name: str):
+                self.console.log(f"Agent: {agent_name} - Stopped")
+
+        self.coordinator.register_hook("on_attack_start", OnAttackStart(self.app))
+        self.coordinator.register_hook(
+            "on_attack_completed",
+            OnAttackCompleted(self.app),
+        )
+        self.coordinator.register_hook("on_each_agent_start", OnAgentStart(self.app))
+        self.coordinator.register_hook(
+            "on_each_agent_teardown",
+            OnAgentTeardown(self.app),
+        )
+        self.coordinator.register_hook("on_each_agent_stop", OnAgentStop(self.app))
+
         self.coordinator.configure_agent_in_test_plan()
         table = Table(
             Column("Agent", style="green"),
@@ -113,10 +161,9 @@ class Attack(YChaosTestplanInputSubCommand):
             return agent._exitcode
         if not agent.validate_and_load_test_plan():
             agent.configure_attack()
-            agent.console.log("Starting the attack")
             assert agent.coordinator is not None
+
             agent.coordinator.start_attack()
-            agent.console.log("Attack completed")
 
             agent.print_all_errors()
 

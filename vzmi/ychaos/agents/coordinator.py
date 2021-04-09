@@ -15,6 +15,7 @@ from vzmi.ychaos.agents.attack_report_schema import AgentStatus, AttackReport
 from vzmi.ychaos.app_logger import AppLogger
 from vzmi.ychaos.testplan.attack import AttackMode
 from vzmi.ychaos.testplan.schema import TestPlan
+from vzmi.ychaos.utils.hooks import EventHook
 
 
 class ConfiguredAgent:
@@ -25,6 +26,13 @@ class ConfiguredAgent:
     def __init__(
         self, agent: Agent, start_time: Optional[datetime], end_time: Optional[datetime]
     ):
+        """
+        Initialize ConfiguredAgent
+        Args:
+            agent: Agent object
+            start_time: Agent execution start time
+            end_time: Agent execution end time
+        """
         self.agent: Agent = agent
         self.start_time = start_time
         self.end_time = end_time
@@ -32,18 +40,59 @@ class ConfiguredAgent:
         self.agent_teardown_thread: Optional[Thread] = None
 
 
-class Coordinator:
+class Coordinator(EventHook):
     """
     The coordinator is responsible for setting up the chaos agents,
     running the agents and monitor the agent currently being run. It also
     takes care of completing the attack by bringing back to the system to its original
     state.
+
+    ## Coordinator Event Hooks
+
+    === "on_attack_start"
+        called when attack is started on the host
+        ```python
+            def callable_hook(): ...
+        ```
+
+    === "on_attack_completed"
+        called when attack is completed
+        ```python
+            def callable_hook(): ...
+        ```
+
+    === "on_each_agent_start"
+        called when a Agent start executing
+        ```python
+            def callable_hook(agent_name: str): ...
+        ```
+
+    === "on_each_agent_teardown"
+        called when a Agent Teardown is started
+        ```python
+            def callable_hook(agent_name: str): ...
+        ```
+
+    === "on_each_agent_stop"
+        called when a Agent completes its execution and teardown step
+        ```python
+            def callable_hook(agent_name: str): ...
+        ```
+    ---
     """
 
+    __hook_events__ = (
+        "on_attack_start",
+        "on_attack_completed",
+        "on_each_agent_start",
+        "on_each_agent_teardown",
+        "on_each_agent_stop",
+    )
     DEFAULT_DURATION = 3
     THREAD_TIMEOUT = 300
 
     def __init__(self, test_plan: TestPlan):
+        super(Coordinator, self).__init__()
         self.test_plan: TestPlan = test_plan
         self.configured_agents: List[ConfiguredAgent] = []
         self.attack_end_time: Optional[datetime] = None
@@ -199,6 +248,10 @@ class Coordinator:
                         configured_agent.agent_teardown_thread = (
                             configured_agent.agent.teardown_async()
                         )
+                        self.execute_hooks(
+                            "on_each_agent_teardown",
+                            configured_agent.agent.config.name,
+                        )
                         configured_agent.agent_teardown_thread.join(
                             timeout=self.THREAD_TIMEOUT
                         )
@@ -216,6 +269,10 @@ class Coordinator:
                     configured_agent.agent.exception.put(e)
                     configured_agent.agent.advance_state(AgentState.ERROR)
                     configured_agent.agent.preserved_state.has_error = True
+            self.execute_hooks(
+                "on_each_agent_stop",
+                configured_agent.agent.config.name,
+            )
 
             temp_exception_queue = Queue()
             while not configured_agent.agent.exception.empty():  # print all exceptions
@@ -282,17 +339,26 @@ class Coordinator:
             attack status - 0 if successful else 1
         """
         self.log.info("Attack started")
+        self.execute_hooks("on_attack_start")
         assert self.attack_end_time is not None
         assert self.configured_agents is not None
         while datetime.now(timezone.utc) <= self.attack_end_time:
             current_agent = self.get_next_agent_for_attack()
             if current_agent:
                 current_agent.agent_start_thread = current_agent.agent.start_async()
+                self.execute_hooks(
+                    "on_each_agent_start",
+                    current_agent.agent.config.name,
+                )
 
             current_agent = self.get_next_agent_for_teardown()
             if current_agent:
                 current_agent.agent_teardown_thread = (
                     current_agent.agent.teardown_async()
+                )
+                self.execute_hooks(
+                    "on_each_agent_teardown",
+                    current_agent.agent.config.name,
                 )
 
             sleep(1)
@@ -302,7 +368,10 @@ class Coordinator:
                 break
 
         self.stop_all_running_agents_in_sync()
-        self.log.info("Attack Completed")
+
         if self.exit_code:
             self.log.info("Attack failed")
+        else:
+            self.log.info("Attack Completed")
+        self.execute_hooks("on_attack_completed")
         return self.exit_code

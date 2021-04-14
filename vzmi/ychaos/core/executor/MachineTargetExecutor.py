@@ -5,8 +5,6 @@ import random
 from types import SimpleNamespace
 from typing import Any
 
-from ansible.executor.task_result import TaskResult
-
 from vzmi.ychaos.app_logger import AppLogger
 from vzmi.ychaos.core.executor.BaseExecutor import BaseExecutor
 from vzmi.ychaos.testplan.attack import MachineTargetDefinition
@@ -52,15 +50,15 @@ class YChaosAnsibleResultCallback(CallbackBase, EventHook):
         self.hosts_unreachable = dict()
         self.hosts_failed = dict()
 
-    def v2_runner_on_unreachable(self, result: TaskResult):
+    def v2_runner_on_unreachable(self, result):
         self.hosts_unreachable[result._host.get_name()] = result
         self.execute_hooks("on_target_unreachable", result)
 
-    def v2_runner_on_ok(self, result: TaskResult):
+    def v2_runner_on_ok(self, result):
         self.hosts_passed[result._host.get_name()] = result
         self.execute_hooks("on_target_passed", result)
 
-    def v2_runner_on_failed(self, result: TaskResult, ignore_errors=False):
+    def v2_runner_on_failed(self, result, ignore_errors=False):
         self.hosts_failed[result._host.get_name()] = result
         self.execute_hooks("on_target_failed", result)
 
@@ -179,6 +177,13 @@ class MachineTargetExecutor(BaseExecutor):
                     ),
                 ),
                 dict(
+                    name="Activate virtual environment",
+                    action=dict(
+                        module="shell",
+                        cmd="source {{result_pip.virtualenv}}/bin/activate",
+                    ),
+                ),
+                dict(
                     name="Create a workspace directory for storing local report files",
                     register="result_create_workspace",
                     action=dict(
@@ -196,22 +201,22 @@ class MachineTargetExecutor(BaseExecutor):
                         content=json.dumps(
                             self.testplan.to_serialized_dict(), indent=4
                         ),
-                        dest="{{result_create_workspace.dest}}/testplan.json",
+                        dest="{{result_create_workspace.path}}/testplan.json",
                     ),
                 ),
                 dict(
                     name="Run YChaos Agent",
                     action=dict(
                         module="shell",
-                        cmd="ychaos agent attack --testplan {{result_testplan_file.dest}} --attack-report-yaml {{result_create_workspace.dest}}/attack_report.yaml",
+                        cmd="ychaos agent attack --testplan {{result_testplan_file.dest}} --attack-report-yaml {{result_create_workspace.path}}/attack_report.yaml",
                     ),
                 ),
                 dict(
                     name="Zip workspace directory",
                     action=dict(
                         module="community.general.archive",
-                        path="{{result_create_workspace.dest}}",
-                        dest="{{result_create_workspace.dest}}/ychaos.zip",
+                        path="{{result_create_workspace.path}}",
+                        dest="{{result_create_workspace.path}}/ychaos.zip",
                         format="zip",
                     ),
                 ),
@@ -219,7 +224,7 @@ class MachineTargetExecutor(BaseExecutor):
                     name="Copy Workspace directory to local",
                     action=dict(
                         module="fetch",
-                        src="{{result_create_workspace.dest}}/ychaos.zip",
+                        src="{{result_create_workspace.path}}/ychaos.zip",
                         dest=str(
                             self.testplan.attack.get_target_config().report_dir.resolve()
                         )
@@ -230,7 +235,7 @@ class MachineTargetExecutor(BaseExecutor):
                     name="Delete YChaos Workspace on host",
                     action=dict(
                         module="file",
-                        path="{{result_create_workspace.dest}}",
+                        path="{{result_create_workspace.path}}",
                         state="absent",
                         recurse="yes",
                     ),

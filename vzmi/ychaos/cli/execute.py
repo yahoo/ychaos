@@ -5,8 +5,6 @@ from argparse import Namespace
 from pathlib import Path
 from typing import Any, Optional
 
-from ansible.executor.task_result import TaskResult
-
 from vzmi.ychaos.cli import YChaosCLIHook, YChaosTestplanInputSubCommand
 from vzmi.ychaos.core.executor.MachineTargetExecutor import (
     MachineTargetExecutor,
@@ -50,12 +48,12 @@ class Execute(YChaosTestplanInputSubCommand):
         assert isinstance(self.executor, MachineTargetExecutor)
 
         class OnTargetUnreachableHook(YChaosCLITargetExecutorHook):
-            def __call__(self, result: TaskResult):
+            def __call__(self, result):
                 self.console.print(f"{result._host.get_name()} is unreachable")
                 self._exitcode = 1
 
         class OnTargetFailedHook(YChaosCLITargetExecutorHook):  # pragma: no cover
-            def __call__(self, result: TaskResult):
+            def __call__(self, result):
                 self.console.log(
                     f"Attack on {result._host.get_name()} failed. Task={result.task_name}"
                 )

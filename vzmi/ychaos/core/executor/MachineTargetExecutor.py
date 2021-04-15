@@ -33,36 +33,37 @@ CallbackBase: Any  # For mypy
     "ansible.vars.manager", ("VariableManager",), raise_error=False
 )
 
+if CallbackBase:
 
-class YChaosAnsibleResultCallback(CallbackBase, EventHook):
+    class YChaosAnsibleResultCallback(CallbackBase, EventHook):
 
-    __hook_events__ = (
-        "on_target_unreachable",
-        "on_target_failed",
-        "on_target_passed",
-    )
+        __hook_events__ = (
+            "on_target_unreachable",
+            "on_target_failed",
+            "on_target_passed",
+        )
 
-    def __init__(self, *args, **kwargs):
-        super(YChaosAnsibleResultCallback, self).__init__()
+        def __init__(self, *args, **kwargs):
+            super(YChaosAnsibleResultCallback, self).__init__()
 
-        EventHook.__init__(self)
-        self.hooks.update(kwargs.pop("hooks", dict()))
+            EventHook.__init__(self)
+            self.hooks.update(kwargs.pop("hooks", dict()))
 
-        self.hosts_passed = dict()
-        self.hosts_unreachable = dict()
-        self.hosts_failed = dict()
+            self.hosts_passed = dict()
+            self.hosts_unreachable = dict()
+            self.hosts_failed = dict()
 
-    def v2_runner_on_unreachable(self, result):
-        self.hosts_unreachable[result._host.get_name()] = result
-        self.execute_hooks("on_target_unreachable", result)
+        def v2_runner_on_unreachable(self, result):
+            self.hosts_unreachable[result._host.get_name()] = result
+            self.execute_hooks("on_target_unreachable", result)
 
-    def v2_runner_on_ok(self, result):
-        self.hosts_passed[result._host.get_name()] = result
-        self.execute_hooks("on_target_passed", result)
+        def v2_runner_on_ok(self, result):
+            self.hosts_passed[result._host.get_name()] = result
+            self.execute_hooks("on_target_passed", result)
 
-    def v2_runner_on_failed(self, result, ignore_errors=False):
-        self.hosts_failed[result._host.get_name()] = result
-        self.execute_hooks("on_target_failed", result)
+        def v2_runner_on_failed(self, result, ignore_errors=False):
+            self.hosts_failed[result._host.get_name()] = result
+            self.execute_hooks("on_target_failed", result)
 
 
 class MachineTargetExecutor(BaseExecutor):

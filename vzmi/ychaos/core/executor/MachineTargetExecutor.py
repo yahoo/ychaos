@@ -13,22 +13,24 @@ from vzmi.ychaos.utils.dependency import DependencyUtils
 from vzmi.ychaos.utils.hooks import EventHook
 
 (TaskQueueManager,) = DependencyUtils.import_from(
-    "ansible.executor.task_queue_manager", ("TaskQueueManager",)
+    "ansible.executor.task_queue_manager", ("TaskQueueManager",), raise_error=False
 )
 (InventoryManager,) = DependencyUtils.import_from(
-    "ansible.inventory.manager", ("InventoryManager",)
+    "ansible.inventory.manager", ("InventoryManager",), raise_error=False
 )
 (DataLoader,) = DependencyUtils.import_from(
-    "ansible.parsing.dataloader", ("DataLoader",)
+    "ansible.parsing.dataloader", ("DataLoader",), raise_error=False
 )
-(Play,) = DependencyUtils.import_from("ansible.playbook.play", ("Play",))
+(Play,) = DependencyUtils.import_from(
+    "ansible.playbook.play", ("Play",), raise_error=False
+)
 
 CallbackBase: Any  # For mypy
 (CallbackBase,) = DependencyUtils.import_from(
-    "ansible.plugins.callback", ("CallbackBase",)
+    "ansible.plugins.callback", ("CallbackBase",), raise_error=False
 )
 (VariableManager,) = DependencyUtils.import_from(
-    "ansible.vars.manager", ("VariableManager",)
+    "ansible.vars.manager", ("VariableManager",), raise_error=False
 )
 
 

@@ -45,9 +45,9 @@ class Attack(YChaosTestplanInputSubCommand):
         self.console = self.app.console
         self.test_plan_path: Path = kwargs.pop("testplan")
         self.attack_report_yaml_path: Optional[Path] = kwargs.pop("attack_report_yaml")
-        if self.attack_report_yaml_path and not self.attack_report_yaml_path.is_file():
+        if self.attack_report_yaml_path and self.attack_report_yaml_path.is_dir():
             self.console.log(f"{self.attack_report_yaml_path} is not a valid file path")
-            self.set_exitcode(1)
+            self.attack_report_yaml_path = None
         self.test_plan: Optional[TestPlan] = None
         self.coordinator: Optional[Coordinator] = None
 

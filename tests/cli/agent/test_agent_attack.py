@@ -64,7 +64,8 @@ class TestAgentAttackCLI(TestCase):
         app = MockApp(args)
         args.app = app
 
-        self.assertEqual(1, args.cls.main(args))
+        self.assertEqual(0, args.cls.main(args))
+        self.assertTrue("is not a valid file path" in app.get_console_output())
 
     def test_invalid_test_plan(self):
         args = Namespace()

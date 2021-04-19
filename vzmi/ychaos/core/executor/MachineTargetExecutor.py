@@ -173,17 +173,10 @@ class MachineTargetExecutor(BaseExecutor):
                         # Failed in these following reasons
                         # 1. pip not installed
                         # 2. Unable to install required packages
-                        "result_pip.rc != 0"
+                        "result_pip.state == 'absent'"
                     ],
                     vars=dict(
                         ansible_python_interpreter="{{result_which_python3.stdout}}"
-                    ),
-                ),
-                dict(
-                    name="Activate virtual environment",
-                    action=dict(
-                        module="shell",
-                        cmd="source {{result_pip.virtualenv}}/bin/activate",
                     ),
                 ),
                 dict(
@@ -211,7 +204,11 @@ class MachineTargetExecutor(BaseExecutor):
                     name="Run YChaos Agent",
                     action=dict(
                         module="shell",
-                        cmd="ychaos agent attack --testplan {{result_testplan_file.dest}} --attack-report-yaml {{result_create_workspace.path}}/attack_report.yaml",
+                        cmd=(
+                            "source {{result_pip.virtualenv}}/bin/activate"
+                            " && "
+                            "ychaos agent attack --testplan {{result_testplan_file.dest}} --attack-report-yaml {{result_create_workspace.path}}/attack_report.yaml"
+                        ),
                     ),
                 ),
                 dict(
@@ -240,7 +237,6 @@ class MachineTargetExecutor(BaseExecutor):
                         module="file",
                         path="{{result_create_workspace.path}}",
                         state="absent",
-                        recurse="yes",
                     ),
                 ),
                 dict(
@@ -249,7 +245,6 @@ class MachineTargetExecutor(BaseExecutor):
                         module="file",
                         path="{{result_pip.virtualenv}}",
                         state="absent",
-                        recurse="yes",
                     ),
                 ),
             ],

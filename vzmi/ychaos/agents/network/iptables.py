@@ -80,10 +80,9 @@ class IPTablesBlockConfig(TimedAgentConfig):
         examples=[[3000, 4443]],
     )
 
-    incoming_endpoints: Optional[
-        List[Union[IPvAnyNetwork, AnyHttpUrl, IPvAnyAddress]]
-    ] = Field(
+    incoming_endpoints: List[Union[IPvAnyNetwork, AnyHttpUrl, IPvAnyAddress]] = Field(
         description="List of incoming endpoint to block",
+        default=list(),
         examples=["203.0.113.0", "https://yahoo.com:443"],
     )
 
@@ -91,15 +90,8 @@ class IPTablesBlockConfig(TimedAgentConfig):
         List[Union[IPvAnyNetwork, AnyHttpUrl, IPvAnyAddress]]
     ] = Field(
         description="List of outgoing endpoint to block",
+        default=list(),
         examples=["203.0.113.0", "https://yahoo.com:443"],
-    )
-
-    duration: int = Field(
-        description="The duration(in Secs) for which BlockPort Minion Runs",
-        default=300,
-        examples=[500, 450, 120],
-        lt=1800,
-        gt=0,
     )
 
 

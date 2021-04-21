@@ -14,7 +14,7 @@ class MockApp(App):
     """
     This will create a mocked application similar to [App][vzmi.ychaos.cli.main.App]
     whose console output will be tracked by a StringIO object for verification. This is not
-    to be used for production.
+    to be used for production and only for testing purposes.
     """
 
     def __init__(self, args: Namespace):

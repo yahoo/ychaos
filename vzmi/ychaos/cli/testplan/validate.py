@@ -39,11 +39,7 @@ class TestPlanValidatorCommand(YChaosSubCommand):
         return parser
 
     def __init__(self, **kwargs):
-        super(TestPlanValidatorCommand, self).__init__()
-        assert kwargs.pop("cls") == self.__class__
-
-        self.app = kwargs.pop("app")
-        self.console: Console = self.app.console
+        super(TestPlanValidatorCommand, self).__init__(**kwargs)
 
         self.paths: List[Path] = kwargs.pop("paths")
 
@@ -105,7 +101,7 @@ class TestPlanValidatorCommand(YChaosSubCommand):
 
     @classmethod
     def main(cls, args: Namespace) -> Any:
-        validator = TestPlanValidatorCommand(**vars(args))
+        validator = cls(**vars(args))
         validator.do_testplans_validation()
 
         return validator._exitcode

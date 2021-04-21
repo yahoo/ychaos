@@ -83,7 +83,6 @@ class SubCommandParsersAction(_SubParsersAction):
         return cls.build_parser(parser)
 
 
-# This class is adopted from ssharma06/vzmi.utill
 class SubCommand(ABC):
     """
     Abstract base class for an Argparse subcommand. This is used along with the

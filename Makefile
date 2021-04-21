@@ -4,11 +4,16 @@ develop:
 	./develop/make.sh
 
 # build is responsible for building the project, performing code formats,
-# code analysis and running tests.
+# code analysis.
 .PHONY: build
 build:
-	chmod +x develop/validate.sh
-	./develop/validate.sh
+	chmod +x develop/build.sh
+	./develop/build.sh
+
+.PHONY: test
+test:
+	chmod +x develop/test.sh
+	./develop/test.sh
 
 .PHONY: autogen
 autogen:

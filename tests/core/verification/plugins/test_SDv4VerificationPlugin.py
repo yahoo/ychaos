@@ -18,7 +18,7 @@ class TestSDv4VerificationPlugin(TestCase):
         self.verification_config = SDv4Verification(
             pipeline_id=123456,
             job_name="mock_verify",
-            sd_api_url="https://api.screwdriver.ouroath.com",
+            sd_api_url="https://api.screwdriver.cd",
             sd_api_token="test_token",
         )
 
@@ -29,7 +29,7 @@ class TestSDv4VerificationPlugin(TestCase):
             dict(
                 status_code=400,
                 json=lambda: dict(),
-                url="https://api.screwdriver.ouroath.com/v4/auth/token",
+                url="https://api.screwdriver.cd/v4/auth/token",
             ),
             spec=Response,
         )
@@ -38,7 +38,7 @@ class TestSDv4VerificationPlugin(TestCase):
         )
 
         when(requests).get(
-            url="https://api.screwdriver.ouroath.com/v4/auth/token",
+            url="https://api.screwdriver.cd/v4/auth/token",
             params=dict(api_token="test_token"),
             timeout=10,
         ).thenReturn(mock_response)
@@ -49,7 +49,7 @@ class TestSDv4VerificationPlugin(TestCase):
         self.assertDictEqual(
             state_data.data,
             dict(
-                url="https://api.screwdriver.ouroath.com/v4/auth/token",
+                url="https://api.screwdriver.cd/v4/auth/token",
                 status_code=400,
                 json=dict(),
                 error="HTTPError",
@@ -62,7 +62,7 @@ class TestSDv4VerificationPlugin(TestCase):
         verification_plugin = SDv4VerificationPlugin(config=self.verification_config)
 
         when(requests).get(
-            url="https://api.screwdriver.ouroath.com/v4/auth/token",
+            url="https://api.screwdriver.cd/v4/auth/token",
             params=dict(api_token="test_token"),
             timeout=10,
         ).thenRaise(requests.Timeout)
@@ -80,13 +80,13 @@ class TestSDv4VerificationPlugin(TestCase):
             dict(
                 status_code=200,
                 json=lambda: dict(),
-                url="https://api.screwdriver.ouroath.com/v4/auth/token",
+                url="https://api.screwdriver.cd/v4/auth/token",
             ),
             spec=Response,
         )
         when(mock_response).raise_for_status().thenReturn(None)
         when(requests).get(
-            url="https://api.screwdriver.ouroath.com/v4/auth/token",
+            url="https://api.screwdriver.cd/v4/auth/token",
             params=dict(api_token="test_token"),
             timeout=10,
         ).thenReturn(mock_response)
@@ -96,7 +96,7 @@ class TestSDv4VerificationPlugin(TestCase):
             dict(
                 status_code=400,
                 json=lambda: dict(),
-                url="https://api.screwdriver.ouroath.com/v4/events",
+                url="https://api.screwdriver.cd/v4/events",
             ),
             spec=Response,
         )
@@ -104,7 +104,7 @@ class TestSDv4VerificationPlugin(TestCase):
             requests.HTTPError(response=mock_response_event_start)
         )
         when(verification_plugin._session).post(
-            url="https://api.screwdriver.ouroath.com/v4/events", json=ANY
+            url="https://api.screwdriver.cd/v4/events", json=ANY
         ).thenReturn(mock_response_event_start)
 
         state_data = verification_plugin.run_verification()
@@ -113,7 +113,7 @@ class TestSDv4VerificationPlugin(TestCase):
         self.assertDictEqual(
             state_data.data,
             dict(
-                url="https://api.screwdriver.ouroath.com/v4/events",
+                url="https://api.screwdriver.cd/v4/events",
                 status_code=400,
                 json=dict(),
                 error="HTTPError",
@@ -128,13 +128,13 @@ class TestSDv4VerificationPlugin(TestCase):
             dict(
                 status_code=200,
                 json=lambda: dict(),
-                url="https://api.screwdriver.ouroath.com/v4/auth/token",
+                url="https://api.screwdriver.cd/v4/auth/token",
             ),
             spec=Response,
         )
         when(mock_response).raise_for_status().thenReturn(None)
         when(requests).get(
-            url="https://api.screwdriver.ouroath.com/v4/auth/token",
+            url="https://api.screwdriver.cd/v4/auth/token",
             params=dict(api_token="test_token"),
             timeout=10,
         ).thenReturn(mock_response)
@@ -144,13 +144,13 @@ class TestSDv4VerificationPlugin(TestCase):
             dict(
                 status_code=200,
                 json=lambda: dict(id=98765432),
-                url="https://api.screwdriver.ouroath.com/v4/events",
+                url="https://api.screwdriver.cd/v4/events",
             ),
             spec=Response,
         )
         when(mock_response_event_start).raise_for_status().thenReturn(None)
         when(verification_plugin._session).post(
-            url="https://api.screwdriver.ouroath.com/v4/events", json=ANY
+            url="https://api.screwdriver.cd/v4/events", json=ANY
         ).thenReturn(mock_response_event_start)
 
         # Mock for Event monitor
@@ -158,7 +158,7 @@ class TestSDv4VerificationPlugin(TestCase):
             dict(
                 status_code=404,
                 json=lambda: dict(),
-                url="https://api.screwdriver.ouroath.com/v4/events/98765432/builds",
+                url="https://api.screwdriver.cd/v4/events/98765432/builds",
             ),
             spec=Response,
         )
@@ -166,7 +166,7 @@ class TestSDv4VerificationPlugin(TestCase):
             requests.HTTPError(response=mock_response_event_monitor)
         )
         when(verification_plugin._session).get(
-            url="https://api.screwdriver.ouroath.com/v4/events/98765432/builds"
+            url="https://api.screwdriver.cd/v4/events/98765432/builds"
         ).thenReturn(mock_response_event_monitor)
 
         when(time).sleep(ANY).thenReturn(None)
@@ -177,7 +177,7 @@ class TestSDv4VerificationPlugin(TestCase):
         self.assertDictEqual(
             state_data.data,
             dict(
-                url="https://api.screwdriver.ouroath.com/v4/events/98765432/builds",
+                url="https://api.screwdriver.cd/v4/events/98765432/builds",
                 status_code=404,
                 json=dict(),
                 error="HTTPError",
@@ -192,13 +192,13 @@ class TestSDv4VerificationPlugin(TestCase):
             dict(
                 status_code=200,
                 json=lambda: dict(),
-                url="https://api.screwdriver.ouroath.com/v4/auth/token",
+                url="https://api.screwdriver.cd/v4/auth/token",
             ),
             spec=Response,
         )
         when(mock_response).raise_for_status().thenReturn(None)
         when(requests).get(
-            url="https://api.screwdriver.ouroath.com/v4/auth/token",
+            url="https://api.screwdriver.cd/v4/auth/token",
             params=dict(api_token="test_token"),
             timeout=10,
         ).thenReturn(mock_response)
@@ -208,13 +208,13 @@ class TestSDv4VerificationPlugin(TestCase):
             dict(
                 status_code=200,
                 json=lambda: dict(id=98765432),
-                url="https://api.screwdriver.ouroath.com/v4/events",
+                url="https://api.screwdriver.cd/v4/events",
             ),
             spec=Response,
         )
         when(mock_response_event_start).raise_for_status().thenReturn(None)
         when(verification_plugin._session).post(
-            url="https://api.screwdriver.ouroath.com/v4/events", json=ANY
+            url="https://api.screwdriver.cd/v4/events", json=ANY
         ).thenReturn(mock_response_event_start)
 
         # Mock for Event monitor
@@ -222,13 +222,13 @@ class TestSDv4VerificationPlugin(TestCase):
             dict(
                 status_code=200,
                 json=lambda: [dict(status="FAILURE", eventId=98765432, jobId=88888)],
-                url="https://api.screwdriver.ouroath.com/v4/events/98765432/builds",
+                url="https://api.screwdriver.cd/v4/events/98765432/builds",
             ),
             spec=Response,
         )
         when(mock_response_event_monitor).raise_for_status().thenReturn(None)
         when(verification_plugin._session).get(
-            url="https://api.screwdriver.ouroath.com/v4/events/98765432/builds"
+            url="https://api.screwdriver.cd/v4/events/98765432/builds"
         ).thenReturn(mock_response_event_monitor)
 
         when(time).sleep(ANY).thenReturn(None)
@@ -251,13 +251,13 @@ class TestSDv4VerificationPlugin(TestCase):
             dict(
                 status_code=200,
                 json=lambda: dict(),
-                url="https://api.screwdriver.ouroath.com/v4/auth/token",
+                url="https://api.screwdriver.cd/v4/auth/token",
             ),
             spec=Response,
         )
         when(mock_response).raise_for_status().thenReturn(None)
         when(requests).get(
-            url="https://api.screwdriver.ouroath.com/v4/auth/token",
+            url="https://api.screwdriver.cd/v4/auth/token",
             params=dict(api_token="test_token"),
             timeout=10,
         ).thenReturn(mock_response)
@@ -267,13 +267,13 @@ class TestSDv4VerificationPlugin(TestCase):
             dict(
                 status_code=200,
                 json=lambda: dict(id=98765432),
-                url="https://api.screwdriver.ouroath.com/v4/events",
+                url="https://api.screwdriver.cd/v4/events",
             ),
             spec=Response,
         )
         when(mock_response_event_start).raise_for_status().thenReturn(None)
         when(verification_plugin._session).post(
-            url="https://api.screwdriver.ouroath.com/v4/events", json=ANY
+            url="https://api.screwdriver.cd/v4/events", json=ANY
         ).thenReturn(mock_response_event_start)
 
         # Mock for Event monitor (1)
@@ -281,7 +281,7 @@ class TestSDv4VerificationPlugin(TestCase):
             dict(
                 status_code=200,
                 json=lambda: [dict(status="QUEUED", eventId=98765432, jobId=88888)],
-                url="https://api.screwdriver.ouroath.com/v4/events/98765432/builds",
+                url="https://api.screwdriver.cd/v4/events/98765432/builds",
             ),
             spec=Response,
         )
@@ -292,14 +292,14 @@ class TestSDv4VerificationPlugin(TestCase):
             dict(
                 status_code=200,
                 json=lambda: [dict(status="SUCCESS", eventId=98765432, jobId=88888)],
-                url="https://api.screwdriver.ouroath.com/v4/events/98765432/builds",
+                url="https://api.screwdriver.cd/v4/events/98765432/builds",
             ),
             spec=Response,
         )
         when(mock_response_event_monitor_2).raise_for_status().thenReturn(None)
 
         when(verification_plugin._session).get(
-            url="https://api.screwdriver.ouroath.com/v4/events/98765432/builds"
+            url="https://api.screwdriver.cd/v4/events/98765432/builds"
         ).thenReturn(mock_response_event_monitor_1).thenReturn(
             mock_response_event_monitor_2
         )

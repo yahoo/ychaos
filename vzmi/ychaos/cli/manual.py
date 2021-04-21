@@ -27,11 +27,7 @@ class Manual(YChaosSubCommand):
     help = "Print the manual for YChaos CLI"
 
     def __init__(self, **kwargs):
-        super(Manual, self).__init__()
-        assert kwargs.pop("cls") == self.__class__
-
-        self.app = kwargs.pop("app")
-        self.console: Console = self.app.console
+        super(Manual, self).__init__(**kwargs)
 
         self.file: Optional[Path] = kwargs.pop("file", None)
 
@@ -79,7 +75,7 @@ class Manual(YChaosSubCommand):
 
     @classmethod
     def main(cls, args: Namespace) -> Any:  # pragma: no cover
-        manual = Manual(**vars(args))
+        manual = cls(**vars(args))
         manual.do_print_manual_entry()
 
         return manual._exitcode

@@ -11,8 +11,11 @@ class InvalidEventHookError(KeyError):
 class EventHook(object):
 
     __hook_events__: Tuple[str, ...] = tuple()
-    # Lists the valid hooks that can be registered for this particular class.
-    # The `register_hook` method checks this list for the hooks that are being registered.
+    """
+    Lists the valid hooks that can be registered for this
+    particular object. The `register_hook()` method checks this list
+    for the hooks that are being registered.
+    """
 
     def __init__(self):
         """

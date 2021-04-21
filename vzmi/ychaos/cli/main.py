@@ -15,7 +15,7 @@ from vzmi.ychaos.cli.exceptions import YChaosCLIError
 from vzmi.ychaos.cli.execute import Execute
 from vzmi.ychaos.cli.manual import Manual
 from vzmi.ychaos.cli.testplan import TestPlan
-from vzmi.ychaos.cli.verification import Verification
+from vzmi.ychaos.cli.verify import Verify
 from vzmi.ychaos.settings import (
     ApplicationSettings,
     DevSettings,
@@ -35,34 +35,7 @@ class YChaos:
     the CLI which takes in the program arguments. See YChaos CLI documentation for
     more details.
 
-    ```
-    $ ychaos -h
-    usage: ychaos [-h] [-v] [-V] [--debug] [-c {dev,prod}]
-                  [--text-report TEXT_REPORT] [--html-report HTML_REPORT]
-                  {testplan,manual,agent} ...
-
-    positional arguments:
-      {testplan,manual,agent}
-        testplan            sub command for test plan operations
-        manual              Print the manual for YChaos CLI
-        agent               ychaos agent CLI
-
-    optional arguments:
-      -h, --help            show this help message and exit
-      -v, --version         show program's version number and exit
-      -c {dev,prod}, --config {dev,prod}
-                            Set YChaos CLI configuration (prod)
-
-    verbosity:
-      -V, --verbose         Increase verbosity of logs (INFO)
-      --debug               Enable debug mode
-
-    reports:
-      --text-report TEXT_REPORT
-                            Generate a text report from the YChaos execution
-      --html-report HTML_REPORT
-                            Generate a HTML report from YChaos execution
-    ```
+    To see the usage of the YChaos CLI, run `ychaos -h` on the terminal
     """
 
     settings = ApplicationSettings.get_instance()
@@ -156,7 +129,7 @@ class YChaos:
         ychaos_cli_subparsers.add_parser(cls=TestPlan, name=TestPlan.name)
         ychaos_cli_subparsers.add_parser(cls=Manual, name=Manual.name)
         ychaos_cli_subparsers.add_parser(cls=Agent, name=Agent.name)
-        ychaos_cli_subparsers.add_parser(cls=Verification, name=Verification.name)
+        ychaos_cli_subparsers.add_parser(cls=Verify, name=Verify.name)
         ychaos_cli_subparsers.add_parser(cls=Execute, name=Execute.name)
 
         args = ychaos_cli.parse_args(program_arguments)
@@ -327,6 +300,14 @@ class YChaosRoot(YChaosSubCommand):
 
     @classmethod
     def main(cls, args: Namespace) -> Any:  # pragma: no cover
+        """
+        Does Nothing.
+        Args:
+            args: Arguments
+
+        Returns:
+            0 (Zero) exitcode
+        """
         return 0
 
 

@@ -35,9 +35,8 @@ are more than huge, it is advised to split the commits into multiple.
     If you have installed the development package with `debug` extension, then all of these
     packages required for screwdriver validations will already be installed in your virtual environment.
 
-You can also run all of the screwdriver validations at once using the script
-provided in the `develop` directory. Change the permission using `chmod +x develop/validate.sh`
-and run the script `./develop/validate.sh` to run all validations at once.
+To run all the code analysis steps locally run `make build`. To
+run unittests locally, run `make test`.
 
 ## Coding standards
 

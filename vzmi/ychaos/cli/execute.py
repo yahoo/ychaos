@@ -25,8 +25,6 @@ class Execute(YChaosTestplanInputSubCommand):
 
     def __init__(self, **kwargs):
         super(Execute, self).__init__(**kwargs)
-        self.app = kwargs.pop("app")
-        self.console = self.app.console
 
         self.test_plan_path: Path = kwargs.pop("testplan")
 

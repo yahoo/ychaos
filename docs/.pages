@@ -2,5 +2,6 @@ arrange:
     - ...
     - agents
     - testplan
+    - verification
     - cli
     - package_docs

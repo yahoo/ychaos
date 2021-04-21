@@ -7,5 +7,5 @@ class SelfTargetExecutor(BaseExecutor):
 
     __target_type__ = "self"
 
-    def execute(self):
-        pass
+    def execute(self) -> None:
+        raise NotImplementedError()

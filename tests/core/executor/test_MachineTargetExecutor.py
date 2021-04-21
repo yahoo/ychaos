@@ -15,7 +15,7 @@ from vzmi.ychaos.core.executor.MachineTargetExecutor import (
 from vzmi.ychaos.testplan.schema import TestPlan
 
 
-class TestMachineExecutor(TestCase):
+class TestMachineTargetExecutor(TestCase):
     def setUp(self) -> None:
         self.testplans_directory = (
             Path(__file__).joinpath("../../../resources/testplans").resolve()

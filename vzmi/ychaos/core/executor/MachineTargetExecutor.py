@@ -71,8 +71,55 @@ class MachineTargetExecutor(BaseExecutor):
     The executor that executes the agent on a set of Virtual machines/Bare metals
     by connecting to the hosts via SSH. The input for the executor is the testplan,
     within which, the target_type is defined as `machine`. The target_config will
-    provide the list of hosts out of which random `blast_radius`%
-    of the hosts is selected for attack.
+    provide the list of hosts out of which random `blast_radius`% of the hosts
+    is selected for attack.
+
+    The following are the valid hooks to this executor
+
+    ## Valid Hooks
+
+    === "on_start"
+        Called when starting to run the Ansible playbook.
+
+        ```python
+            def callable_hook(): ...
+        ```
+
+    === "on_no_targets_found"
+        Called when no targets are found to attack. Either blast radius is
+        too low or there are no hosts in the attack list.
+
+        ```python
+            def callable_hook(): ...
+        ```
+
+    === "on_target_unreachable"
+        Called when a target becomes unreachable during the Ansible play
+
+        ```python
+            def callable_hook(result: AnsibleResult): ...
+        ```
+
+    === "on_target_passed"
+        Called when an ansible task is passed
+
+        ```python
+            def callable_hook(result: AnsibleResult): ...
+        ```
+
+    === "on_target_failed"
+        Called when an ansible task is failed
+
+        ```python
+            def callable_hook(result: AnsibleResult): ...
+        ```
+
+    === "on_end"
+        Called after the end of Ansible playbook run
+
+        ```python
+            def callable_hook(result): ...
+        ```
     """
 
     __target_type__ = "machine"
@@ -250,7 +297,7 @@ class MachineTargetExecutor(BaseExecutor):
             ],
         )
 
-    def execute(self):
+    def execute(self) -> None:
         self.prepare()
 
         if len(self.target_hosts) == 0:

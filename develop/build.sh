@@ -39,14 +39,6 @@ function security_validation() {
     echo "No security vulnerabilities found"
 }
 
-# Unittest and coverage using green
-function unittest() {
-    echo "==============================================="
-    echo "Running Unittests with coverage"
-    pytest --cov=vzmi.ychaos --cov-report term-missing tests --durations=5
-    rm .coverage*
-}
-
 function autogen_cli_docs() {
     echo "==============================================="
     echo "Autogenerating CLI documentation"
@@ -62,5 +54,3 @@ autogen_cli_docs
 flake8_validation
 type_validation
 security_validation
-
-unittest

@@ -10,6 +10,19 @@ from vzmi.ychaos.utils.hooks import EventHook
 
 
 class BaseExecutor(EventHook, ABC):
+    """
+    TargetExecutor defines the target where the agents are executed to
+    test the resiliency of the system. A simple example of Target Executor is the
+    [MachineTargetExecutor][vzmi.ychaos.core.executor.MachineTargetExecutor.MachineTargetExecutor]
+    which holds the program logic to execute the agents (with Coordinator) in Virtual Machines/BareMetals
+
+    Each new Target Executor overrides the `execute()` method which defines "what" is to be done
+    to execute the agents in a particular target environment.
+
+    This class extends the [EventHook][vzmi.ychaos.utils.hooks.EventHook] class, which
+    implies each of the target executor can define its own events and the hooks that will
+    be called during the trigger of an event.
+    """
 
     __target_type__: str
 
@@ -31,12 +44,20 @@ class BaseExecutor(EventHook, ABC):
 
         # Even though ideally this branch is never entered by the code (unless there is some issue with pydantic)
         if not isinstance(
-            target_config, self._get_target_type().MACHINE.metadata.schema
+            target_config, self._get_target_type().metadata.schema
         ):  # pragma: no cov
             raise YChaosTargetConfigConditionFailedError(
                 "Target configuration is not processable for this executor"
             )
 
     @abstractmethod
-    def execute(self):
+    def execute(self) -> None:
+        """
+        Define "what" is to be done when the testplan consists
+        the instruction to execute the agents in a particular
+        target environment.
+
+        Returns:
+            None
+        """
         pass  # Implement in Executors

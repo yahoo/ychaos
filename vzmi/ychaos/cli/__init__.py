@@ -20,7 +20,10 @@ class YChaosSubCommand(SubCommand, ABC):
     _exitcode = 0
 
     def __init__(self, **kwargs):
-        pass  # Abstract method
+        assert kwargs.pop("cls") == self.__class__
+
+        self.app = kwargs.pop("app")
+        self.console: Console = self.app.console
 
     def set_exitcode(self, exitcode=0):
         self._exitcode = exitcode

@@ -42,6 +42,14 @@ class PythonModuleVerification(SchemaModel):
 
 
 class HTTPRequestVerification(SchemaModel):
+    """
+    Makes requests to the specified endpoints and verifies that
+    the service is returning a valid response along with verifying the
+    response time of the service being less than `latency` field.
+
+    The user can also specify a `count` attribute requesting the tool to make
+    `count` number of requests to the same endpoints.
+    """
 
     _http_methods = ("GET", "POST", "HEAD", "PATCH", "DELETE")
 
@@ -104,6 +112,16 @@ class HTTPRequestVerification(SchemaModel):
 
 
 class SDv4Verification(SchemaModel):
+    """
+    The SDV4VerificationPlugin offers the user of YChaos to configure
+    a 3rd party Screwdriver Job that is triggered remotely by YChaos and upon the
+    successful completion of that SDv4 job, the verification is marked as successful.
+
+    If the SDv4 job fails/is aborted, the verification is marked as failure.
+
+    [Know more about Screwdriver CI/CD](https://screwdriver.cd/)
+    """
+
     pipeline_id: int = Field(
         ..., description="SDv4 pipeline ID", examples=[123456, 1041241]
     )

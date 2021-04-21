@@ -9,6 +9,11 @@ from pydantic import validate_arguments
 
 
 class DependencyUtils:
+    """
+    DependencyUtils provides utility methods to handle and import optional dependencies
+    in the YChaos package.
+    """
+
     @classmethod
     def import_module(
         cls, name: str, message: str = None, raise_error: bool = True

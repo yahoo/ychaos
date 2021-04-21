@@ -40,9 +40,7 @@ class Attack(YChaosTestplanInputSubCommand):
 
     def __init__(self, **kwargs):
         super(Attack, self).__init__(**kwargs)
-        assert kwargs.pop("cls") == self.__class__
-        self.app = kwargs.pop("app")
-        self.console = self.app.console
+
         self.test_plan_path: Path = kwargs.pop("testplan")
         self.attack_report_yaml_path: Optional[Path] = kwargs.pop("attack_report_yaml")
         if self.attack_report_yaml_path and self.attack_report_yaml_path.is_dir():
@@ -156,7 +154,7 @@ class Attack(YChaosTestplanInputSubCommand):
 
     @classmethod
     def main(cls, args: Namespace):
-        agent = Attack(**vars(args))
+        agent = cls(**vars(args))
         if agent._exitcode:
             return agent._exitcode
         if not agent.validate_and_load_test_plan():

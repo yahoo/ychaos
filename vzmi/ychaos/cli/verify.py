@@ -15,10 +15,10 @@ from vzmi.ychaos.utils.dependency import DependencyUtils
 (Console,) = DependencyUtils.import_from("rich.console", ("Console",))
 (Markdown,) = DependencyUtils.import_from("rich.markdown", ("Markdown",))
 
-__all__ = ["Verification"]
+__all__ = ["Verify"]
 
 
-class Verification(YChaosTestplanInputSubCommand):
+class Verify(YChaosTestplanInputSubCommand):
     """
     The `verify` subcommand of YChaos is used to verify the state of the system. This
     subcommand requires a valid testplan which can be provided with the -t/--testplan argument.
@@ -29,11 +29,7 @@ class Verification(YChaosTestplanInputSubCommand):
     help = "The verification subcommand of YChaos"
 
     def __init__(self, **kwargs):
-        super(Verification, self).__init__()
-        assert kwargs.pop("cls") == self.__class__
-
-        self.app = kwargs.pop("app")
-        self.console: Console = self.app.console
+        super(Verify, self).__init__(**kwargs)
 
         self.test_plan_path: Path = kwargs.pop("testplan")
         self.state: SystemState = SystemState(kwargs.pop("state", None).upper())
@@ -45,7 +41,7 @@ class Verification(YChaosTestplanInputSubCommand):
 
     @classmethod
     def build_parser(cls, parser: ArgumentParser) -> ArgumentParser:
-        parser = super(Verification, cls).build_parser(parser)
+        parser = super(Verify, cls).build_parser(parser)
         parser.add_argument(
             "-s",
             "--state",
@@ -195,7 +191,7 @@ class Verification(YChaosTestplanInputSubCommand):
 
     @classmethod
     def main(cls, args: Namespace) -> Any:  # pragma: no cover
-        verification_command = Verification(**vars(args))
+        verification_command = Verify(**vars(args))
 
         verification_command.verify_system_state()
 

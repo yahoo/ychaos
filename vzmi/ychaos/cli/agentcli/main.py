@@ -6,9 +6,6 @@ from argparse import ArgumentParser, Namespace
 from vzmi.ychaos.cli import YChaosSubCommand
 from vzmi.ychaos.cli.agentcli.attack import Attack
 from vzmi.ychaos.utils.argparse import SubCommandParsersAction
-from vzmi.ychaos.utils.dependency import DependencyUtils
-
-(Console,) = DependencyUtils.import_from("rich.console", ("Console",))
 
 __all__ = ["Agent"]
 

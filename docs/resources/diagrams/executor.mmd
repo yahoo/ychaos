@@ -1,0 +1,59 @@
+%% Copy the following code to https://mermaid-js.github.io/mermaid-live-editor
+%% to generate a new image of the flowchart.
+
+flowchart TD
+    subgraph core
+        TP[YChaos Testplan] --> |Validate| EXEC[Executor]
+        EXEC --> |Determine\nTarget Type| TARGET_EXEC((Target\nExecutor))
+        TARGET_EXEC -->  AGENT_CNTRL
+
+        subgraph agent[Agent Controller]
+            AGENT_CNTRL[Agent\nController]
+            AGENT_CNTRL --> CHECK_MODE{Mode}
+
+            %% Sequential
+            CHECK_MODE --> |Sequential| AGENT_ITR{{Iterate\nAgents}}
+            AGENT_ITR --> |Agent Config| AGENT_RUN((Run\nAgent))
+            AGENT_RUN --> AGENT_ITR
+
+            %% Concurrent
+            CHECK_MODE --> |Concurrent| AGENT_CONC[Run\nagents\nconcurrently]
+
+            subgraph AGENT_EXEC_LC[Agent Lifecycle]
+                AGENT_CONF[Agent\nConfig] --> AGENT_DEFN[Agent\nDefinition]
+                AGENT_DEFN --> AGENT_SETUP_LC[setup]
+                AGENT_SETUP_LC --> AGENT_RUN_LC[run]
+                AGENT_RUN_LC --> AGENT_TEARDOWN_LC[teardown]
+                AGENT_MONITOR_LC[monitor]
+            end
+        end
+
+        AGENT_CONC --> |Completion of\nAgents execution| DONE_SUCCESS[Done successfully]
+        AGENT_RUN --> |Completion of\nAgents execution| DONE_SUCCESS[Done successfully]
+
+        DONE_SUCCESS --> VERIFY_SYSTEM{Verify System State}
+
+        VERIFY_SYSTEM --> |System\nhandled\nthe chaos| ALL_GOOD[All Good]
+        VERIFY_SYSTEM --> |System\nunable to\nhandle chaos| CORRECTIVE_MEASURES[Take\ncorrective\nmeasures]
+
+        CORRECTIVE_MEASURES --> |Take\ncorrective\naction| EXEC
+    end
+
+    subgraph target_type["target_type (config)"]
+        MACHINE
+        SELF
+    end
+
+    subgraph agents
+        CPU[CPU\nBurn]
+        NETWORK[Network\nBlock]
+    end
+
+    subgraph mode
+        Concurrent
+        Sequential
+    end
+
+    agents --> TP
+    target_type --> TP
+    mode --> TP

@@ -6,13 +6,10 @@ from pathlib import Path
 from typing import Any, List
 
 from pydantic import ValidationError
+from rich.panel import Panel
 
 from vzmi.ychaos.cli import YChaosSubCommand
 from vzmi.ychaos.testplan.validator import TestPlanValidator
-from vzmi.ychaos.utils.dependency import DependencyUtils
-
-(Console,) = DependencyUtils.import_from("rich.console", ("Console",))
-(Panel,) = DependencyUtils.import_from("rich.panel", ("Panel",))
 
 __all__ = ["TestPlanValidatorCommand"]
 

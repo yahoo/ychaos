@@ -8,7 +8,7 @@
     git clone git@git.vzbuilders.com:`whoami`/vzmi.ychaos.git
     ```
 
-2. Setup the project on an IDE (Preferrably PyCharm).
+2. Set up the project on an IDE (Preferably PyCharm).
 
     !!! Note
         It is recommended to install [pydantic plugin for Pycharm](https://pydantic-docs.helpmanual.io/pycharm_plugin/)
@@ -42,8 +42,8 @@ run unittests locally, run `make test`.
 
 This section of the document contains some of the coding standards
 followed in this package. It is recommended to read this and follow this
-for any contribution. Some of the preferred way of standards are mentioned.
-Although, most of the sub sections are provided with reasoning, this is not an
+for any contribution. This section of the document provides some of the preferred ways of 
+writing code.  Although, most of the subsections are provided with reasoning, this is not an
 official coding standard and can vary in special conditions.
 
 !!! hint

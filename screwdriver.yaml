@@ -23,7 +23,6 @@ jobs:
          template: python-2104/documentation
          environment:
              DOCUMENTATION_PUBLISH: False
-             DOWNGRADE_PKGS: ""
          requires: [~pr]
          steps:
              - postinit: pip install -e .[doc_build]

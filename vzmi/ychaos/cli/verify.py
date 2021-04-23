@@ -10,10 +10,6 @@ from vzmi.ychaos.core.verification.controller import VerificationController
 from vzmi.ychaos.core.verification.data import VerificationStateData
 from vzmi.ychaos.testplan import SystemState
 from vzmi.ychaos.testplan.verification import VerificationConfig
-from vzmi.ychaos.utils.dependency import DependencyUtils
-
-(Console,) = DependencyUtils.import_from("rich.console", ("Console",))
-(Markdown,) = DependencyUtils.import_from("rich.markdown", ("Markdown",))
 
 __all__ = ["Verify"]
 

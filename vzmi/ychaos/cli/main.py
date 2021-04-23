@@ -7,6 +7,9 @@ from collections import OrderedDict
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Union
 
+from rich.console import Console
+from rich.table import Table
+
 from vzmi.ychaos import __version__
 from vzmi.ychaos.app_logger import AppLogger
 from vzmi.ychaos.cli import YChaosSubCommand
@@ -23,10 +26,6 @@ from vzmi.ychaos.settings import (
     Settings,
 )
 from vzmi.ychaos.utils.argparse import SubCommandParsersAction
-from vzmi.ychaos.utils.dependency import DependencyUtils
-
-(Console,) = DependencyUtils.import_from("rich.console", ("Console",))
-(Table,) = DependencyUtils.import_from("rich.table", ("Table",))
 
 
 class YChaos:

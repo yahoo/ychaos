@@ -4,14 +4,12 @@ from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from typing import Optional
 
+from rich.table import Column, Table
+
 from vzmi.ychaos.agents.coordinator import Coordinator
 from vzmi.ychaos.cli import YChaosCLIHook, YChaosTestplanInputSubCommand
 from vzmi.ychaos.testplan.schema import TestPlan
-from vzmi.ychaos.utils.dependency import DependencyUtils
 from vzmi.ychaos.utils.yaml import Dumper
-
-(Console,) = DependencyUtils.import_from("rich.console", ("Console",))
-(Table, Column) = DependencyUtils.import_from("rich.table", ("Table", "Column"))
 
 __all__ = ["Attack"]
 

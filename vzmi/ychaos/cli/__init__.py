@@ -3,16 +3,14 @@
 from abc import ABC
 from argparse import ArgumentParser
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 from pydantic import ValidationError
+from rich.console import Console
+from rich.panel import Panel
 
 from vzmi.ychaos.testplan.schema import TestPlan
 from vzmi.ychaos.utils.argparse import SubCommand
-from vzmi.ychaos.utils.dependency import DependencyUtils
-
-(Console,) = DependencyUtils.import_from("rich.console", ("Console",))
-(Panel,) = DependencyUtils.import_from("rich.panel", ("Panel",))
 
 
 class YChaosSubCommand(SubCommand, ABC):
@@ -30,9 +28,6 @@ class YChaosSubCommand(SubCommand, ABC):
 
 
 class YChaosTestplanInputSubCommand(YChaosSubCommand, ABC):
-
-    console: Any
-
     @classmethod
     def build_parser(cls, parser: ArgumentParser) -> ArgumentParser:
         parser.add_argument(

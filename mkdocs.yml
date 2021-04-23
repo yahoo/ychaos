@@ -22,6 +22,7 @@ extra_css: []
 markdown_extensions:
     - admonition
     - codehilite
+    - attr_list
     - markdown_include.include:
         base_path: docs
     - toc:
@@ -62,7 +63,7 @@ nav:
         - Contribution: contribution.md
         - Project Dependencies: dependencies.md
         - Code Of Conduct: code_of_conduct.md
-        - Subpackages: subpackages.md
+        - FAQ: faq.md
     - ...
 
 remote_branch: gh-pages

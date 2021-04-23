@@ -25,3 +25,7 @@ autogen:
 doc:
 	chmod +x develop/doc.sh
 	./develop/doc.sh
+
+.PHONEY: docbuild
+docbuild:
+	mkdocs build

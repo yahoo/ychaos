@@ -1,5 +1,8 @@
 # Contrib Agent
 
+!!! Warning
+    This feature is in Beta.
+
 YChaos allows the users to define their own chaos agents to be run
 on their targets to test the resiliency of the system. The principal
 concept of contrib agent is to have users write their own chaos modules

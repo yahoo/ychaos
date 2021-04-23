@@ -55,3 +55,10 @@ that the response time is less than what is mentioned in `latency` field.
 YChaos also provides 2 other plugins out of the box namely
 [SDV4VerificationPlugin][vzmi.ychaos.testplan.verification.SDv4Verification] and
 [PythonModuleVerificationPlugin][vzmi.ychaos.testplan.verification.PythonModuleVerification]
+
+## YChaos Verification Architecture
+
+Following diagram illustrates the code architecture of YChaos'
+verification component
+
+![Verification Flowchart](../resources/img/verification_flowchart.svg)

@@ -6,11 +6,9 @@ from io import StringIO
 from pathlib import Path
 from typing import Any, Optional
 
-from vzmi.ychaos.cli import YChaosSubCommand
-from vzmi.ychaos.utils.dependency import DependencyUtils
+from rich.markdown import Markdown
 
-(Console,) = DependencyUtils.import_from("rich.console", ("Console",))
-(Markdown,) = DependencyUtils.import_from("rich.markdown", ("Markdown",))
+from vzmi.ychaos.cli import YChaosSubCommand
 
 __all__ = ["Manual"]
 

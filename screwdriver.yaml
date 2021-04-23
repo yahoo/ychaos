@@ -3,10 +3,6 @@ shared:
     settings:
         slack: ['resilience-alerts']
     environment:
-        # Filename to contain the generated changelog, the default puts the file in the [docs](docs) directory
-        # used by the mkdocs utility.
-        CHANGELOG_FILENAME: docs/changelog.md
-        
         # Documentation tool to use, can be either sphinx which looks for documentation in doc/source
         # or mkdocs which looks for documentation in docs.
         # By default use [mkdocs](https://www.mkdocs.org/) tool to build documentation from the [docs](docs) directory.
@@ -23,6 +19,7 @@ jobs:
          template: python-2104/documentation
          environment:
              DOCUMENTATION_PUBLISH: False
+             CHANGELOG_FILENAME: /dev/null
          requires: [~pr]
          steps:
              - postinit: pip install -e .[doc_build]
@@ -95,6 +92,8 @@ jobs:
     doc_publish:
         template: python-2104/documentation
         requires: [python_package]
+        environment:
+            CHANGELOG_FILENAME: /dev/null
         steps:
             - postinit: pip install -e .[doc_build]
             - prepublish_documentation: python3 screwdriver/autogen_docs.py

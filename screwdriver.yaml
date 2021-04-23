@@ -56,7 +56,7 @@ jobs:
         template: python-2104/validate_style
         requires: [~pr, ~commit]
         steps:
-            - validate_code: pypirun black black --check vzmi/ tests/ setup.py
+            - validate_code: pypirun black black --check vzmi/ tests/ develop/ setup.py
 
     test_validation:
         template: python-2104/validate_unittest
@@ -80,16 +80,10 @@ jobs:
     python_package:
         template: python-2104/package_python
         requires: [version]
-        steps:
-            - posttag_release: python3 screwdriver/label_build.py
 
 
     # Application packaging
     # The jobs in this section are configured using the deploy.conf file.
-
-    # By default these don't publish the packages since applications don't generally need all types
-    # of packaging.  Uncomment the desired job and change PACKAGE_PUBLISH to True to enable a specific
-    # deployment packaging type.
 
     # docker_package:
     #      template: python-2104/docker_pythonapp
@@ -97,30 +91,11 @@ jobs:
     #         PACKAGE_PUBLISH: False
     #      requires: [python_package]
 
-    # yinst_rh7_package:
-    #     template: python-2104/package_yinst
-    #     environment:
-    #         PACKAGE_PUBLISH: False
-    #     image: docker-registry.ops.yahoo.com:4443/python/ylinux7
-    #     requires: [python_package]
-
-    # Before publishing rpm packages, the CI Pipeline will need to be whitelisted to access the
-    # specified rpm repository in artifactory.  If this is not done the publish operation will
-    # fail with permission errors.
-
-    # rpm_rh7_package:
-    #     template: python-2104/package_rpm
-    #    image: docker-registry.ops.yahoo.com:4443/python/ylinux7
-    #     environment:
-    #         PACKAGE_PUBLISH: False
-    #     requires: [python_package]
-
-        # Publish sphinx or mkdocs documentation to github pages of this repo
-
-    # Publish sphinx or mkdocs documentation to github pages of this repo
+    # Publish mkdocs documentation to github pages of this repo
     doc_publish:
         template: python-2104/documentation
         requires: [python_package]
         steps:
-            - prepublish_documentation: python3 screwdriver/autogen_docs.py
             - postinit: pip install -e .[doc_build]
+            - prepublish_documentation: python3 screwdriver/autogen_docs.py
+

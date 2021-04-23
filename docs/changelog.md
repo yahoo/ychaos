@@ -2,7 +2,16 @@
 
 ## Next release
 
-1. Minor Bug Fixes for MachineTarget Executor. [#126](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/126), [#123](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/123), [#122](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/122) by Alfin S Thomas, Shashank Sharma
+1. Add documentation to YChaos 
+[#129](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/129), 
+[#130](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/130),
+[#134](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/134) by Shashank Sharma
+   
+1. Minor Bug Fixes for MachineTarget Executor. 
+[#126](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/126), 
+[#123](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/123), 
+[#122](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/122) by Alfin S Thomas, Shashank Sharma
+
 1. Add Machine Target Executor to connect to targets and execute attack (_Phase 1_)
 [#91](https://git.vzbuilders.com/resilience/vzmi.ychaos/pull/91) by Shashank Sharma
 

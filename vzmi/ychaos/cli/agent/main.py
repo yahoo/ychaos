@@ -4,7 +4,7 @@
 from argparse import ArgumentParser, Namespace
 
 from vzmi.ychaos.cli import YChaosSubCommand
-from vzmi.ychaos.cli.agentcli.attack import Attack
+from vzmi.ychaos.cli.agent.attack import Attack
 from vzmi.ychaos.utils.argparse import SubCommandParsersAction
 
 __all__ = ["Agent"]

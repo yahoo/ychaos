@@ -2,7 +2,7 @@
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from rich.table import Column, Table
 
@@ -151,7 +151,7 @@ class Attack(YChaosTestplanInputSubCommand):
             self.console.log(f"Attack report stored at {self.attack_report_yaml_path}")
 
     @classmethod
-    def main(cls, args: Namespace):
+    def main(cls, args: Namespace) -> Any:
         agent = cls(**vars(args))
         if agent._exitcode:
             return agent._exitcode

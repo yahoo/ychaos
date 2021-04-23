@@ -13,7 +13,7 @@ from rich.table import Table
 from vzmi.ychaos import __version__
 from vzmi.ychaos.app_logger import AppLogger
 from vzmi.ychaos.cli import YChaosSubCommand
-from vzmi.ychaos.cli.agentcli.main import Agent
+from vzmi.ychaos.cli.agent.main import Agent
 from vzmi.ychaos.cli.exceptions import YChaosCLIError
 from vzmi.ychaos.cli.execute import Execute
 from vzmi.ychaos.cli.manual import Manual

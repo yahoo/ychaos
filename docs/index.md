@@ -2,7 +2,7 @@
 
 YChaos is a self serving chaos testing toolkit designed to
 provide you with all the capabilities of doing an end to end resilience
-testing of your service. YChaos' is designed to give users a framework
+testing of your service. YChaos is designed to give users a framework
 to validate, verify and attack your system to simulate real life
 failures that might cause outages in your service.
 

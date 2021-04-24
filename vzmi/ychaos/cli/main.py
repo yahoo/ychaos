@@ -144,10 +144,10 @@ class YChaos:
         # Call the right method for the subcommand
         try:
             exitcode = args.cls.main(args)
-        except YChaosCLIError as e:
+        except YChaosCLIError as e:  # pragma: no cover
             e.handle()
             exitcode = e.exitcode
-        except Exception as unknown_error:
+        except Exception as unknown_error:  # pragma: no cover
             exitcode = 255
             args.app.unknown_error()
 
@@ -240,7 +240,7 @@ class App:
 
         return _tree
 
-    def is_debug_mode(self) -> bool:
+    def is_debug_mode(self) -> bool:  # pragma: no cover
         """
         Returns if the app was initialized with debug mode
         Returns:
@@ -270,7 +270,7 @@ class App:
 
         self.console.print(table)
 
-    def unknown_error(self):
+    def unknown_error(self):  # pragma: no cover
         self.console.line()
         self.console.print_exception(extra_lines=2)
 
@@ -311,5 +311,5 @@ class YChaosRoot(YChaosSubCommand):
 
 
 # This is where it all started..
-def main():
+def main():  # pragma: no cover
     YChaos.main(sys.argv[1:])

@@ -38,12 +38,12 @@ class TestVerificationController(TestCase):
             VerificationController(
                 self.mock_testplan,
                 SystemState.STEADY,
-                [{"STEADY": None}, {"CHAOS": None}],
+                [dict(STEADY=None), dict(CHAOS=None)],
             )
 
     def test_verification_controller_execute_for_valid_state(self):
         verification_controller = VerificationController(
-            self.mock_testplan, SystemState.STEADY, list()
+            self.mock_testplan, SystemState.STEADY, [dict(STEADY=None)]
         )
         verification_controller.testplan.verification[0].config["path"] = __file__
         is_verified = verification_controller.execute()
@@ -63,6 +63,11 @@ class TestVerificationController(TestCase):
         is_verified = verification_controller.execute()
         self.assertTrue(is_verified)
         self.assertEqual(len(verification_controller.verification_data), 1)
+        self.assertFalse(
+            verification_controller.verification_data[0].is_data_present(
+                SystemState.RECOVERED
+            )
+        )
         self.assertIsNone(
             verification_controller.verification_data[0].get_data(SystemState.RECOVERED)
         )

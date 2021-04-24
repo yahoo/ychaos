@@ -10,7 +10,7 @@ from vzmi.ychaos.agents.utils.annotations import log_agent_lifecycle
 NoOpAgentConfig = functools.partial(AgentConfig, name="no_op")
 
 
-class NoOpAgent(Agent):  # pragma: no cover
+class NoOpAgent(Agent):
     """
     An agent that does nothing
     """
@@ -19,7 +19,7 @@ class NoOpAgent(Agent):  # pragma: no cover
         assert isinstance(config, AgentConfig)
         super(NoOpAgent, self).__init__(config)
 
-    def monitor(self) -> LifoQueue:
+    def monitor(self) -> LifoQueue:  # pragma: no cover
         super(NoOpAgent, self).monitor()
         return self._status
 

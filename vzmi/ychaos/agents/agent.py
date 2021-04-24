@@ -132,7 +132,7 @@ class Agent(ABC):
         )
         self.stop_async_run: bool = False  # can be used as a flag to stop the attack and return from `run` method
 
-        self.exception = Queue(1)
+        self.exception = Queue(-1)
 
         self._status = LifoQueue()
         self._state_history = list()
@@ -279,6 +279,8 @@ class Agent(ABC):
             current state
         """
         if not self._state_history:
+            # Never possible
+            self._state_history = list()
             self.advance_state(AgentState.UNDEFINED)
         return self._state_history[-1]
 

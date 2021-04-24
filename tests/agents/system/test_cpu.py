@@ -1,5 +1,6 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
+import math
 import multiprocessing
 from datetime import datetime, timedelta
 from unittest import TestCase
@@ -62,6 +63,30 @@ class TestCpuBurn(TestCase):
 
         cpu_burn_agent.teardown()
         self.assertEqual(cpu_burn_agent.current_state, AgentState.TEARDOWN)
+
+    def test_cpu_burn_monitor(self):
+        cpu_burn_config = CPUBurnConfig(duration=0.1, cores_pct=0)
+        cpu_burn_agent = CPUBurn(cpu_burn_config)
+
+        monitor_status_queue = cpu_burn_agent.monitor()
+        status = monitor_status_queue.get()
+
+        self.assertTrue("cpu_usage" in status.data)
+        self.assertEqual(status.data["cpu_count"], 0)
+
+    def test_cpu_burn_monitor_when_psutil_package_not_installed(self):
+        when(DependencyUtils).import_module("psutil", raise_error=False).thenReturn(
+            None
+        )
+        cpu_burn_config = CPUBurnConfig(duration=0.1, cores_pct=0)
+        cpu_burn_agent = CPUBurn(cpu_burn_config)
+
+        monitor_status_queue = cpu_burn_agent.monitor()
+        status = monitor_status_queue.get()
+
+        self.assertTrue("cpu_usage" in status.data)
+        self.assertTrue(math.isnan(status.data["cpu_usage"]))
+        self.assertEqual(status.data["cpu_count"], 0)
 
     def tearDown(self) -> None:
         unstub()

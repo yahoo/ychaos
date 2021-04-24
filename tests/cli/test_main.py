@@ -1,6 +1,5 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
-
 from unittest import TestCase
 
 from vzmi.ychaos.cli.main import YChaos
@@ -20,9 +19,17 @@ class TestYChaosCLI(TestCase):
         self.assertEqual(0, _exit.exception.code)
 
     def test_ychaos_cli_complex_command(self):
-        ychaos_command = "ychaos testplan validate tests/resources/testplans/valid/ tests/resources/testplans/valid/testplan4.json"
+        ychaos_command = [
+            "ychaos",
+            "--log-file",
+            "/dev/null",
+            "testplan",
+            "validate",
+            "tests/resources/testplans/valid/",
+            "tests/resources/testplans/valid/testplan4.json",
+        ]
         with self.assertRaises(SystemExit) as _exit:
-            YChaos.main(ychaos_command.split()[1:])
+            YChaos.main(ychaos_command[1:])
 
         self.assertEqual(1, _exit.exception.code)
 

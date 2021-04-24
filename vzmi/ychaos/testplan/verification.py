@@ -7,7 +7,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from pydantic import AnyHttpUrl, Field, SecretStr, validator
+from pydantic import AnyHttpUrl, Field, PositiveInt, SecretStr, validator
 
 from vzmi.ychaos.testplan import SchemaModel, SystemState
 from vzmi.ychaos.testplan.common import Secret
@@ -138,7 +138,7 @@ class SDv4Verification(SchemaModel):
         description="The Screwdriver pipeline/user access token to be able to start the jon in the pipeline",
     )
 
-    job_timeout: int = Field(default=3600, description="Job Timeout in seconds")
+    job_timeout: PositiveInt = Field(default=3600, description="Job Timeout in seconds")
 
 
 class VerificationType(AEnum):

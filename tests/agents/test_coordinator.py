@@ -9,7 +9,6 @@ from unittest import TestCase
 from mockito import ANY, unstub, when
 
 from vzmi.ychaos.agents.agent import AgentState
-from vzmi.ychaos.agents.attack_report_schema import AttackReport
 from vzmi.ychaos.agents.coordinator import Coordinator
 from vzmi.ychaos.testplan.attack import AttackMode
 from vzmi.ychaos.testplan.schema import TestPlan
@@ -176,31 +175,34 @@ class TestCoordinator(TestCase):
         configured_agents[1].agent.preserved_state.is_aborted = True
         result = coordinator.generate_attack_report()
         self.assertIsNotNone(result)
-        result = AttackReport(**result)
-        self.assertEqual(result.id, str(coordinator.test_plan.id))
-        self.assertEqual(result.mode, coordinator.test_plan.attack.mode.value)
-        self.assertEqual(result.attack_start_time, str(coordinator.attack_start_time))
-        self.assertEqual(
-            result.expected_attack_end_time, str(coordinator.attack_end_time)
+        self.assertEqual(result["id"], str(coordinator.test_plan.id))
+        self.assertEqual(result["mode"], coordinator.test_plan.attack.mode.value)
+        self.assertEqual(result["start_time"], str(coordinator.attack_start_time))
+        self.assertEqual(result["expected_end_time"], str(coordinator.attack_end_time))
+        self.assertEqual(len(result["agents"]), len(coordinator.configured_agents))
+
+        expected_agent_states = (
+            AgentState.ERROR.name,
+            AgentState.ABORTED.name,
+            AgentState.INIT.name,
+            AgentState.INIT.name,
         )
-        self.assertEqual(len(result.agents), len(coordinator.configured_agents))
-        self.assertEqual(result.agents[0].status, AgentState.ERROR.name)
-        self.assertEqual(result.agents[1].status, AgentState.ABORTED.name)
-        self.assertEqual(result.agents[2].status, AgentState.INIT.name)
-        self.assertEqual(result.agents[3].status, AgentState.INIT.name)
-        report_agents = list(zip(result.agents, coordinator.configured_agents))
+        for i in range(0, 4):
+            self.assertEqual(result["agents"][i]["status"], expected_agent_states[i])
+
+        report_agents = list(zip(result["agents"], coordinator.configured_agents))
         for report_agent in report_agents:
             self.assertEqual(
-                report_agent[0].end_time,
+                report_agent[0]["end_time"],
                 str(report_agent[1].end_time)
                 if hasattr(report_agent[1].agent.config, "duration")
                 else "NaN",
             )
             self.assertEqual(
-                report_agent[0].start_time, str(report_agent[1].start_time)
+                report_agent[0]["start_time"], str(report_agent[1].start_time)
             )
             self.assertEqual(
-                report_agent[0].agent_name, report_agent[1].agent.config.name
+                report_agent[0]["agent_name"], report_agent[1].agent.config.name
             )
 
     def test_start_attack_successfully(self):
@@ -212,9 +214,8 @@ class TestCoordinator(TestCase):
         coordinator.start_attack()
         self.assertFalse(coordinator.get_exit_status())
         report = coordinator.generate_attack_report()
-        report = AttackReport(**report)
-        for agent in report.agents:
-            self.assertEqual(agent.status, AgentState.DONE.name)
+        for agent in report["agents"]:
+            self.assertEqual(agent["status"], AgentState.DONE.name)
 
     def test_start_attack_failed_test(self):
         test_plan = self.test_plan.copy()
@@ -226,8 +227,7 @@ class TestCoordinator(TestCase):
         coordinator.start_attack()
         self.assertTrue(coordinator.get_exit_status())
         report = coordinator.generate_attack_report()
-        report = AttackReport(**report)
-        self.assertEqual(report.agents[0].status, AgentState.ERROR.name)
+        self.assertEqual(report["agents"][0]["status"], AgentState.ERROR.name)
 
         self.assertEqual(len(coordinator.get_all_exceptions()), 1)
         self.assertIsInstance(coordinator.get_all_exceptions()[0], Exception)

@@ -22,7 +22,7 @@ class MockAgentConfig(AgentConfig):
 class MockAgent(Agent):
     def monitor(self) -> LifoQueue:
         super(MockAgent, self).monitor()
-        self._status.put(randint())
+        self._status.put(randint(10, 20))
 
     def setup(self) -> None:
         super(MockAgent, self).setup()
@@ -35,6 +35,12 @@ class MockAgent(Agent):
     def teardown(self) -> None:
         super(MockAgent, self).teardown()
         print(f"Running {self.__class__.__name__} teardown method")
+
+
+class MockAgentTeardownRaisesError(MockAgent):
+    def teardown(self) -> None:
+        super(MockAgentTeardownRaisesError, self).teardown()
+        raise Exception("Some Error occurred")
 
 
 class TestBaseAgent(TestCase):
@@ -74,3 +80,12 @@ class TestBaseAgent(TestCase):
             agent.run()
 
         self.assertEqual(agent.current_state, AgentState.ABORTED)
+
+    def test_agent_teardown_async_when_teardown_raises_error(self):
+        agent = MockAgentTeardownRaisesError(self.mock_agent_config.copy())
+        self.assertEqual(agent.current_state, AgentState.INIT)
+
+        t = agent.teardown_async()
+        t.join()
+
+        self.assertEqual(agent.current_state, AgentState.ERROR)

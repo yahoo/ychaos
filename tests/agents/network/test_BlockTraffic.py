@@ -5,7 +5,6 @@ import filecmp
 import os
 import shutil
 from pathlib import Path
-from stat import S_IREAD, S_IRGRP, S_IROTH, S_IWRITE, S_IWUSR
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
 

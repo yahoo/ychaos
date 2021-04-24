@@ -38,3 +38,7 @@ class TestServerCertValidation(TestCase):
         self.assertEqual(data["host"], "unknownendpoint.com")
         self.assertIsNotNone(data["error"])
         self.assertEqual(data["port"], 4443)
+
+        # Coverage
+        agent.teardown()
+        agent.monitor()

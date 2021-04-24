@@ -45,7 +45,7 @@ class BaseExecutor(EventHook, ABC):
         # Even though ideally this branch is never entered by the code (unless there is some issue with pydantic)
         if not isinstance(
             target_config, self._get_target_type().metadata.schema
-        ):  # pragma: no cov
+        ):  # pragma: no cover
             raise YChaosTargetConfigConditionFailedError(
                 "Target configuration is not processable for this executor"
             )

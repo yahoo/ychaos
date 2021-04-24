@@ -81,9 +81,6 @@ class SDv4VerificationPlugin(BaseVerificationPlugin):
                         job_id=build["jobId"],
                     ),
                 )
-            elif build["status"] in ("CREATED", "QUEUED", "RUNNING"):
-                # Wait for 60 seconds and check for the status of the build again
-                time.sleep(60)
             elif build["status"] in ("SUCCESS",):
                 self.logger.info(
                     status=build["status"], msg="SDv4 job verification successful"
@@ -98,6 +95,10 @@ class SDv4VerificationPlugin(BaseVerificationPlugin):
                         job_id=build["jobId"],
                     ),
                 )
+            else:
+                # Status = ("CREATED", "QUEUED", "RUNNING")
+                # Wait for 60 seconds and check for the status of the build again
+                time.sleep(60)
 
     def run_verification(self) -> VerificationStateData:
         self.logger.info(msg="Starting SDv4 job verification")

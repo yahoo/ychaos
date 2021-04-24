@@ -243,7 +243,7 @@ class TestSDv4VerificationPlugin(TestCase):
             ),
         )
 
-    def test_sdv4_verification_monitor_job_failed_with_job_success(self):
+    def test_sdv4_verification_monitor_job_succeeded_with_job_success(self):
         verification_plugin = SDv4VerificationPlugin(config=self.verification_config)
 
         # Mock for Token fetch
@@ -315,6 +315,14 @@ class TestSDv4VerificationPlugin(TestCase):
                 event_id=98765432, job_id=88888, status="SUCCESS", status_message=None
             ),
         )
+
+    def test_monitor_job_when_pipeline_timeout_is_0(self):
+        # This is never possible in real time scenario.
+        # This test is added to cover a branch
+        self.verification_config.job_timeout = 0
+        verification_plugin = SDv4VerificationPlugin(config=self.verification_config)
+        data = verification_plugin._monitor_job(dict())
+        self.assertIsNone(data)
 
     def tearDown(self) -> None:
         unstub()

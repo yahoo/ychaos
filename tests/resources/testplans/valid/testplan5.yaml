@@ -1,0 +1,26 @@
+verification:
+  - states:
+      - CHAOS
+      - STEADY
+    type: python_module
+    config:
+        path: "/home/y/lib/script.py"
+  - states:
+      - CHAOS
+    type: python_module
+    config:
+        path: "/home/y/lib/script.py"
+        arguments:
+            - "key1=value1"
+            - "key2=value2"
+attack:
+    target_type: machine
+    target_config:
+        blast_radius: 100
+        hostnames:
+            - mockhost01.ychaos.yahoo.com
+        ssh_config:
+            private_key: /sd/tokens/pkey-cert
+    agents:
+        - type: no_op
+

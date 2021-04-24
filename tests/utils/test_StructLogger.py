@@ -130,6 +130,22 @@ class TestStructLogger(TestCase):
         self.assertEqual(child_logger.name, "test.testChild")
         self.assertDictEqual(child_logger._binder, dict())
 
+        self.logger.unbind()
+        self.assertDictEqual(self.logger._binder, dict())
+
+    def test_unbind(self):
+        self.logger.bind(testKwarg1="testValue1", testKwarg2="testValue2")
+        self.assertDictEqual(
+            self.logger._binder, dict(testKwarg1="testValue1", testKwarg2="testValue2")
+        )
+
+        self.logger.unbind({"testKwarg1"})
+        self.assertDictEqual(self.logger._binder, dict(testKwarg2="testValue2"))
+
+        self.logger.bind(testKwarg1="testValue1", testKwarg2="testValue2")
+        self.logger.unbind()
+        self.assertDictEqual(self.logger._binder, dict())
+
     def test_get_child_with_parent_bindings(self):
         self.logger.bind(testKwarg="testValue")
         child_logger = self.logger.getChild("testChild", bind_parent_attributes=True)

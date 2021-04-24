@@ -4,6 +4,7 @@ from unittest import TestCase
 
 import requests
 from mockito import mock, unstub, when
+from pydantic import SecretStr
 from requests import Response
 
 from vzmi.ychaos.core.verification.plugins.HTTPRequestVerificationPlugin import (
@@ -142,6 +143,74 @@ class TestHTTPVerificationPlugin(TestCase):
                 error_desc="",
             ),
         )
+
+    def test_plugin_run_verification_for_verify_set_to_false(self):
+        self.verification_config.verify = False
+
+        verification_plugin = HTTPRequestVerificationPlugin(self.verification_config)
+        self.assertEqual(verification_plugin._session.verify, False)
+
+        mock_response = mock(
+            dict(status_code=200, elapsed=mock(dict(microseconds=34000)), spec=Response)
+        )
+        when(verification_plugin._session).request(
+            "GET",
+            url="https://ychaos.yahoo.com",
+            timeout=self.verification_config.timeout / 1000,
+        ).thenReturn(mock_response)
+
+        state_data = verification_plugin.run_verification()
+
+        self.assertEqual(state_data.rc, 0)
+        self.assertEqual(len(state_data.data), self.verification_config.count)
+        self.assertListEqual(state_data.data[0], list())
+
+    def test_plugin_run_verification_with_basic_auth(self):
+        self.verification_config.basic_auth = "mock_username", SecretStr(
+            "mock_password"
+        )
+        verification_plugin = HTTPRequestVerificationPlugin(self.verification_config)
+        self.assertTupleEqual(
+            verification_plugin._session.auth, ("mock_username", "mock_password")
+        )
+
+        mock_response = mock(
+            dict(status_code=200, elapsed=mock(dict(microseconds=34000)), spec=Response)
+        )
+        when(verification_plugin._session).request(
+            "GET",
+            url="https://ychaos.yahoo.com",
+            timeout=self.verification_config.timeout / 1000,
+        ).thenReturn(mock_response)
+
+        state_data = verification_plugin.run_verification()
+
+        self.assertEqual(state_data.rc, 0)
+        self.assertEqual(len(state_data.data), self.verification_config.count)
+        self.assertListEqual(state_data.data[0], list())
+
+    def test_plugin_run_verification_with_bearer_token(self):
+        self.verification_config.bearer_token = SecretStr("mock_token")
+        verification_plugin = HTTPRequestVerificationPlugin(self.verification_config)
+        self.assertDictEqual(
+            verification_plugin._session.headers,
+            dict(Authorization="Bearer mock_token"),
+        )
+
+        mock_response = mock(
+            dict(status_code=200, elapsed=mock(dict(microseconds=34000)), spec=Response)
+        )
+        when(verification_plugin._session).request(
+            "GET",
+            url="https://ychaos.yahoo.com",
+            timeout=self.verification_config.timeout / 1000,
+        ).thenReturn(mock_response)
+
+        state_data = verification_plugin.run_verification()
+
+        self.assertEqual(state_data.rc, 0)
+        self.assertEqual(len(state_data.data), self.verification_config.count)
+        self.assertListEqual(state_data.data[0], list())
 
     def tearDown(self) -> None:
         unstub()

@@ -39,7 +39,6 @@ class AgentType(AEnum):
 
     # System Agents
     CPU_BURN = "cpu_burn", SimpleNamespace(schema=CPUBurnConfig, agent_defn=CPUBurn)
-    # TODO: Add CPU Burn etc.
 
     # Network Agents
     IPTABLES_BLOCK = "iptables_block", SimpleNamespace(

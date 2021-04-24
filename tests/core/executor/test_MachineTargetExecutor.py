@@ -55,6 +55,28 @@ class TestMachineTargetExecutor(TestCase):
             in ["mockhost01.ychaos.yahoo.com", "mockhost02.ychaos.yahoo.com"]
         )
 
+    def test_machine_executor_prepare_with_single_host(self):
+        mock_valid_testplan = TestPlan.load_file(
+            self.testplans_directory.joinpath("valid/testplan5.yaml")
+        )
+        executor = MachineTargetExecutor(mock_valid_testplan)
+        executor.prepare()
+
+        self.assertListEqual(
+            sorted(executor.ansible_context.inventory.hosts),
+            [
+                "mockhost01.ychaos.yahoo.com",
+            ],
+        )
+        self.assertEqual(executor.ansible_context.play_source["connection"], "ssh")
+        self.assertEqual(executor.ansible_context.play_source["strategy"], "free")
+        self.assertTrue(
+            executor.ansible_context.play_source["hosts"]
+            in [
+                "mockhost01.ychaos.yahoo.com",
+            ]
+        )
+
     def test_ychaos_ansible_callback(self):
         callback = YChaosAnsibleResultCallback(
             hooks=dict(

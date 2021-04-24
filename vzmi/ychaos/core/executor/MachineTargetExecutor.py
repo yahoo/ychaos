@@ -33,7 +33,7 @@ CallbackBase: Any  # For mypy
     "ansible.vars.manager", ("VariableManager",), raise_error=False
 )
 
-if CallbackBase:
+if CallbackBase:  # pragma: no cover
 
     class YChaosAnsibleResultCallback(CallbackBase, EventHook):
 
@@ -325,5 +325,5 @@ class MachineTargetExecutor(BaseExecutor):
             print(e)
         finally:
             self.ansible_context.tqm.cleanup()
-            if self.ansible_context.loader:
+            if self.ansible_context.loader:  # pragma: no cover
                 self.ansible_context.loader.cleanup_all_tmp_files()

@@ -1,12 +1,11 @@
 #  Copyright 2021, Verizon Media
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
-import multiprocessing
 from argparse import Namespace
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
-from mockito import unstub, when
+from mockito import unstub
 
 from vzmi.ychaos.cli.execute import Execute
 from vzmi.ychaos.cli.mock import MockApp

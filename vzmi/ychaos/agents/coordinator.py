@@ -10,8 +10,9 @@ from threading import Thread
 from time import sleep
 from typing import Dict, List, Optional
 
+from pydantic import BaseModel
+
 from vzmi.ychaos.agents.agent import Agent, AgentState
-from vzmi.ychaos.agents.attack_report_schema import AgentStatus, AttackReport
 from vzmi.ychaos.app_logger import AppLogger
 from vzmi.ychaos.testplan.attack import AttackMode
 from vzmi.ychaos.testplan.schema import TestPlan
@@ -209,7 +210,7 @@ class Coordinator(EventHook):
                 configured_agent.agent.current_state == AgentState.ERROR
                 or not configured_agent.agent.exception.empty()
             ):
-                configured_agent.agent.current_state == AgentState.ERROR
+                configured_agent.agent.advance_state(AgentState.ERROR)
                 configured_agent.agent.preserved_state.has_error = True
                 return True
         return False
@@ -305,11 +306,30 @@ class Coordinator(EventHook):
         """
         Generates attack report
         """
+
+        class AgentStatus(BaseModel):
+            agent_name: str
+            start_time: str
+            end_time: str
+            status: str
+
+        class AttackReport(BaseModel):
+            """
+            Attack Report Structure
+            """
+
+            id: str
+            host: str
+            start_time: str
+            expected_end_time: str
+            mode: str
+            agents: List[AgentStatus]
+
         report: AttackReport = AttackReport(
             id=str(self.test_plan.id),
             host=os.uname()[1],
-            attack_start_time=str(self.attack_start_time),
-            expected_attack_end_time=str(self.attack_end_time),
+            start_time=str(self.attack_start_time),
+            expected_end_time=str(self.attack_end_time),
             mode=self.test_plan.attack.mode.value,
             agents=[],
         )

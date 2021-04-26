@@ -89,6 +89,13 @@ class YChaos:
             metavar="config",
         )
 
+        ychaos_cli.add_argument(
+            "--no-color",
+            action="store_true",
+            default=False,
+            help="Disable color on console output",
+        )
+
         # Arguments for creating HTML & Text Reports
         report_argument_group = ychaos_cli.add_argument_group("reports")
         report_argument_group.add_argument(
@@ -164,7 +171,7 @@ class App:
         args.verbose = min(2, args.verbose)
 
         self.args = args
-        self.console = Console(record=True)
+        self.console = Console(record=True, no_color=args.no_color)
         self.settings: Union[DevSettings, ProdSettings] = Settings.get_instance()
 
         self.cli = cli
@@ -266,7 +273,8 @@ class App:
             if not k.startswith("_cmd"):
                 if isinstance(v, Iterable) and not isinstance(v, str):
                     v = "\n".join([str(_v) for _v in v])
-                table.add_row(str(k), str(v))
+                if v is not None:
+                    table.add_row(str(k), str(v))
 
         self.console.print(table)
 

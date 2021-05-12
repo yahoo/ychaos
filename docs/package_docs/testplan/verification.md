@@ -1,1 +1,1 @@
-::: vzmi.ychaos.testplan.verification
+::: ychaos.testplan.verification

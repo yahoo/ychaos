@@ -1,1 +1,1 @@
-::: vzmi.ychaos.agents.contrib
+::: ychaos.agents.contrib

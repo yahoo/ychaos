@@ -8,10 +8,10 @@ from unittest import TestCase
 
 from mockito import ANY, unstub, when
 
-from vzmi.ychaos.agents.agent import AgentState
-from vzmi.ychaos.agents.coordinator import Coordinator
-from vzmi.ychaos.testplan.attack import AttackMode
-from vzmi.ychaos.testplan.schema import TestPlan
+from ychaos.agents.agent import AgentState
+from ychaos.agents.coordinator import Coordinator
+from ychaos.testplan.attack import AttackMode
+from ychaos.testplan.schema import TestPlan
 
 
 class TestCoordinator(TestCase):

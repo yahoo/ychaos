@@ -3,11 +3,11 @@
 from pathlib import Path
 from unittest import TestCase
 
-from vzmi.ychaos.core.exceptions.executor_errors import (
+from ychaos.core.exceptions.executor_errors import (
     YChaosTargetConfigConditionFailedError,
 )
-from vzmi.ychaos.core.executor.SelfTargetExecutor import SelfTargetExecutor
-from vzmi.ychaos.testplan.schema import TestPlan
+from ychaos.core.executor.SelfTargetExecutor import SelfTargetExecutor
+from ychaos.testplan.schema import TestPlan
 
 
 class TestSelfTargetExecutor(TestCase):

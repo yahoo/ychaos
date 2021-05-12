@@ -1,1 +1,1 @@
-::: vzmi.ychaos.cli.agent.attack
+::: ychaos.cli.agent.attack

@@ -3,9 +3,9 @@
 import tempfile
 from unittest import TestCase
 
-from vzmi.ychaos.app_logger import AppLogger
-from vzmi.ychaos.settings import DevSettings, ProdSettings, Settings
-from vzmi.ychaos.utils.logging import StructLogger
+from ychaos.app_logger import AppLogger
+from ychaos.settings import DevSettings, ProdSettings, Settings
+from ychaos.utils.logging import StructLogger
 
 
 class TestAppLogger(TestCase):

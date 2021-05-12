@@ -1,1 +1,1 @@
-::: vzmi.ychaos.core.verification.data
+::: ychaos.core.verification.data

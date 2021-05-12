@@ -2,7 +2,7 @@
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 from unittest import TestCase
 
-from vzmi.ychaos.settings import ProdSettings, Settings
+from ychaos.settings import ProdSettings, Settings
 
 
 class TestSettings(TestCase):

@@ -6,9 +6,9 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
-from vzmi.ychaos.cli.mock import MockApp
-from vzmi.ychaos.cli.verify import Verify
-from vzmi.ychaos.testplan.schema import TestPlan
+from ychaos.cli.mock import MockApp
+from ychaos.cli.verify import Verify
+from ychaos.testplan.schema import TestPlan
 
 
 class TestVerificationCommand(TestCase):

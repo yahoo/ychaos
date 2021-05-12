@@ -5,7 +5,7 @@ from unittest import TestCase
 
 from mockito import unstub, when
 
-from vzmi.ychaos.testplan.common import Secret
+from ychaos.testplan.common import Secret
 
 
 class TestSecret(TestCase):

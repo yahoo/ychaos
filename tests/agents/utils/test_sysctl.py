@@ -5,7 +5,7 @@ from unittest import TestCase
 
 from mockito import patch, unstub
 
-from vzmi.ychaos.agents.utils.sysctl import SysCtl
+from ychaos.agents.utils.sysctl import SysCtl
 
 
 class TestSysCtl(TestCase):

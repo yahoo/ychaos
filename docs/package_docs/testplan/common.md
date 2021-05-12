@@ -1,1 +1,1 @@
-::: vzmi.ychaos.testplan.common
+::: ychaos.testplan.common

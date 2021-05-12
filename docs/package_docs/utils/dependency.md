@@ -1,1 +1,1 @@
-::: vzmi.ychaos.utils.dependency
+::: ychaos.utils.dependency

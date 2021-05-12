@@ -9,15 +9,15 @@ from unittest import TestCase
 import jsondiff
 from pkg_resources import resource_filename
 
-from vzmi.ychaos.testplan import SystemState
-from vzmi.ychaos.testplan.attack import (
+from ychaos.testplan import SystemState
+from ychaos.testplan.attack import (
     AttackConfig,
     MachineTargetDefinition,
     SSHConfig,
     TargetType,
 )
-from vzmi.ychaos.testplan.schema import TestPlan, TestPlanSchema
-from vzmi.ychaos.testplan.verification import (
+from ychaos.testplan.schema import TestPlan, TestPlanSchema
+from ychaos.testplan.verification import (
     PythonModuleVerification,
     VerificationConfig,
 )
@@ -121,7 +121,7 @@ class TestSchemaDataClass(TestCase):
         # Validate the schema.json is up to date
         current_schema = TestPlanSchema.schema()
 
-        PKG_RESOURCES = "vzmi.ychaos.testplan.resources"
+        PKG_RESOURCES = "ychaos.testplan.resources"
         AUTOGEN_SCHEMA_FILE = str(resource_filename(PKG_RESOURCES, "schema.json"))
 
         schema_file = Path(AUTOGEN_SCHEMA_FILE)

@@ -5,9 +5,9 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
-from vzmi.ychaos.core.verification.controller import VerificationController
-from vzmi.ychaos.testplan import SystemState
-from vzmi.ychaos.testplan.schema import TestPlan
+from ychaos.core.verification.controller import VerificationController
+from ychaos.testplan import SystemState
+from ychaos.testplan.schema import TestPlan
 
 
 class TestVerificationController(TestCase):

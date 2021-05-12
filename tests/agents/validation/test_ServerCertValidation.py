@@ -2,8 +2,8 @@
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 from unittest import TestCase
 
-from vzmi.ychaos.agents.agent import AgentMonitoringDataPoint
-from vzmi.ychaos.agents.validation.certificate import (
+from ychaos.agents.agent import AgentMonitoringDataPoint
+from ychaos.agents.validation.certificate import (
     ServerCertValidation,
     ServerCertValidationConfig,
 )

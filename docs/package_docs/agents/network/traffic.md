@@ -1,1 +1,1 @@
-::: vzmi.ychaos.agents.network.traffic
+::: ychaos.agents.network.traffic

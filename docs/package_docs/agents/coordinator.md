@@ -1,1 +1,1 @@
-::: vzmi.ychaos.agents.coordinator
+::: ychaos.agents.coordinator

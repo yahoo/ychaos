@@ -10,7 +10,7 @@ from unittest import TestCase
 
 from mockito import unstub, when
 
-from vzmi.ychaos.agents.network.traffic import TrafficBlock, TrafficBlockConfig
+from ychaos.agents.network.traffic import TrafficBlock, TrafficBlockConfig
 
 
 class TestBlockTraffic(TestCase):

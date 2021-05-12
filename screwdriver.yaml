@@ -1,36 +1,32 @@
 version: 4
 shared:
-    settings:
-        slack: ['resilience-alerts']
     environment:
         # Documentation tool to use, can be either sphinx which looks for documentation in doc/source
         # or mkdocs which looks for documentation in docs.
         # By default use [mkdocs](https://www.mkdocs.org/) tool to build documentation from the [docs](docs) directory.
         DOCUMENTATION_FORMATS: mkdocs
-        SD_COVERAGE_PLUGIN_ENABLED: false
 
 jobs:
     # Validation jobs
     dependency_validation:
-        template: python-2104/validate_dependencies
+        template: python/validate_dependencies
         requires: [~pr, ~commit]
 
     doc_validation:
-         template: python-2104/documentation
+         template: python/documentation
          environment:
              DOCUMENTATION_PUBLISH: False
-             CHANGELOG_FILENAME: /dev/null
          requires: [~pr]
          steps:
              - postinit: pip install -e .[doc_build]
              - prepublish_documentation: python3 screwdriver/autogen_docs.py
 
     lint_validation:
-        template: python-2104/validate_lint
+        template: python/validate_lint
         requires: [~pr, ~commit]
 
     package_validation:
-        template: python-2104/package_python
+        template: python/package_python
         environment:
             PACKAGE_PYTHON_PUBLISH: False
         requires: [~pr]
@@ -38,62 +34,46 @@ jobs:
     security_validation:
         environment:
             SECURITY_BANDIT_CONFIG_ARGS: "-s B101"
-        template: python-2104/validate_security
+        template: python/validate_security
         requires: [~pr, ~commit]
 
     # Style validation using `flake8`
     style_validation:
-        template: python-2104/validate_style
+        template: python/validate_codestyle
         requires: [~pr, ~commit]
         steps:
-            - validate_code: pypirun flake8 flake8 vzmi/ychaos
+            - validate_code: sd-cmd python/pypirun@latest flake8 flake8 vzmi/ychaos
 
     # Code Format Validation using `black`
     code_format_validation:
-        template: python-2104/validate_style
+        template: python/validate_codestyle
         requires: [~pr, ~commit]
         steps:
-            - validate_code: pypirun black black --check vzmi/ tests/ develop/ setup.py
+            - validate_code: sd-cmd python/pypirun@latest black black --check vzmi/ tests/ develop/ setup.py
 
     test_validation:
-        template: python-2104/validate_unittest
+        template: python/validate_unittest
         environment:
             TOX_ARGS: --parallel all
-            SD_COVERAGE_PLUGIN_ENABLED: true
         requires: [~pr, ~commit]
 
     type_validation:
-        environment:
-            PYPIRUN_ARGS: '--upgrade_pip'
-        template: python-2104/validate_type
+        template: python/validate_type
         requires: [~pr, ~commit]
 
     # Package auto-versioning, this must run before generating a package for publishing
     version:
-        template: python-2104/version
+        template: python/version
         requires: [dependency_validation, lint_validation, style_validation, type_validation, security_validation, test_validation, code_format_validation]
 
     # Python packaging
     python_package:
-        template: python-2104/package_python
+        template: python/package_python
         requires: [version]
 
-
-    # Application packaging
-    # The jobs in this section are configured using the deploy.conf file.
-
-    # docker_package:
-    #      template: python-2104/docker_pythonapp
-    #      environment:
-    #         PACKAGE_PUBLISH: False
-    #      requires: [python_package]
-
-    # Publish mkdocs documentation to github pages of this repo
     doc_publish:
-        template: python-2104/documentation
+        template: python/documentation
         requires: [python_package]
-        environment:
-            CHANGELOG_FILENAME: /dev/null
         steps:
             - postinit: pip install -e .[doc_build]
             - prepublish_documentation: python3 screwdriver/autogen_docs.py

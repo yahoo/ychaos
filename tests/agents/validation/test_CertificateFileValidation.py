@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
-from vzmi.ychaos.agents.validation.certificate import (
+from ychaos.agents.validation.certificate import (
     CertificateFileValidation,
     CertificateFileValidationConfig,
 )

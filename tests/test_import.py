@@ -7,7 +7,7 @@
 test_ychaos
 ----------------------------------
 
-Tests for the 'vzmi.ychaos' module.
+Tests for the 'ychaos' module.
 """
 
 import unittest

@@ -6,7 +6,7 @@ from argparse import ArgumentParser, Namespace
 from typing import Any
 from unittest import TestCase
 
-from vzmi.ychaos.utils.argparse import SubCommand, SubCommandParsersAction
+from ychaos.utils.argparse import SubCommand, SubCommandParsersAction
 
 
 class SubCommandMock(SubCommand):

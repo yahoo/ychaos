@@ -8,8 +8,8 @@ from unittest import TestCase
 
 from rich.emoji import Emoji
 
-from vzmi.ychaos.cli.mock import MockApp
-from vzmi.ychaos.cli.testplan.validate import TestPlanValidatorCommand
+from ychaos.cli.mock import MockApp
+from ychaos.cli.testplan.validate import TestPlanValidatorCommand
 
 
 class TestTestPlanValidatorCommand(TestCase):

@@ -1,1 +1,1 @@
-::: vzmi.ychaos.core.verification.controller
+::: ychaos.core.verification.controller

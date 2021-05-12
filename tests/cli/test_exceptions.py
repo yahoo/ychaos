@@ -4,9 +4,9 @@ from argparse import Namespace
 from pathlib import Path
 from unittest import TestCase
 
-from vzmi.ychaos.cli.exceptions import YChaosCLIError
-from vzmi.ychaos.cli.mock import MockApp
-from vzmi.ychaos.cli.testplan.validate import TestPlanValidatorCommand
+from ychaos.cli.exceptions import YChaosCLIError
+from ychaos.cli.mock import MockApp
+from ychaos.cli.testplan.validate import TestPlanValidatorCommand
 
 
 class MockYChaosCLIError(YChaosCLIError):

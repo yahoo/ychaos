@@ -1,1 +1,1 @@
-::: vzmi.ychaos.cli.mock
+::: ychaos.cli.mock

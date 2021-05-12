@@ -1,1 +1,1 @@
-::: vzmi.ychaos.testplan.attack
+::: ychaos.testplan.attack

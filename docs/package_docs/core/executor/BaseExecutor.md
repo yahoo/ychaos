@@ -1,1 +1,1 @@
-::: vzmi.ychaos.core.executor.BaseExecutor
+::: ychaos.core.executor.BaseExecutor

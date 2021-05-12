@@ -7,10 +7,10 @@ from mockito import mock, unstub, when
 from pydantic import SecretStr
 from requests import Response
 
-from vzmi.ychaos.core.verification.plugins.HTTPRequestVerificationPlugin import (
+from ychaos.core.verification.plugins.HTTPRequestVerificationPlugin import (
     HTTPRequestVerificationPlugin,
 )
-from vzmi.ychaos.testplan.verification import HTTPRequestVerification
+from ychaos.testplan.verification import HTTPRequestVerification
 
 
 class TestHTTPVerificationPlugin(TestCase):

@@ -4,13 +4,8 @@ from queue import LifoQueue
 from random import randint
 from unittest import TestCase
 
-from vzmi.ychaos.agents.agent import (
-    Agent,
-    AgentConfig,
-    AgentPriority,
-    AgentState,
-)
-from vzmi.ychaos.agents.exceptions import AgentError
+from ychaos.agents.agent import Agent, AgentConfig, AgentPriority, AgentState
+from ychaos.agents.exceptions import AgentError
 
 
 class MockAgentConfig(AgentConfig):

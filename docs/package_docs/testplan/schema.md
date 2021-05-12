@@ -1,1 +1,1 @@
-::: vzmi.ychaos.testplan.schema
+::: ychaos.testplan.schema

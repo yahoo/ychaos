@@ -5,7 +5,7 @@ import logging
 from io import StringIO
 from unittest import TestCase
 
-from vzmi.ychaos.utils.logging import StructLogger
+from ychaos.utils.logging import StructLogger
 
 
 class TestStructLogger(TestCase):

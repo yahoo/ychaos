@@ -1,1 +1,1 @@
-::: vzmi.ychaos.agents.validation.certificate
+::: ychaos.agents.validation.certificate

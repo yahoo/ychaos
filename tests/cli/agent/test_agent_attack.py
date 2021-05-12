@@ -5,9 +5,9 @@ from argparse import Namespace
 from pathlib import Path
 from unittest import TestCase
 
-from vzmi.ychaos.agents.coordinator import Coordinator
-from vzmi.ychaos.cli.agent.attack import Attack
-from vzmi.ychaos.cli.mock import MockApp
+from ychaos.agents.coordinator import Coordinator
+from ychaos.cli.agent.attack import Attack
+from ychaos.cli.mock import MockApp
 
 
 class TestAgentAttackCLI(TestCase):

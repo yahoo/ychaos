@@ -5,14 +5,14 @@ from unittest import TestCase
 
 from mockito import ANY, mock, unstub, when
 
-from vzmi.ychaos.core.exceptions.executor_errors import (
+from ychaos.core.exceptions.executor_errors import (
     YChaosTargetConfigConditionFailedError,
 )
-from vzmi.ychaos.core.executor.MachineTargetExecutor import (
+from ychaos.core.executor.MachineTargetExecutor import (
     MachineTargetExecutor,
     YChaosAnsibleResultCallback,
 )
-from vzmi.ychaos.testplan.schema import TestPlan
+from ychaos.testplan.schema import TestPlan
 
 
 class TestMachineTargetExecutor(TestCase):

@@ -7,10 +7,10 @@ import requests
 from mockito import ANY, mock, unstub, when
 from requests import Response
 
-from vzmi.ychaos.core.verification.plugins.SDv4VerificationPlugin import (
+from ychaos.core.verification.plugins.SDv4VerificationPlugin import (
     SDv4VerificationPlugin,
 )
-from vzmi.ychaos.testplan.verification import SDv4Verification
+from ychaos.testplan.verification import SDv4Verification
 
 
 class TestSDv4VerificationPlugin(TestCase):

@@ -16,7 +16,7 @@ in a good state before performing the attack.
 
 A sample testplan with HTTP verification plugin integrated is
 provided below. The configuration of `http_request` plugin is 
-[here][vzmi.ychaos.testplan.verification.HTTPRequestVerification].
+[here][ychaos.testplan.verification.HTTPRequestVerification].
 
 ```yaml
 description: A Demo Testplan
@@ -53,8 +53,8 @@ that the services return a valid response along with verifying
 that the response time is less than what is mentioned in `latency` field.
 
 YChaos also provides 2 other plugins out of the box namely
-[SDV4VerificationPlugin][vzmi.ychaos.testplan.verification.SDv4Verification] and
-[PythonModuleVerificationPlugin][vzmi.ychaos.testplan.verification.PythonModuleVerification]
+[SDV4VerificationPlugin]ychaos.testplan.verification.SDv4Verification] and
+[PythonModuleVerificationPlugin][ychaos.testplan.verification.PythonModuleVerification]
 
 ## YChaos Verification Architecture
 

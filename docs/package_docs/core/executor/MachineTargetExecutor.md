@@ -1,1 +1,1 @@
-::: vzmi.ychaos.core.executor.MachineTargetExecutor
+::: ychaos.core.executor.MachineTargetExecutor

@@ -2,7 +2,7 @@
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 from unittest import TestCase
 
-from vzmi.ychaos.utils.builtins import FQDN
+from ychaos.utils.builtins import FQDN
 
 
 class TestFQDN(TestCase):

@@ -2,7 +2,7 @@
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 from unittest import TestCase
 
-from vzmi.ychaos.utils.hooks import EventHook, InvalidEventHookError
+from ychaos.utils.hooks import EventHook, InvalidEventHookError
 
 
 class MockEventHook(EventHook):

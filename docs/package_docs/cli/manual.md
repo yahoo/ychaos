@@ -1,1 +1,1 @@
-::: vzmi.ychaos.cli.manual
+::: ychaos.cli.manual

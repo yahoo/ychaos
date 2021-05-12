@@ -1,1 +1,1 @@
-::: vzmi.ychaos.utils.hooks
+::: ychaos.utils.hooks

@@ -6,10 +6,7 @@ from unittest import TestCase
 
 from mockito import ANY, unstub, verify, when
 
-from vzmi.ychaos.agents.network.iptables import (
-    IPTablesBlock,
-    IPTablesBlockConfig,
-)
+from ychaos.agents.network.iptables import IPTablesBlock, IPTablesBlockConfig
 
 
 class TestIPTablesBlock(TestCase):

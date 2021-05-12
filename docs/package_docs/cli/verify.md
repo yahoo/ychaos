@@ -1,1 +1,1 @@
-::: vzmi.ychaos.cli.verify
+::: ychaos.cli.verify

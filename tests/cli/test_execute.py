@@ -7,9 +7,9 @@ from unittest import TestCase
 
 from mockito import unstub
 
-from vzmi.ychaos.cli.execute import Execute
-from vzmi.ychaos.cli.mock import MockApp
-from vzmi.ychaos.testplan.schema import TestPlan
+from ychaos.cli.execute import Execute
+from ychaos.cli.mock import MockApp
+from ychaos.testplan.schema import TestPlan
 
 
 class TestVerificationCommand(TestCase):

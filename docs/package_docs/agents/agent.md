@@ -1,1 +1,1 @@
-::: vzmi.ychaos.agents.agent
+::: ychaos.agents.agent

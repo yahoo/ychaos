@@ -1,1 +1,1 @@
-::: vzmi.ychaos.agents.network.iptables
+::: ychaos.agents.network.iptables

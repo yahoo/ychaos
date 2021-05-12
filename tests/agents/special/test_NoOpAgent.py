@@ -5,8 +5,8 @@ from unittest import TestCase
 
 from mockito import unstub, when
 
-from vzmi.ychaos.agents.agent import AgentConfig, AgentState
-from vzmi.ychaos.agents.special.NoOpAgent import NoOpAgent
+from ychaos.agents.agent import AgentConfig, AgentState
+from ychaos.agents.special.NoOpAgent import NoOpAgent
 
 
 class TestNoOpAgent(TestCase):

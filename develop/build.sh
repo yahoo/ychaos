@@ -11,7 +11,7 @@ function format_codestyle() {
 function sort_imports() {
     echo "==============================================="
     echo "Sorting imports"
-    isort -m 3 --tc vzmi/ || { echo "Sorting imports failed" ; exit 1; }
+    isort -m 3 --tc src/ || { echo "Sorting imports failed" ; exit 1; }
     isort -m 3 --tc tests/ || { echo "Sorting imports failed" ; exit 1; }
     echo "Sorting imports complete"
 }
@@ -20,7 +20,7 @@ function sort_imports() {
 function flake8_validation() {
     echo "==============================================="
     echo "Running flake8 Style Check"
-    flake8 vzmi/ychaos || { echo "flake8 Style Validation Failed" ; exit 1; }
+    flake8 src/ychaos || { echo "flake8 Style Validation Failed" ; exit 1; }
     echo "flake8 Style Validation passing"
 }
 
@@ -28,14 +28,14 @@ function flake8_validation() {
 function type_validation() {
     echo "================================================"
     echo "Running Type validation"
-    mypy --ignore-missing-imports -p vzmi.ychaos || { echo "Type validation failed" ; exit 1; }
+    mypy --ignore-missing-imports src/ychaos || { echo "Type validation failed" ; exit 1; }
 }
 
 # Security Validation using Bandit
 function security_validation() {
     echo "================================================"
     echo "Running Security Checks"
-    bandit -r vzmi/ychaos -s B101 -q || { echo "Security validation failed" ; exit 1; }
+    bandit -r src/ychaos -s B101 -q || { echo "Security validation failed" ; exit 1; }
     echo "No security vulnerabilities found"
 }
 

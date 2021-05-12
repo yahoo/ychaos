@@ -4,7 +4,7 @@
 #  Licensed under the terms of the ${MY_OSI} license. See the LICENSE file in the project root for terms
 
 """
-Package setup file for python module vzmi.ychaos
+Package setup file for python module ychaos
 """
 # WARNING: Do not modify this file unless you know exactly what you are doing.
 #
@@ -48,7 +48,8 @@ if __name__ == "__main__":
     # We're being run from the command line so call setup with our arguments
     setuptools.setup(
         scripts=scripts(),
-        packages=setuptools.find_packages(),
+        packages=setuptools.find_packages(where="src"),
+        package_dir={"": "src"},
         test_suite="tests",
         package_data={"": ["*.json"]},
     )

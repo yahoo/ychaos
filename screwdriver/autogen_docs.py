@@ -6,10 +6,10 @@ from json_schema_for_humans.generate import (
     GenerationConfiguration,
     generate_from_filename,
 )
-from vzmi.ychaos.cli.main import YChaos
+from ychaos.cli.main import YChaos
 
 AUTOGEN_SCHEMA_JS_FILE = "docs/testplan/playground/schema.min.js"
-SCHEMA_JSON_FILE = "vzmi/ychaos/testplan/resources/schema.json"
+SCHEMA_JSON_FILE = "src/ychaos/testplan/resources/schema.json"
 
 print("Generating schema.min.js for playground..")
 

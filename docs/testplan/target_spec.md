@@ -16,7 +16,7 @@ each of the target types available in the package.
 
 ## Machine (`machine`)
 
-::: vzmi.ychaos.testplan.attack.MachineTargetDefinition
+::: ychaos.testplan.attack.MachineTargetDefinition
     selection:
         filters:
         - "!"

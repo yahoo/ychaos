@@ -1,1 +1,1 @@
-::: vzmi.ychaos.agents.system.cpu
+::: ychaos.agents.system.cpu

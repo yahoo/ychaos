@@ -7,9 +7,9 @@ from unittest import TestCase
 
 from mockito import unstub, when
 
-from vzmi.ychaos.agents.agent import AgentState
-from vzmi.ychaos.agents.system.cpu import CPUBurn, CPUBurnConfig, _burn
-from vzmi.ychaos.utils.dependency import DependencyUtils
+from ychaos.agents.agent import AgentState
+from ychaos.agents.system.cpu import CPUBurn, CPUBurnConfig, _burn
+from ychaos.utils.dependency import DependencyUtils
 
 
 class TestCpuBurn(TestCase):

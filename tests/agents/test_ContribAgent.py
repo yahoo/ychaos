@@ -4,8 +4,8 @@
 from queue import LifoQueue
 from unittest import TestCase
 
-from vzmi.ychaos.agents.agent import Agent, AgentConfig, AgentState
-from vzmi.ychaos.agents.contrib import ContribAgentConfig
+from ychaos.agents.agent import Agent, AgentConfig, AgentState
+from ychaos.agents.contrib import ContribAgentConfig
 
 
 class MockCommunityAgentConfig(AgentConfig):

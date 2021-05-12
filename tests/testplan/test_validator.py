@@ -7,7 +7,7 @@ from unittest import TestCase
 
 from pydantic import ValidationError
 
-from vzmi.ychaos.testplan.validator import TestPlanValidator
+from ychaos.testplan.validator import TestPlanValidator
 
 
 class TestTestPlanValidator(TestCase):

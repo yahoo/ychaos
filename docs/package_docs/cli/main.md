@@ -1,1 +1,1 @@
-::: vzmi.ychaos.cli.main
+::: ychaos.cli.main

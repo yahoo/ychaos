@@ -1,4 +1,4 @@
-#  Copyright 2021, Verizon Media
+#  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 from abc import ABC
 from argparse import ArgumentParser
@@ -13,7 +13,7 @@ from rich.panel import Panel
 from ychaos.testplan.schema import TestPlan
 from ychaos.utils.argparse import SubCommand
 
-__copyright__: str = "Copyright 2021, Verizon Media Inc."
+__copyright__: str = "Copyright 2021, Yahoo Inc."
 __version__: str = pkg_resources.get_distribution("ychaos").version
 
 

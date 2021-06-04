@@ -44,14 +44,14 @@ You can install the package using pip or directly from Github
 === "Artifactory"
 
     ```bash
-    pip install vzmi.ychaos[chaos]
+    pip install ychaos[chaos]
     ```
     
     The above command will install the latest version of the `chaos` sub-package
-    from artifactory. To install another subpackage of `vzmi.ychaos`, 
+    from artifactory. To install another subpackage of `ychaos`, 
     
     ```bash
-    pip install vzmi.ychaos[my-awesome-subpackage]
+    pip install ychaos[my-awesome-subpackage]
     ```
    
 === "Source"
@@ -59,7 +59,7 @@ You can install the package using pip or directly from Github
     You can also install the package directly from source. To do this,
     
     ```bash
-    git clone git@git.vzbuilders.com:resilience/vzmi.ychaos.git
-    cd vzmi.ychaos
+    git clone https://github.com/yahoo/ychaos
+    cd ychaos
     python3 setup.py install
     ```

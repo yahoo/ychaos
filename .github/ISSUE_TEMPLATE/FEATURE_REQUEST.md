@@ -1,6 +1,6 @@
 ---
 name: "🚀 Feature request"
-about: Suggest an idea for improving vzmi.ychaos
+about: Suggest an idea for improving ychaos
 title: ''
 labels: 'type:Enhancement'
 assignees: ''

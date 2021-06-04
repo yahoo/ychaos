@@ -6,16 +6,6 @@ extra:
     doc_owner_shortid: resilience-core@verizonmedia.com
     version:
         provider: mike
-    social:
-        - icon: fontawesome/brands/github
-          link: https://git.vzbuilders.com/resilience/
-          name: Resilience Project on Github
-        - icon: fontawesome/brands/slack
-          link: https://vzbuilders.slack.com/messages/C014B20A11U
-          name: Shashank Sharma on Slack
-        - icon: fontawesome/brands/yahoo
-          link: mailto://resilience-core@verizonmedia.com
-          name: Mail Resilience Team
 
 extra_css: []
 
@@ -54,7 +44,7 @@ plugins:
     - awesome-pages
     - mkdocstrings:
           watch:
-              - vzmi/ychaos
+              - src/ychaos
 
 nav:
     - YChaos:
@@ -68,16 +58,16 @@ nav:
 
 remote_branch: gh-pages
 remote_name: origin
-repo_name: resilience/vzmi.ychaos
-repo_url: https://git.vzbuilders.com/resilience/vzmi.ychaos
+repo_name: yahoo/ychaos
+repo_url: https://github.com/yahoo/ychaos
 site_name: YChaos - The Resilience Toolkit
-site_url: https://git.vzbuilders.com/pages/resilience/vzmi.ychaos
-site_description: Python module vzmi.ychaos
+site_url: https://yahoo.github.io/ychaos
+site_description: Python module ychaos
 strict: false
 
 theme:
     name: 'material'
-    base_url: https://git.vzbuilders.com/resilience/vzmi.ychaos
+    base_url: https://github.com/yahoo/ychaos
     language: 'en'
     features:
         - navigation.tabs
@@ -87,6 +77,6 @@ theme:
         repo: fontawesome/brands/github
 
 # Not Strictly Copyright :D
-copyright: Maintained by Resilience Team
+copyright: Maintained by Yahoo! Resilience Team
 
 use_directory_urls: true

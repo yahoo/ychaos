@@ -14,7 +14,6 @@ from typing import Any, List, Optional
 __all__ = ["SubCommandParsersAction", "SubCommand"]
 
 
-# This class is adopted from ssharma06/vzmi.utill
 class SubCommandParsersAction(_SubParsersAction):
     """
     Extends the `_SubParsersAction` class of Argparse that can be used for the
@@ -28,7 +27,7 @@ class SubCommandParsersAction(_SubParsersAction):
     ```
 
     All the parsers added to the `subparsers` using the `add_parser` method will now require a
-    mandatory attribute `cls` that implements the base [SubCommand][vzmi.ychaos.utils.argparse.subparsers.SubCommand] class.
+    mandatory attribute `cls` that implements the base [SubCommand][ychaos.utils.argparse.subparsers.SubCommand] class.
     This overridden method adds a new default variable to the parser named `cls` that can be called during
     parsing arguments
 
@@ -47,7 +46,7 @@ class SubCommandParsersAction(_SubParsersAction):
     In the above example, the two sub-commands `SubCommand1.name` and `SubCommand2.name` are
     handled by their respective classes.
 
-    See [SubCommand][vzmi.ychaos.utils.argparse.subparsers.SubCommand] for more details.
+    See [SubCommand][ychaos.utils.argparse.subparsers.SubCommand] for more details.
     """
 
     def add_parser(self, name=None, **kwargs: Any) -> ArgumentParser:
@@ -86,7 +85,7 @@ class SubCommandParsersAction(_SubParsersAction):
 class SubCommand(ABC):
     """
     Abstract base class for an Argparse subcommand. This is used along with the
-    [SubCommandParsersAction][vzmi.ychaos.utils.argparse.subparsers.SubCommandParsersAction].
+    [SubCommandParsersAction][ychaos.utils.argparse.subparsers.SubCommandParsersAction].
 
     The subcommands can implement this method along with adding the action `SubCommandParsersAction` to
     `add_subparsers` method. Each class inheriting the command will implement the `build_parser` method

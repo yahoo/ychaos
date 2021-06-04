@@ -9,7 +9,7 @@ To install the required dependencies to run agents, you can use the `agents`
 extras.
 
 ```bash
-pip install vzmi.ychaos[agents]
+pip install ychaos[agents]
 ```
 
 The above command will install the core requirements of ychaos

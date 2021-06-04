@@ -63,7 +63,7 @@ class DependencyUtils:
         Examples:
 
             ```python
-            from vzmi.ychaos.utils.dependency import DependencyHandler
+            from ychaos.utils.dependency import DependencyHandler
             BaseModel, Field = DependencyHandler.import_from("pydantic", ("BaseModel", "Field"))
             ```
 

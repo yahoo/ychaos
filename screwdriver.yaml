@@ -42,14 +42,14 @@ jobs:
         template: python/validate_codestyle
         requires: [~pr, ~commit]
         steps:
-            - validate_code: sd-cmd python/pypirun@latest flake8 flake8 vzmi/ychaos
+            - validate_code: sd-cmd python/pypirun@latest flake8 flake8 src/ychaos
 
     # Code Format Validation using `black`
     code_format_validation:
         template: python/validate_codestyle
         requires: [~pr, ~commit]
         steps:
-            - validate_code: sd-cmd python/pypirun@latest black black --check vzmi/ tests/ develop/ setup.py
+            - validate_code: sd-cmd python/pypirun@latest black black --check src/ tests/ develop/ setup.py
 
     test_validation:
         template: python/validate_unittest

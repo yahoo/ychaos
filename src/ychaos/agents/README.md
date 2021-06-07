@@ -9,5 +9,5 @@ All the required dependencies to run the agents in this package can
 be installed by running
 
 ```bash
-pip install vzmi.ychaos[agents]
+pip install ychaos[agents]
 ```

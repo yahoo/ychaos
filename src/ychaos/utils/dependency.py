@@ -1,4 +1,4 @@
-#  Copyright 2021, Verizon Media
+#  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 
 import importlib
@@ -63,7 +63,7 @@ class DependencyUtils:
         Examples:
 
             ```python
-            from vzmi.ychaos.utils.dependency import DependencyHandler
+            from ychaos.utils.dependency import DependencyHandler
             BaseModel, Field = DependencyHandler.import_from("pydantic", ("BaseModel", "Field"))
             ```
 

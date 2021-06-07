@@ -46,6 +46,14 @@ function autogen_cli_docs() {
     echo "Done"
 }
 
+# For PyCharm activate virtual environment
+if [ -d "venv/" ];
+then
+echo "==============================================="
+echo "Activating Virtual Environment"
+source venv/bin/activate
+fi
+
 format_codestyle
 sort_imports
 

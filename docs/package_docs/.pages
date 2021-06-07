@@ -1,7 +1,7 @@
 nav:
-    - vzmi.ychaos.testplan: testplan
-    - vzmi.ychaos.agents: agents
-    - vzmi.ychaos.core: core
-    - vzmi.ychaos.cli: cli
-    - vzmi.ychaos.utils: utils
+    - ychaos.testplan: testplan
+    - ychaos.agents: agents
+    - ychaos.core: core
+    - ychaos.cli: cli
+    - ychaos.utils: utils
 title: Package Documentation

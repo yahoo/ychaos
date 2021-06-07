@@ -5,7 +5,7 @@
 To install the latest version of the package, run
 
 ```bash
-pip install vzmi.ychaos
+pip install ychaos
 ```
 
 The above command will install the package and also all

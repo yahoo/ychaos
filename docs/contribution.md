@@ -5,7 +5,7 @@
 1. Clone the repository on your local machine
 
     ```bash
-    git clone git@git.vzbuilders.com:`whoami`/vzmi.ychaos.git
+    git clone https://github.com/yahoo/ychaos
     ```
 
 2. Set up the project on an IDE (Preferably PyCharm).

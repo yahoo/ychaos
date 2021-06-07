@@ -14,8 +14,8 @@ To develop a simple YChaos agent, create a python file say `/tmp/awesome_agent.p
 with a sample structure given below. 
 
 ```python linenums="1" hl_lines="48 49"
-from vzmi.ychaos.agents.agent import Agent, AgentConfig
-from vzmi.ychaos.agents.utils.annotations import log_agent_lifecycle
+from ychaos.agents.agent import Agent, AgentConfig
+from ychaos.agents.utils.annotations import log_agent_lifecycle
 from queue import LifoQueue
 from pydantic import BaseModel
 

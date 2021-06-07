@@ -33,7 +33,7 @@ update the package to the latest version
 * **Python version**: 
 * **Subsystem**:
 
-<!-- How do we reproduce this bug on our side -->
+<!-- How do we reproduce this bug on our side? -->
 1.
 2.
 3.

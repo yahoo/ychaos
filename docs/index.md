@@ -1,6 +1,6 @@
 # YChaos
 
-YChaos is a self serving chaos testing toolkit designed to
+YChaos is a self-serving chaos testing toolkit designed to
 provide you with all the capabilities of doing an end to end resilience
 testing of your service. YChaos is designed to give users a framework
 to validate, verify and attack your system to simulate real life
@@ -51,8 +51,12 @@ You can install the package using pip or directly from Github
     from artifactory. To install another subpackage of `ychaos`, 
     
     ```bash
-    pip install ychaos[my-awesome-subpackage]
+    pip install ychaos[<subpackage>]
     ```
+
+    The following subpackages are available for usage
+    1. agents : `pip install ychaos[agents]`
+    2. chaos : `pip install ychaos[chaos]`
    
 === "Source"
 
@@ -61,5 +65,5 @@ You can install the package using pip or directly from Github
     ```bash
     git clone https://github.com/yahoo/ychaos
     cd ychaos
-    python3 setup.py install
+    python setup.py develop easy_install ychaos[<subpackage>]
     ```

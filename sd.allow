@@ -1,6 +1,6 @@
 version: 1
 push:
 
-  - screwdriver:1041241
-  - screwdriver:1041241pr
+  - screwdriver:7419
+  - screwdriver:7419pr
 

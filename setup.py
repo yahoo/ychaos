@@ -24,7 +24,6 @@ Package setup file for python module ychaos
 #  - Generate any output to stdout (do not use the print function or call or use any code that uses it)
 import os
 import setuptools
-import sys
 
 
 def scripts():

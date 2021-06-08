@@ -5,6 +5,10 @@ shared:
         # or mkdocs which looks for documentation in docs.
         # By default use [mkdocs](https://www.mkdocs.org/) tool to build documentation from the [docs](docs) directory.
         DOCUMENTATION_FORMATS: mkdocs
+        SCM_CLONE_TYPE: https
+    secrets:
+        - SCM_USERNAME
+        - SCM_ACCESS_TOKEN
 
 jobs:
     # Validation jobs
@@ -18,7 +22,6 @@ jobs:
              DOCUMENTATION_PUBLISH: False
          requires: [~pr]
          steps:
-             - postinit: pip install -e .[doc_build]
              - prepublish_documentation: python3 screwdriver/autogen_docs.py
 
     lint_validation:
@@ -42,14 +45,16 @@ jobs:
         template: python/validate_codestyle
         requires: [~pr, ~commit]
         steps:
-            - validate_code: sd-cmd python/pypirun@latest flake8 flake8 src/ychaos
+            - postinstall_dependencies: pip install -U .[pep8]
+            - validate_code: flake8 src/ychaos
 
     # Code Format Validation using `black`
     code_format_validation:
         template: python/validate_codestyle
         requires: [~pr, ~commit]
         steps:
-            - validate_code: sd-cmd python/pypirun@latest black black --check src/ tests/ develop/ setup.py
+            - postinstall_dependencies: pip install -U .[pep8]
+            - validate_code: black --check src/ tests/ develop/ setup.py
 
     test_validation:
         template: python/validate_unittest
@@ -60,21 +65,24 @@ jobs:
     type_validation:
         template: python/validate_type
         requires: [~pr, ~commit]
+        steps:
+            - postinstall_dependencies: pip install -U .[mypy]
+            - validate_code: ${BASE_PYTHON} -m mypy --txt-report /sd/workspace/artifacts/reports/type_validation --ignore-missing-imports src
 
-    # Package auto-versioning, this must run before generating a package for publishing
-    version:
-        template: python/version
-        requires: [dependency_validation, lint_validation, style_validation, type_validation, security_validation, test_validation, code_format_validation]
+#    # Package auto-versioning, this must run before generating a package for publishing
+#    version:
+#        template: python/version
+#        requires: [dependency_validation, lint_validation, style_validation, type_validation, security_validation, test_validation, code_format_validation]
+#
+#    # Python packaging
+#    python_package:
+#        template: python/package_python
+#        requires: [version]
 
-    # Python packaging
-    python_package:
-        template: python/package_python
-        requires: [version]
-
+    # TODO: Add `requires` to autopublish documentation on commit after the repo is made public.
     doc_publish:
         template: python/documentation
-        requires: [python_package]
+        environment:
+            DOCUMENTATION_PUBLISH: True
         steps:
-            - postinit: pip install -e .[doc_build]
             - prepublish_documentation: python3 screwdriver/autogen_docs.py
-

@@ -1,6 +1,6 @@
 # Summary
 
-@ychaos-dev
+@yahoo/ychaos-dev
 
 <!-- 
     Provide a general summary of what changes are you proposing in this

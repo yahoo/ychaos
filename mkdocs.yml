@@ -53,6 +53,7 @@ plugins:
 nav:
     - YChaos:
         - Home: index.md
+        - Happy Path: happy_path.md
         - Changelog: releases.md
         - Contribution: contribution.md
         - Project Dependencies: dependencies.md

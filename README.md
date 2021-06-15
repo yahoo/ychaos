@@ -1,5 +1,5 @@
 
-<!-- TODO Add other badges (SDv4, codecov, chat, -->
+<!-- TODO Add other badges (SDv4, codecov, chat, etc.) -->
 ![Python Support](https://img.shields.io/pypi/pyversions/ychaos)
 [![PyPi](https://img.shields.io/pypi/status/ychaos)](https://pypi.org/project/ychaos/)
 [![Code Style](https://img.shields.io/badge/codestyle-black-black)](https://black.readthedocs.io/en/stable/index.html)
@@ -8,19 +8,38 @@
 
 # ychaos
 
-The Resilience Toolkit
-
 YChaos is a self-serving chaos testing toolkit designed to
 provide users with all the capabilities of doing an end to end resilience
 testing of your service. YChaos is designed to give users a framework
 to validate, verify and attack your system to simulate real life
 failures that might cause outages in your service.
 
-To get started, refer to the [documentation](https://yahoo.github.io/ychaos)
+To get started with YChaos, refer to the [documentation](https://yahoo.github.io/ychaos)
+
+## Table of contents
+
+1. [Background](#background)
+1. [Install](#install)
+1. [Usage](#usage)
+1. [Maintainers](#maintainers)
+1. [License](#license)
+
+## Background
+
+The most important aspect of maintaining a web service on cloud
+infrastructure is to make it resilient from failures. Most of
+these failures are unexpected and are not tested while development.
+The service which is capable of handling an unexpected failure passes the
+criteria of a resilient service.
+
+YChaos provides a self-serving framework to inject these unexpected failures
+into your service in the form of YChaos Agents and understand if your service
+is equipped to handle unknown failures either within the service
+or from a 3rd party service dependency.
 
 ## Install
 
-To install ychaos,
+To install ychaos from PyPi,
 
 ```bash
 pip install ychaos[<subpackage>]
@@ -37,17 +56,16 @@ You can also install the package from the source code.
 ```bash
 git clone https://github.com/yahoo/ychaos
 cd ychaos
-python setup.py develop easy_install ychaos[<subpackage>]
+python setup.py install easy_install ychaos[<subpackage>]
 ```
 
 ## Usage
 
-Refer to the documentation to know about the usage.
+Refer to the [documentation](https://yahoo.github.io/) to know about the usage.
 
 ## Maintainers
 
-<!-- TODO Add Team Email -->
-[The Resilience Team @yahoo](ychaos-dev@verizonmedia.com)
+[The Resilience Team @yahoo](mailto://ychaos-dev@verizonmedia.com)
 
 ## License
 

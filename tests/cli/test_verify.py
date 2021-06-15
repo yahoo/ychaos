@@ -72,6 +72,7 @@ class TestVerificationCommand(TestCase):
 
     def test_verification_for_testplan_with_valid_plugin_path(self):
         temp_testplan_file = NamedTemporaryFile("w+")
+        temp_py_file = NamedTemporaryFile("w+", suffix="py")
 
         args = Namespace()
         args.cls = self.cls
@@ -80,7 +81,7 @@ class TestVerificationCommand(TestCase):
         testplan = TestPlan.load_file(
             self.testplans_directory.joinpath("valid/testplan1.yaml")
         )
-        testplan.verification[0].config["path"] = __file__
+        testplan.verification[0].config["path"] = temp_py_file.name
         testplan.export_to_file(temp_testplan_file.name)
 
         args.testplan = temp_testplan_file.name

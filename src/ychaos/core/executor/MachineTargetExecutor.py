@@ -254,7 +254,7 @@ class MachineTargetExecutor(BaseExecutor):
                         cmd=(
                             "source {{result_pip.virtualenv}}/bin/activate"
                             " && "
-                            "ychaos agent attack --testplan {{result_testplan_file.dest}} --attack-report-yaml {{result_create_workspace.path}}/attack_report.yaml"
+                            "ychaos --log-file {{result_create_workspace.path}}/ychaos.log agent attack --testplan {{result_testplan_file.dest}} --attack-report-yaml {{result_create_workspace.path}}/attack_report.yaml"
                         ),
                     ),
                 ),

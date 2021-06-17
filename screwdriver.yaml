@@ -62,6 +62,8 @@ jobs:
             TOX_ARGS: --parallel all
             TOX_ENVLIST: py36
         requires: [~pr, ~commit]
+        steps:
+            - codecov: echo "Skip Codecov"
 
     test_validation_py37:
         template: python/validate_unittest
@@ -69,6 +71,8 @@ jobs:
             TOX_ARGS: --parallel all
             TOX_ENVLIST: py37
         requires: [ ~pr, ~commit ]
+        steps:
+            - codecov: echo "Skip Codecov"
 
     test_validation_py38:
         template: python/validate_unittest

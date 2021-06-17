@@ -59,19 +59,22 @@ jobs:
     test_validation_py36:
         template: python/validate_unittest
         environment:
-            TOX_ARGS: --parallel all -e py36
+            TOX_ARGS: --parallel all
+            TOX_ENVLIST: py36
         requires: [~pr, ~commit]
 
     test_validation_py37:
         template: python/validate_unittest
         environment:
-            TOX_ARGS: --parallel all -e py37
+            TOX_ARGS: --parallel all
+            TOX_ENVLIST: py37
         requires: [ ~pr, ~commit ]
 
     test_validation_py38:
         template: python/validate_unittest
         environment:
-            TOX_ARGS: --parallel all -e py38
+            TOX_ARGS: --parallel all
+            TOX_ENVLIST: py37
         requires: [ ~pr, ~commit ]
 
     type_validation:

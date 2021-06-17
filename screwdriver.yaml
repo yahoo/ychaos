@@ -78,7 +78,7 @@ jobs:
         template: python/validate_unittest
         environment:
             TOX_ARGS: --parallel all
-            TOX_ENVLIST: py37
+            TOX_ENVLIST: py38
         requires: [ ~pr, ~commit ]
 
     type_validation:

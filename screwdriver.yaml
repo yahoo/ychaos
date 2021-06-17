@@ -56,11 +56,26 @@ jobs:
             - postinstall_dependencies: pip install -U .[pep8]
             - validate_code: black --check src/ tests/ develop/ setup.py
 
-    test_validation:
+    test_validation_py36:
         template: python/validate_unittest
         environment:
             TOX_ARGS: --parallel all
+            TOXENV: py36
         requires: [~pr, ~commit]
+
+    test_validation_py37:
+        template: python/validate_unittest
+        environment:
+            TOX_ARGS: --parallel all
+            TOXENV: py37
+        requires: [ ~pr, ~commit ]
+
+    test_validation_py38:
+        template: python/validate_unittest
+        environment:
+            TOX_ARGS: --parallel all
+            TOXENV: py38
+        requires: [ ~pr, ~commit ]
 
     type_validation:
         template: python/validate_type

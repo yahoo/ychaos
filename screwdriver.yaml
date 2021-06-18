@@ -80,6 +80,8 @@ jobs:
             TOX_ARGS: --parallel all
             TOX_ENVLIST: py38
         requires: [ ~pr, ~commit ]
+        steps:
+            - codecov: echo "Skip Codecov"
 
     test_validation_py39:
         template: python/validate_unittest

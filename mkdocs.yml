@@ -53,6 +53,7 @@ plugins:
 nav:
     - YChaos:
         - Home: index.md
+        - Get Started: get_started.md
         - Changelog: releases.md
         - Contribution: contribution.md
         - Project Dependencies: dependencies.md

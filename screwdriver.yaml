@@ -8,7 +8,8 @@ shared:
         - SCM_ACCESS_TOKEN
     settings:
         email:
-            addresses: ychaos-alerts@verizonmedia.com
+            addresses:
+                - ychaos-alerts@verizonmedia.com
             statuses:
                 - ABORTED
                 - FAILURE

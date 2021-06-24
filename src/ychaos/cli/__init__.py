@@ -5,16 +5,12 @@ from argparse import ArgumentParser
 from pathlib import Path
 from typing import Optional
 
-import pkg_resources
 from pydantic import ValidationError
 from rich.console import Console
 from rich.panel import Panel
 
 from ychaos.testplan.schema import TestPlan
 from ychaos.utils.argparse import SubCommand
-
-__copyright__: str = "Copyright 2021, Yahoo Inc."
-__version__: str = pkg_resources.get_distribution("ychaos").version
 
 
 class YChaosSubCommand(SubCommand, ABC):

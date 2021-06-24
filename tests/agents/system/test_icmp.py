@@ -1,18 +1,12 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
-import math
-import multiprocessing
 import os
-from datetime import datetime, timedelta
 from unittest import TestCase
 
 from mockito import unstub, verify, when
 
-from ychaos.agents.agent import AgentState
-from ychaos.agents.system.cpu import CPUBurn, CPUBurnConfig, _burn
 from ychaos.agents.system.icmp import PingDisable, PingDisableConfig
 from ychaos.agents.utils.sysctl import SysCtl
-from ychaos.utils.dependency import DependencyUtils
 
 
 class TestPingDisable(TestCase):

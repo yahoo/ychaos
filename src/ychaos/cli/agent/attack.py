@@ -56,38 +56,27 @@ class Attack(YChaosTestplanInputSubCommand):
     def configure_attack(self):
         self.coordinator = Coordinator(self.test_plan)
 
-        class OnAttackStart(YChaosCLIHook):
+        class YChaosAgentAttackCLIHook(YChaosCLIHook):
             def __init__(self, app):
-                super(OnAttackStart, self).__init__(app)
+                super(YChaosAgentAttackCLIHook, self).__init__(app)
 
+        class OnAttackStart(YChaosAgentAttackCLIHook):
             def __call__(self):
                 self.console.log("Attack Started")
 
         class OnAttackCompleted(YChaosCLIHook):
-            def __init__(self, app):
-                super(OnAttackCompleted, self).__init__(app)
-
             def __call__(self):
                 self.console.log("Attack Ended")
 
-        class OnAgentStart(YChaosCLIHook):
-            def __init__(self, app):
-                super(OnAgentStart, self).__init__(app)
-
+        class OnAgentStart(YChaosAgentAttackCLIHook):
             def __call__(self, agent_name: str):
                 self.console.log(f"Agent: {agent_name} - Started")
 
-        class OnAgentTeardown(YChaosCLIHook):
-            def __init__(self, app):
-                super(OnAgentTeardown, self).__init__(app)
-
+        class OnAgentTeardown(YChaosAgentAttackCLIHook):
             def __call__(self, agent_name: str):
                 self.console.log(f"Agent: {agent_name} - Teardown started")
 
-        class OnAgentStop(YChaosCLIHook):
-            def __init__(self, app):
-                super(OnAgentStop, self).__init__(app)
-
+        class OnAgentStop(YChaosAgentAttackCLIHook):
             def __call__(self, agent_name: str):
                 self.console.log(f"Agent: {agent_name} - Stopped")
 

@@ -23,6 +23,12 @@ class ApplicationSettings(BaseModel):
     def get_instance(cls):
         return cls()
 
+    @classmethod
+    def get_version(cls):
+        import pkg_resources
+
+        return pkg_resources.get_distribution(cls.get_instance().PROG).version
+
 
 class DevSettings(ApplicationSettings):
     """

@@ -11,7 +11,7 @@ from rich.console import Console
 from rich.table import Table
 
 from ychaos.app_logger import AppLogger
-from ychaos.cli import YChaosSubCommand, __version__
+from ychaos.cli import YChaosSubCommand
 from ychaos.cli.agent.main import Agent
 from ychaos.cli.exceptions import YChaosCLIError
 from ychaos.cli.execute import Execute
@@ -57,7 +57,7 @@ class YChaos:
             "-v",
             "--version",
             action="version",
-            version=f"v{__version__} [resilience/ychaos]",
+            version=f"v{cls.settings.get_version()} [yahoo/ychaos]",
         )
 
         # Verbosity Argument Group

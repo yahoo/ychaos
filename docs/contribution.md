@@ -127,4 +127,4 @@ piece of code. If the else block just contains `None`, use a simple if statement
 
 Use [pathlib](https://docs.python.org/3/library/pathlib.html) for path operation instead of
 `os.path` as this has better methods of operating on path. It also has utility methods to resolve
-expand user etc. 
+expand user etc.

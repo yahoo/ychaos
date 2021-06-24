@@ -1,14 +1,18 @@
 version: 4
 shared:
     environment:
-        # Documentation tool to use, can be either sphinx which looks for documentation in doc/source
-        # or mkdocs which looks for documentation in docs.
-        # By default use [mkdocs](https://www.mkdocs.org/) tool to build documentation from the [docs](docs) directory.
         DOCUMENTATION_FORMATS: mkdocs
         SCM_CLONE_TYPE: https
     secrets:
         - SCM_USERNAME
         - SCM_ACCESS_TOKEN
+    settings:
+        email:
+            addresses:
+                - ychaos-alerts@verizonmedia.com
+            statuses:
+                - ABORTED
+                - FAILURE
 
 jobs:
     # Validation jobs
@@ -17,12 +21,12 @@ jobs:
         requires: [~pr, ~commit]
 
     doc_validation:
-         template: python/documentation
-         environment:
-             DOCUMENTATION_PUBLISH: False
-         requires: [~pr]
-         steps:
-             - prepublish_documentation: python3 screwdriver/autogen_docs.py
+        template: python/documentation
+        environment:
+            DOCUMENTATION_PUBLISH: False
+        requires: [~pr]
+        steps:
+            - prepublish_documentation: python3 screwdriver/autogen_docs.py
 
     lint_validation:
         template: python/validate_lint

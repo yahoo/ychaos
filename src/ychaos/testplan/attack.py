@@ -212,7 +212,7 @@ class AgentExecutionConfig(SchemaModel):
     def _parse_agent_configuration(cls, v, values):
         if "type" in values:
             return AgentType(values["type"]).metadata.schema(**v)
-        else:
+        else:  # pragma: no cover
             return v
 
 
@@ -256,5 +256,5 @@ class AttackConfig(SchemaModel):
     def _parse_target_configuration(cls, v, values):
         if "target_type" in values:
             return TargetType(values["target_type"]).metadata.schema(**v)
-        else:
+        else:  # pragma: no cover
             return v

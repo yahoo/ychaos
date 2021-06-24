@@ -1,5 +1,6 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
+from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
 from ychaos.cli.main import YChaos
@@ -63,3 +64,18 @@ class TestYChaosCLI(TestCase):
             YChaos.main(ychaos_command.split()[1:])
 
         self.assertEqual(1, _exit.exception.code)
+
+    def test_ychaos_cli_saves_reports(self):
+        txt_report = NamedTemporaryFile("w+", suffix=".txt")
+        html_report = NamedTemporaryFile("w+", suffix=".html")
+        ychaos_command = (
+            f"ychaos --text-report {txt_report.name} --html-report {html_report.name}"
+        )
+
+        with self.assertRaises(SystemExit) as _exit:
+            YChaos.main(ychaos_command.split()[1:])
+
+        self.assertEqual(0, _exit.exception.code)
+
+        txt_report.seek(0)
+        self.assertTrue("YChaos, The resilience testing framework" in txt_report.read())

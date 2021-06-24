@@ -4,7 +4,7 @@ import os
 import shlex
 import subprocess  # nosec
 from pathlib import Path
-from typing import Dict, Union
+from typing import Union
 
 from pydantic import validate_arguments
 

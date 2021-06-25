@@ -15,7 +15,7 @@ import unittest
 
 class TestImport(unittest.TestCase):
     def test__module__import(self):
-        pass
+        import ychaos
 
 
 if __name__ == "__main__":

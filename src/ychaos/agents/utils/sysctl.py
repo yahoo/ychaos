@@ -4,7 +4,7 @@ import os
 import shlex
 import subprocess  # nosec
 from pathlib import Path
-from typing import Dict, Union
+from typing import Union
 
 from pydantic import validate_arguments
 
@@ -90,22 +90,3 @@ class SysCtl:
             else:
                 return False
         return True
-
-    @classmethod
-    def all(cls) -> Dict[str, bytes]:
-        """
-        Fetch all permissible sysctl variables as a dictionary.
-        Returns:
-            Dictionary of str -> bytes indicating all the sysctl variables.
-        """
-        proc = subprocess.run(  # nosec
-            [cls._cmd, "-a", "-e"], stdout=subprocess.PIPE, stderr=subprocess.PIPE
-        )
-        all_var_map = dict()
-        if proc.returncode == 0:
-            _ls = proc.stdout.strip().split(b"\n")
-            for _line in _ls:
-                _lsplit, _rsplit = _line.split(b" = ")
-                all_var_map[str(_lsplit, "UTF-8")] = _rsplit
-
-        return all_var_map

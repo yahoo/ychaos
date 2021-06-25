@@ -1,6 +1,7 @@
 
 <!-- TODO Add other badges (codecov, chat, etc.) -->
 [![CI Pipeline](https://cd.screwdriver.cd/pipelines/7419/badge)](https://cd.screwdriver.cd/pipelines/7419/)
+[![codecov](https://codecov.io/gh/yahoo/ychaos/branch/main/graph/badge.svg?token=UA7QNZ6QOQ)](https://codecov.io/gh/yahoo/ychaos)
 ![Python Support](https://img.shields.io/pypi/pyversions/ychaos)
 [![PyPi](https://img.shields.io/pypi/status/ychaos)](https://pypi.org/project/ychaos/)
 [![Code Style](https://img.shields.io/badge/codestyle-black-black)](https://black.readthedocs.io/en/stable/index.html)

@@ -1,0 +1,39 @@
+# Copyright 2021, Yahoo
+# Licensed under the terms of the Apache 2.0 license.  See the LICENSE file in the project root for terms
+[run]
+parallel = True
+branch = True
+cover_pylib = False
+source = src
+omit =
+    src/ychaos/cli/mock.py
+
+[report]
+ignore_errors = True
+exclude_lines =
+    pragma: no cover
+    ^def test_
+
+    # Don't complain about missing debug-only code:
+    def __repr__
+    if self\.debug
+
+    # Don't complain if tests don't hit defensive assertion code:
+    raise AssertionError
+    raise NotImplementedError
+
+    # Don't complain if non-runnable code isn't run:
+    if 0:
+    if __name__ == .__main__.:
+
+    if TYPE_CHECKING:
+    @overload
+    pass
+
+[paths]
+source =
+    src/ychaos
+    .tox/py*/lib/python*/site-packages/ychaos
+
+precision = 2
+show_missing = True

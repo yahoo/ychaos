@@ -93,6 +93,8 @@ jobs:
             TOX_ARGS: --parallel all
             TOX_ENVLIST: py39
         requires: [ ~pr, ~commit ]
+        steps:
+            - codecov: chmod +x ./screwdriver/codecov.sh && ./screwdriver/codecov.sh
 
     type_validation:
         template: python/validate_type

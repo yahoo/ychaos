@@ -103,20 +103,82 @@ jobs:
             - postinstall_dependencies: pip install -U .[mypy]
             - validate_code: ${BASE_PYTHON} -m mypy --txt-report /sd/workspace/artifacts/reports/type_validation --ignore-missing-imports src
 
-#    # Package auto-versioning, this must run before generating a package for publishing
-#    version:
-#        template: python/version
-#        requires: [dependency_validation, lint_validation, style_validation, type_validation, security_validation, test_validation, code_format_validation]
-#
-#    # Python packaging
-#    python_package:
-#        template: python/package_python
-#        requires: [version]
+    # Package auto-versioning, this must run before generating a package for publishing
+    version_test_pypi:
+        template: python-2104/version
+        requires:
+            - dependency_validation
+            - lint_validation
+            - style_validation
+            - type_validation
+            - security_validation
+            - code_format_validation
 
-    # TODO: Add `requires` to autopublish documentation on commit after the repo is made public.
+            # Unittest Jobs
+            - test_validation_py36
+            - test_validation_py37
+            - test_validation_py38
+            - test_validation_py39
+
+    # Publish package to test.pypi.org
+    # Release to test.pypi is auto triggered for every commit
+    # to the repository.
+    package_publish_test_pypi:
+        environment:
+            PUBLISH: True
+            TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
+        template: python-2104/package_python
+        requires: [version_test_pypi]
+
+    # Release Pipeline to publish package to PyPi
+    # This is manually triggered by the maintainers
+    # to publish a new version release to PyPi
+    release:
+        template: sd/noop
+        blockedBy:
+            - ~dependency_validation
+            - ~lint_validation
+            - ~style_validation
+            - ~type_validation
+            - ~security_validation
+            - ~code_format_validation
+
+            # Unittest Jobs
+            - ~test_validation_py36
+            - ~test_validation_py37
+            - ~test_validation_py38
+            - ~test_validation_py39
+
+    version_pypi:
+        template: python-2104/version
+        requires:
+            # Manually trigger release
+            - release
+
+            # Validation Jobs
+            - dependency_validation
+            - lint_validation
+            - style_validation
+            - type_validation
+            - security_validation
+            - code_format_validation
+
+            # Unittest Jobs
+            - test_validation_py36
+            - test_validation_py37
+            - test_validation_py38
+            - test_validation_py39
+
+    package_publish_pypi:
+        template: python-2104/package_python
+        environment:
+            PUBLISH: True
+        requires: [version_pypi]
+
     doc_publish:
         template: python/documentation
         environment:
             DOCUMENTATION_PUBLISH: True
         steps:
             - prepublish_documentation: python3 screwdriver/autogen_docs.py
+        requires: [package_publish_pypi]

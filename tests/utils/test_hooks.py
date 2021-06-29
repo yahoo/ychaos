@@ -28,7 +28,7 @@ class TestEventHook(TestCase):
         with self.assertRaises(InvalidEventHookError):
             event_hook_object.mocked_method_that_calls_invalid_hooks()
 
-    class MockInactiveHook:
+    class MockHookCallable_Inactive:
         active = False
 
         def __call__(self, *args, **kwargs):
@@ -38,5 +38,22 @@ class TestEventHook(TestCase):
 
     def test_hooks_not_called_if_inactive(self):
         event_hook_object = MockEventHook()
-        event_hook_object.register_hook("on_valid_hooks", self.MockInactiveHook())
+        event_hook_object.register_hook(
+            "on_valid_hooks", self.MockHookCallable_Inactive()
+        )
         event_hook_object.mocked_method_that_calls_valid_hooks()
+
+    class MockHookCallable_RaisesError:
+        raise_error = True
+
+        def __call__(self, *args, **kwargs):
+            # Should always throw an error
+            assert 1 == 0
+
+    def test_hook_called_raises_error_when_raise_error_is_true(self):
+        event_hook_object = MockEventHook()
+        event_hook_object.register_hook(
+            "on_valid_hooks", self.MockHookCallable_RaisesError()
+        )
+        with self.assertRaises(AssertionError):
+            event_hook_object.mocked_method_that_calls_valid_hooks()

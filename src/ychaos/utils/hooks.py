@@ -56,4 +56,5 @@ class EventHook(object):
                 if getattr(hook, "active", True):
                     hook(*args)
             except Exception as hook_error:  # nosec
-                pass  # Ignore Errors for now (This design can change)
+                if getattr(hook, "raise_error", False):
+                    raise hook_error

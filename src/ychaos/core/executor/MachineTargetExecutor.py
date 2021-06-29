@@ -120,6 +120,13 @@ class MachineTargetExecutor(BaseExecutor):
         ```python
             def callable_hook(result): ...
         ```
+
+    === "on_error"
+        Called when an exception is raised
+
+        ```python
+            def callable_hook(e: Exception): ...
+        ```
     """
 
     __target_type__ = "machine"
@@ -130,6 +137,7 @@ class MachineTargetExecutor(BaseExecutor):
         "on_target_unreachable",
         "on_target_failed",
         "on_target_passed",
+        "on_error",
         "on_end",
     )
 
@@ -323,7 +331,7 @@ class MachineTargetExecutor(BaseExecutor):
             result = self.ansible_context.tqm.run(play)
             self.execute_hooks("on_end", result)
         except Exception as e:
-            print(e)
+            self.execute_hooks("on_error", e)
         finally:
             self.ansible_context.tqm.cleanup()
             if self.ansible_context.loader:  # pragma: no cover

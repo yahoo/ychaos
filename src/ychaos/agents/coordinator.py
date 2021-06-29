@@ -2,7 +2,6 @@
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 
 import os
-import traceback
 from datetime import datetime, timedelta, timezone
 from logging import Logger
 from queue import Queue
@@ -280,9 +279,9 @@ class Coordinator(EventHook):
                 error = configured_agent.agent.exception.get()
                 temp_exception_queue.put(error)
                 self.log.error(
-                    f"Error occurred for the Agent={configured_agent.agent.config.name}: {error}"
+                    f"Error occurred for the Agent={configured_agent.agent.config.name}",
+                    exc_info=error,
                 )
-                traceback.print_exception(type(error), error, error.__traceback__)
             configured_agent.agent.exception = temp_exception_queue
 
     def get_all_exceptions(self) -> list:

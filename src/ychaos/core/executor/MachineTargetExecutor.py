@@ -249,6 +249,7 @@ class MachineTargetExecutor(BaseExecutor):
                 ),
                 dict(
                     name="Run YChaos Agent",
+                    ignore_errors="yes",
                     action=dict(
                         module="shell",
                         cmd=(

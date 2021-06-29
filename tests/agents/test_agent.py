@@ -84,3 +84,12 @@ class TestBaseAgent(TestCase):
         t.join()
 
         self.assertEqual(agent.current_state, AgentState.ERROR)
+
+    def test_agent_run_when_is_not_runnable_raises_error(self):
+        agent = MockAgent(self.mock_agent_config.copy())
+        agent.exception.put(Exception("Error"))
+
+        with self.assertRaises(AgentError):
+            agent.run()
+
+        self.assertEqual(agent.current_state, AgentState.ABORTED)

@@ -175,7 +175,7 @@ class Agent(ABC):
         Returns:
             None
         """
-        if self.current_state != AgentState.SETUP or not self.is_runnable():
+        if self.current_state != AgentState.SETUP:
             if self.config.raise_on_state_mismatch:
                 self.advance_state(AgentState.ABORTED)
                 raise AgentError("Agent state is not in SETUP state. Bailing out")
@@ -183,6 +183,9 @@ class Agent(ABC):
             warnings.warn(
                 "Agent is currently not in the SETUP state. Proceeding anyway"
             )
+
+        if not self.is_runnable():
+            raise AgentError("Agent not in executable state. Bailing out")
         self.advance_state(AgentState.RUNNING)
 
     def start(

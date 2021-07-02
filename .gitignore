@@ -27,6 +27,7 @@ pip-log.txt
 htmlcov/
 .coverage.*
 .tox
+.coverage
 nosetests.xml
 .testrepository
 .cache

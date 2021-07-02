@@ -160,7 +160,7 @@ class YChaos:
         # Teardown
         args.app.teardown(exitcode)
 
-        exit(exitcode)
+        sys.exit(exitcode)
 
 
 class App:

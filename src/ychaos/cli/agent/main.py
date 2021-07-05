@@ -24,8 +24,9 @@ class Agent(YChaosSubCommand):
         test_plan_command_subparser = parser.add_subparsers(
             action=SubCommandParsersAction, dest=f"_cmd.{cls.name}"
         )
+        assert isinstance(test_plan_command_subparser, SubCommandParsersAction)
 
-        test_plan_command_subparser.add_parser(name=Attack.name, cls=Attack)
+        test_plan_command_subparser.add_parser(cls=Attack)
         return parser
 
     @classmethod

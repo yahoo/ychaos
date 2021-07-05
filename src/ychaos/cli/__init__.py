@@ -1,7 +1,7 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 from abc import ABC
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from typing import Optional
 
@@ -9,8 +9,51 @@ from pydantic import ValidationError
 from rich.console import Console
 from rich.panel import Panel
 
+from ychaos.cli.exceptions import YChaosCLIError
 from ychaos.testplan.schema import TestPlan
 from ychaos.utils.argparse import SubCommand
+
+
+class YChaosArgumentParser(ArgumentParser):
+    """
+    YChaosArgumentParser serves as a special parser to parse the
+    CLI commands for ychaos. It provides utility methods to parse arguments,
+    pass subcommand implementation and run a subcommand. It also handles
+    the CLI exception gracefully by running the `handle` method of the exception raised.
+    """
+
+    def __init__(self, *args, **kwargs):
+        """
+        Initialize a YChaos Argument parser.
+
+        Args:
+            **kwargs: `__root__` for the root execution when no subcommand is thrown.
+        """
+        # __root__ SubCommand class determines the root of the YChaos
+        # i.e. when YChaos CLI is called without any arguments
+        self.__root__ = kwargs.pop("__root__", None)
+
+        super(YChaosArgumentParser, self).__init__(*args, **kwargs)
+
+    def parse_args(self, args=None, namespace=None) -> Namespace:  # type: ignore
+        args = super(YChaosArgumentParser, self).parse_args(args, namespace)
+        if not hasattr(args, "cls"):
+            assert issubclass(self.__root__, SubCommand)
+            args.cls = self.__root__
+
+        return args
+
+    def run_command(self, args: Namespace) -> int:
+        """
+        Run a subcommand from YChaos CLI
+        """
+        try:
+            exitcode = args.cls.main(args)
+        except YChaosCLIError as e:
+            e.handle()
+            exitcode = e.exitcode
+
+        return exitcode
 
 
 class YChaosSubCommand(SubCommand, ABC):

@@ -11,9 +11,8 @@ from rich.console import Console
 from rich.table import Table
 
 from ychaos.app_logger import AppLogger
-from ychaos.cli import YChaosSubCommand
+from ychaos.cli import YChaosArgumentParser, YChaosSubCommand
 from ychaos.cli.agent.main import Agent
-from ychaos.cli.exceptions import YChaosCLIError
 from ychaos.cli.execute import Execute
 from ychaos.cli.manual import Manual
 from ychaos.cli.testplan import TestPlan
@@ -48,8 +47,10 @@ class YChaos:
         Returns:
             None
         """
-        ychaos_cli = ArgumentParser(
-            prog=cls.settings.PROG, formatter_class=ArgumentDefaultsHelpFormatter
+        ychaos_cli = YChaosArgumentParser(
+            prog=cls.settings.PROG,
+            formatter_class=ArgumentDefaultsHelpFormatter,
+            __root__=YChaosRoot,
         )
 
         # YChaos CLI version
@@ -130,17 +131,16 @@ class YChaos:
             dest=cls.settings.COMMAND_IDENTIFIER.format(cls.settings.PROG),
         )
 
+        assert isinstance(ychaos_cli_subparsers, SubCommandParsersAction)
+
         # Subcommands
-        ychaos_cli_subparsers.add_parser(cls=TestPlan, name=TestPlan.name)
-        ychaos_cli_subparsers.add_parser(cls=Manual, name=Manual.name)
-        ychaos_cli_subparsers.add_parser(cls=Agent, name=Agent.name)
-        ychaos_cli_subparsers.add_parser(cls=Verify, name=Verify.name)
-        ychaos_cli_subparsers.add_parser(cls=Execute, name=Execute.name)
+        ychaos_cli_subparsers.add_parser(cls=TestPlan)
+        ychaos_cli_subparsers.add_parser(cls=Manual)
+        ychaos_cli_subparsers.add_parser(cls=Agent)
+        ychaos_cli_subparsers.add_parser(cls=Verify)
+        ychaos_cli_subparsers.add_parser(cls=Execute)
 
         args = ychaos_cli.parse_args(program_arguments)
-
-        if not hasattr(args, "cls"):
-            args.cls = YChaosRoot
 
         args.app = App(args, ychaos_cli)
 
@@ -149,10 +149,7 @@ class YChaos:
 
         # Call the right method for the subcommand
         try:
-            exitcode = args.cls.main(args)
-        except YChaosCLIError as e:  # pragma: no cover
-            e.handle()
-            exitcode = e.exitcode
+            exitcode = ychaos_cli.run_command(args)
         except Exception as unknown_error:  # pragma: no cover
             exitcode = 255
             args.app.unknown_error()

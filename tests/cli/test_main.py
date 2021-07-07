@@ -1,9 +1,14 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
+import sys
+from argparse import Namespace
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
-from ychaos.cli.main import YChaos
+from mockito import unstub, verify, when
+
+from ychaos.cli.main import YChaos, main
+from ychaos.cli.mock import MockApp
 
 
 class TestYChaosCLI(TestCase):
@@ -79,3 +84,28 @@ class TestYChaosCLI(TestCase):
 
         txt_report.seek(0)
         self.assertTrue("YChaos, The resilience testing framework" in txt_report.read())
+
+    def test_ychaos_entrypoint(self):
+        sys.argv = [
+            "ychaos",
+        ]
+        with self.assertRaises(SystemExit) as _exit:
+            main()
+
+
+class TestYChaosCLIApp(TestCase):
+    def test_app_handles_unknown_errors(self):
+        args = Namespace()
+        app = MockApp(args=args)
+        when(app.console).print_exception(extra_lines=2).thenReturn(0)
+
+        app.unknown_error()
+        verify(app.console, times=1).print_exception(extra_lines=2)
+
+    def test_app_in_debug_mode(self):
+        args = Namespace(debug=True)
+        app = MockApp(args=args)
+        self.assertTrue(app.is_debug_mode())
+
+    def tearDown(self) -> None:
+        unstub()

@@ -243,7 +243,7 @@ class App:
 
         return _tree
 
-    def is_debug_mode(self) -> bool:  # pragma: no cover
+    def is_debug_mode(self) -> bool:
         """
         Returns if the app was initialized with debug mode
         Returns:
@@ -274,7 +274,7 @@ class App:
 
         self.console.print(table)
 
-    def unknown_error(self):  # pragma: no cover
+    def unknown_error(self):
         self.console.line()
         self.console.print_exception(extra_lines=2)
 
@@ -302,7 +302,7 @@ class YChaosRoot(YChaosSubCommand):
     """
 
     @classmethod
-    def main(cls, args: Namespace) -> Any:  # pragma: no cover
+    def main(cls, args: Namespace) -> Any:
         """
         Does Nothing.
         Args:
@@ -315,5 +315,5 @@ class YChaosRoot(YChaosSubCommand):
 
 
 # This is where it all started..
-def main():  # pragma: no cover
+def main():
     YChaos.main(sys.argv[1:])

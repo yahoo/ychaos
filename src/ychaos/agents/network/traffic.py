@@ -10,8 +10,8 @@ from typing import List, Optional
 
 from pydantic import Field, validate_arguments
 
-from ychaos.agents.agent import Agent, TimedAgentConfig
-from ychaos.agents.utils.annotations import log_agent_lifecycle
+from ..agent import Agent, TimedAgentConfig
+from ..utils.annotations import log_agent_lifecycle
 
 
 class TrafficBlockConfig(TimedAgentConfig):

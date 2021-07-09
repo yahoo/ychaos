@@ -8,14 +8,9 @@ import requests
 from pydantic import validate_arguments
 from requests import HTTPError, Session, Timeout
 
-from ychaos.core.verification.data import (
-    VerificationData,
-    VerificationStateData,
-)
-from ychaos.core.verification.plugins.BaseVerificationPlugin import (
-    BaseVerificationPlugin,
-)
-from ychaos.testplan.verification import SDv4Verification
+from ....testplan.verification import SDv4Verification
+from ..data import VerificationData, VerificationStateData
+from .BaseVerificationPlugin import BaseVerificationPlugin
 
 
 class SDv4VerificationPlugin(BaseVerificationPlugin):

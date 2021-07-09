@@ -5,14 +5,14 @@
 import warnings
 from queue import LifoQueue
 
-from ychaos.agents.agent import (
+from ..agent import (
     Agent,
     AgentMonitoringDataPoint,
     AgentPriority,
     TimedAgentConfig,
 )
-from ychaos.agents.utils.annotations import log_agent_lifecycle
-from ychaos.agents.utils.sysctl import SysCtl
+from ..utils.annotations import log_agent_lifecycle
+from ..utils.sysctl import SysCtl
 
 
 class PingDisableConfig(TimedAgentConfig):

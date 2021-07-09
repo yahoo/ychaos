@@ -6,8 +6,8 @@ from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from ychaos.testplan import SystemState
-from ychaos.testplan.verification import VerificationType
+from ...testplan import SystemState
+from ...testplan.verification import VerificationType
 
 
 class VerificationStateData(BaseModel):

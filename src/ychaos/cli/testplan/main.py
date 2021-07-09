@@ -4,9 +4,9 @@
 from argparse import ArgumentParser, Namespace
 from typing import Any
 
-from ychaos.cli import YChaosSubCommand
-from ychaos.cli.testplan.validate import TestPlanValidatorCommand
-from ychaos.utils.argparse import SubCommandParsersAction
+from ...utils.argparse import SubCommandParsersAction
+from .. import YChaosSubCommand
+from .validate import TestPlanValidatorCommand
 
 __all__ = ["TestPlan"]
 

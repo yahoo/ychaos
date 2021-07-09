@@ -10,20 +10,15 @@ from typing import Any, Dict, Iterable, List, Optional, Union
 from rich.console import Console
 from rich.table import Table
 
-from ychaos.app_logger import AppLogger
-from ychaos.cli import YChaosArgumentParser, YChaosSubCommand
-from ychaos.cli.agent.main import Agent
-from ychaos.cli.execute import Execute
-from ychaos.cli.manual import Manual
-from ychaos.cli.testplan import TestPlan
-from ychaos.cli.verify import Verify
-from ychaos.settings import (
-    ApplicationSettings,
-    DevSettings,
-    ProdSettings,
-    Settings,
-)
-from ychaos.utils.argparse import SubCommandParsersAction
+from ..app_logger import AppLogger
+from ..settings import ApplicationSettings, DevSettings, ProdSettings, Settings
+from ..utils.argparse import SubCommandParsersAction
+from . import YChaosArgumentParser, YChaosSubCommand
+from .agent.main import Agent
+from .execute import Execute
+from .manual import Manual
+from .testplan import TestPlan
+from .verify import Verify
 
 
 class YChaos:

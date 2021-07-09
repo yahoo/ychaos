@@ -8,10 +8,10 @@ from uuid import UUID, uuid4
 import yaml
 from pydantic import Field
 
-from ychaos.testplan import SchemaModel, SystemState
-from ychaos.testplan.attack import AttackConfig
-from ychaos.testplan.verification import VerificationConfig
-from ychaos.utils.yaml import Dumper
+from ..utils.yaml import Dumper
+from . import SchemaModel, SystemState
+from .attack import AttackConfig
+from .verification import VerificationConfig
 
 
 class TestPlanSchema(SchemaModel):

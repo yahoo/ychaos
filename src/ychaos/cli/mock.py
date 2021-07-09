@@ -6,7 +6,7 @@ from io import StringIO
 
 from rich.console import Console
 
-from ychaos.cli.main import App
+from .main import App
 
 
 class MockApp(App):

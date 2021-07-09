@@ -3,28 +3,28 @@
 
 from types import SimpleNamespace
 
-from ychaos.agents.contrib import ContribAgentConfig
-from ychaos.agents.network.iptables import (
+from ..utils.builtins import AEnum
+from .contrib import ContribAgentConfig
+from .network.iptables import (
     DNSBlock,
     DNSBlockConfig,
     IPTablesBlock,
     IPTablesBlockConfig,
 )
-from ychaos.agents.network.traffic import TrafficBlock, TrafficBlockConfig
-from ychaos.agents.special.NoOpAgent import (
+from .network.traffic import TrafficBlock, TrafficBlockConfig
+from .special.NoOpAgent import (
     NoOpAgent,
     NoOpAgentConfig,
     NoOpTimedAgent,
     NoOpTimedAgentConfig,
 )
-from ychaos.agents.system.cpu import CPUBurn, CPUBurnConfig
-from ychaos.agents.validation.certificate import (
+from .system.cpu import CPUBurn, CPUBurnConfig
+from .validation.certificate import (
     CertificateFileValidation,
     CertificateFileValidationConfig,
     ServerCertValidation,
     ServerCertValidationConfig,
 )
-from ychaos.utils.builtins import AEnum
 
 __all__ = ["AgentType"]
 

@@ -16,14 +16,14 @@ from pydantic import (
     validate_arguments,
 )
 
-from ychaos.agents.agent import (
+from ..agent import (
     Agent,
     AgentMonitoringDataPoint,
     AgentState,
     TimedAgentConfig,
 )
-from ychaos.agents.exceptions import AgentError
-from ychaos.agents.utils.annotations import log_agent_lifecycle
+from ..exceptions import AgentError
+from ..utils.annotations import log_agent_lifecycle
 
 __all__ = ["IPTablesBlockConfig", "IPTablesBlock", "DNSBlockConfig", "DNSBlock"]
 

@@ -5,14 +5,9 @@ import subprocess  # nosec: using shlex
 
 from pydantic import validate_arguments
 
-from ychaos.core.verification.data import (
-    VerificationData,
-    VerificationStateData,
-)
-from ychaos.core.verification.plugins.BaseVerificationPlugin import (
-    BaseVerificationPlugin,
-)
-from ychaos.testplan.verification import PythonModuleVerification
+from ....testplan.verification import PythonModuleVerification
+from ..data import VerificationData, VerificationStateData
+from .BaseVerificationPlugin import BaseVerificationPlugin
 
 
 class PythonModuleVerificationPlugin(BaseVerificationPlugin):

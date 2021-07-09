@@ -5,9 +5,9 @@ from argparse import Namespace
 from pathlib import Path
 from typing import Any, Optional
 
-from ychaos.cli import YChaosCLIHook, YChaosTestplanInputSubCommand
-from ychaos.core.executor.MachineTargetExecutor import MachineTargetExecutor
-from ychaos.testplan.attack import TargetType
+from ..core.executor.MachineTargetExecutor import MachineTargetExecutor
+from ..testplan.attack import TargetType
+from . import YChaosCLIHook, YChaosTestplanInputSubCommand
 
 
 class YChaosCLITargetExecutorHook(YChaosCLIHook, ABC):

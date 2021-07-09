@@ -13,8 +13,8 @@ from typing import Any, Dict, Tuple
 
 from pydantic import BaseModel, Field
 
-from ychaos.agents.exceptions import AgentError
-from ychaos.utils.builtins import BuiltinUtils
+from ..utils.builtins import BuiltinUtils
+from .exceptions import AgentError
 
 
 class AgentState(IntEnum):

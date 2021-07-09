@@ -6,8 +6,8 @@ from typing import Any
 
 from pydantic import Field
 
-from ychaos.testplan import SchemaModel
-from ychaos.utils.builtins import AEnum
+from ..utils.builtins import AEnum
+from . import SchemaModel
 
 
 class SecretType(AEnum):

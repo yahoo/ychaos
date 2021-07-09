@@ -8,7 +8,7 @@ from typing import Any, Optional
 
 from rich.markdown import Markdown
 
-from ychaos.cli import YChaosSubCommand
+from . import YChaosSubCommand
 
 __all__ = ["Manual"]
 

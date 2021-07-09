@@ -8,8 +8,8 @@ from typing import Any, List
 from pydantic import ValidationError
 from rich.panel import Panel
 
-from ychaos.cli import YChaosSubCommand
-from ychaos.testplan.validator import TestPlanValidator
+from ...testplan.validator import TestPlanValidator
+from .. import YChaosSubCommand
 
 __all__ = ["TestPlanValidatorCommand"]
 

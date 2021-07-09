@@ -6,10 +6,10 @@ from typing import Any, Optional
 
 from rich.table import Column, Table
 
-from ychaos.agents.coordinator import Coordinator
-from ychaos.cli import YChaosCLIHook, YChaosTestplanInputSubCommand
-from ychaos.testplan.schema import TestPlan
-from ychaos.utils.yaml import Dumper
+from ...agents.coordinator import Coordinator
+from ...testplan.schema import TestPlan
+from ...utils.yaml import Dumper
+from .. import YChaosCLIHook, YChaosTestplanInputSubCommand
 
 __all__ = ["Attack"]
 

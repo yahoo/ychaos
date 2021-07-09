@@ -6,8 +6,8 @@ import os
 import time
 from typing import Optional, Union
 
-from ychaos.settings import DevSettings, ProdSettings, Settings
-from ychaos.utils.logging import StructLogger
+from .settings import DevSettings, ProdSettings, Settings
+from .utils.logging import StructLogger
 
 
 class AppLogger:

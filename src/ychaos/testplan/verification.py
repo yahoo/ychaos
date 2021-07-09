@@ -9,9 +9,9 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 from pydantic import AnyHttpUrl, Field, PositiveInt, SecretStr, validator
 
-from ychaos.testplan import SchemaModel, SystemState
-from ychaos.testplan.common import Secret
-from ychaos.utils.builtins import AEnum, BuiltinUtils
+from ..utils.builtins import AEnum, BuiltinUtils
+from . import SchemaModel, SystemState
+from .common import Secret
 
 
 class PythonModuleVerification(SchemaModel):

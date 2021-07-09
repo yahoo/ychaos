@@ -6,7 +6,7 @@ from typing import Any, Union
 
 import yaml
 
-from ychaos.testplan.schema import TestPlan
+from .schema import TestPlan
 
 
 class TestPlanValidator:

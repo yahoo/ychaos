@@ -17,15 +17,10 @@ from pydantic import (
     validator,
 )
 
-from ychaos.agents.agent import (
-    Agent,
-    AgentConfig,
-    AgentMonitoringDataPoint,
-    AgentPriority,
-)
-from ychaos.agents.utils.annotations import log_agent_lifecycle
-from ychaos.utils.builtins import AEnum
-from ychaos.utils.dependency import DependencyUtils
+from ...utils.builtins import AEnum
+from ...utils.dependency import DependencyUtils
+from ..agent import Agent, AgentConfig, AgentMonitoringDataPoint, AgentPriority
+from ..utils.annotations import log_agent_lifecycle
 
 (X509,) = DependencyUtils.import_from(
     "OpenSSL.crypto",

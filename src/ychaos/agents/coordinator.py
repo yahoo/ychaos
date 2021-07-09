@@ -11,11 +11,11 @@ from typing import Dict, List, Optional
 
 from pydantic import BaseModel
 
-from ychaos.agents.agent import Agent, AgentState
-from ychaos.app_logger import AppLogger
-from ychaos.testplan.attack import AttackMode
-from ychaos.testplan.schema import TestPlan
-from ychaos.utils.hooks import EventHook
+from ..app_logger import AppLogger
+from ..testplan.attack import AttackMode
+from ..testplan.schema import TestPlan
+from ..utils.hooks import EventHook
+from .agent import Agent, AgentState
 
 
 class ConfiguredAgent:

@@ -5,11 +5,11 @@ from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from typing import Any, Optional
 
-from ychaos.cli import YChaosCLIHook, YChaosTestplanInputSubCommand
-from ychaos.core.verification.controller import VerificationController
-from ychaos.core.verification.data import VerificationStateData
-from ychaos.testplan import SystemState
-from ychaos.testplan.verification import VerificationConfig
+from ..core.verification.controller import VerificationController
+from ..core.verification.data import VerificationStateData
+from ..testplan import SystemState
+from ..testplan.verification import VerificationConfig
+from . import YChaosCLIHook, YChaosTestplanInputSubCommand
 
 __all__ = ["Verify"]
 

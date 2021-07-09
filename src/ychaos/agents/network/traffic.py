@@ -16,7 +16,7 @@ from ..utils.annotations import log_agent_lifecycle
 
 class TrafficBlockConfig(TimedAgentConfig):
     name = "traffic_block"
-    description = "This minion modifies the the hosts /etc/hosts file to block traffic to certain hostnames"
+    description = "This agent modifies the the hosts /etc/hosts file to block traffic to certain hostnames"
 
     is_sudo = True
 

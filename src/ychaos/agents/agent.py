@@ -110,7 +110,7 @@ class Agent(ABC):
     Each agent takes in one configuration object that is a subclass of AgentConfig.
 
     The agents have a lifecycle defined in `AgentState` each of them indicating
-    the state in which the agent is currently in. The minion is advanced to the next state before
+    the state in which the agent is currently in. The agent is advanced to the next state before
     executing any of the lifecycle methods.
     """
 

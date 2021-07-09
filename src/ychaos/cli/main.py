@@ -74,7 +74,7 @@ class YChaos:
             required=False,
         )
 
-        # Configuration for the GRU Command Line Interface
+        # Configuration for the ychaos Command Line Interface
         ychaos_cli.add_argument(
             "-c",
             "--config",

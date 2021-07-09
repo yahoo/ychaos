@@ -56,7 +56,7 @@ def iptables_command_builder(
 
 class IPTablesBlockConfig(TimedAgentConfig):
     name = "block_ports"
-    desc = "This minion modifies the iptables rules to block traffic to specified ports or endpoint"
+    desc = "This agent modifies the iptables rules to block traffic to specified ports or endpoint"
     is_sudo = True
     incoming_ports: Optional[List[int]] = Field(
         description="List of incoming ports to block",

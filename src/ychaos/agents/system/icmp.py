@@ -48,7 +48,7 @@ class PingDisable(Agent):
         if self.preserved_state.is_ping_disabled:
             warnings.warn(
                 "ICMP ignore is already turned on. "
-                "Running this minion will not be a no-operation"
+                "Running this agent will be a no-operation"
             )
         else:
             SysCtl.set(self.sysctl_var, b"1")

@@ -32,7 +32,7 @@ pyopenssl = DependencyUtils.import_module("requests.packages.urllib3.contrib.pyo
 
 class ServerCertValidationConfig(AgentConfig):
     name = "server_cert_validation"
-    desc = "This minion retrieves SSL certificates from server and validates it"
+    desc = "This agent retrieves SSL certificates from server and validates it"
     priority = AgentPriority.LOW_PRIORITY
 
     urls: List[AnyHttpUrl] = Field(
@@ -134,9 +134,7 @@ class CertificateFileConfig(BaseModel):
 
 class CertificateFileValidationConfig(AgentConfig):
     name = "cert_file_validation"
-    desc = (
-        "This minion decodes the local certificates and validates for expiry/critical"
-    )
+    desc = "This agent decodes the local certificates and validates for expiry/critical"
     priority = AgentPriority.LOW_PRIORITY
 
     expiry_threshold: timedelta = Field(

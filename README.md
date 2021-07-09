@@ -58,7 +58,7 @@ You can also install the package from the source code.
 ```bash
 git clone https://github.com/yahoo/ychaos
 cd ychaos
-python setup.py install easy_install ychaos[<subpackage>]
+pip install ".[<subpackage>]"
 ```
 
 ## Usage

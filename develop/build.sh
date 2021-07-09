@@ -8,7 +8,14 @@ function format_codestyle() {
 }
 
 # Sort Imports using isort
-function sort_imports() {
+function fix_imports() {
+    echo "=============================================="
+    echo "Fixing absolute imports"
+    find src -type f -name "*.py" | while read -r fname; do
+        absolufy-imports "${fname}" --never
+    done
+    echo "Fixing absolute imports complete"
+
     echo "==============================================="
     echo "Sorting imports"
     isort -m 3 --tc src/ || { echo "Sorting imports failed" ; exit 1; }
@@ -55,7 +62,7 @@ source venv/bin/activate
 fi
 
 format_codestyle
-sort_imports
+fix_imports
 
 autogen_cli_docs
 

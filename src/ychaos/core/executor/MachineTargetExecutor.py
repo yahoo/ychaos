@@ -5,12 +5,12 @@ import random
 from types import SimpleNamespace
 from typing import Any
 
-from ychaos.app_logger import AppLogger
-from ychaos.core.executor.BaseExecutor import BaseExecutor
-from ychaos.testplan.attack import MachineTargetDefinition
-from ychaos.testplan.schema import TestPlan
-from ychaos.utils.dependency import DependencyUtils
-from ychaos.utils.hooks import EventHook
+from ...app_logger import AppLogger
+from ...testplan.attack import MachineTargetDefinition
+from ...testplan.schema import TestPlan
+from ...utils.dependency import DependencyUtils
+from ...utils.hooks import EventHook
+from .BaseExecutor import BaseExecutor
 
 (TaskQueueManager,) = DependencyUtils.import_from(
     "ansible.executor.task_queue_manager", ("TaskQueueManager",), raise_error=False

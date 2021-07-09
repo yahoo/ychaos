@@ -6,7 +6,7 @@ from typing import Any, Dict
 
 from pydantic import Field, PrivateAttr
 
-from ychaos.agents.agent import Agent, AgentConfig
+from .agent import Agent, AgentConfig
 
 
 class ContribAgentConfig(AgentConfig):

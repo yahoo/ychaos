@@ -13,8 +13,8 @@ from typing import Any, Dict, Tuple
 
 from pydantic import BaseModel, Field
 
-from ychaos.agents.exceptions import AgentError
-from ychaos.utils.builtins import BuiltinUtils
+from ..utils.builtins import BuiltinUtils
+from .exceptions import AgentError
 
 
 class AgentState(IntEnum):
@@ -110,7 +110,7 @@ class Agent(ABC):
     Each agent takes in one configuration object that is a subclass of AgentConfig.
 
     The agents have a lifecycle defined in `AgentState` each of them indicating
-    the state in which the agent is currently in. The minion is advanced to the next state before
+    the state in which the agent is currently in. The agent is advanced to the next state before
     executing any of the lifecycle methods.
     """
 

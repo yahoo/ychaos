@@ -9,14 +9,9 @@ import requests
 from pydantic import BaseModel, validate_arguments
 from requests import Session
 
-from ychaos.core.verification.data import (
-    VerificationData,
-    VerificationStateData,
-)
-from ychaos.core.verification.plugins.BaseVerificationPlugin import (
-    BaseVerificationPlugin,
-)
-from ychaos.testplan.verification import HTTPRequestVerification
+from ....testplan.verification import HTTPRequestVerification
+from ..data import VerificationData, VerificationStateData
+from .BaseVerificationPlugin import BaseVerificationPlugin
 
 
 class HTTPRequestVerificationPlugin(BaseVerificationPlugin):

@@ -5,14 +5,14 @@
 import warnings
 from queue import LifoQueue
 
-from ychaos.agents.agent import (
+from ..agent import (
     Agent,
     AgentMonitoringDataPoint,
     AgentPriority,
     TimedAgentConfig,
 )
-from ychaos.agents.utils.annotations import log_agent_lifecycle
-from ychaos.agents.utils.sysctl import SysCtl
+from ..utils.annotations import log_agent_lifecycle
+from ..utils.sysctl import SysCtl
 
 
 class PingDisableConfig(TimedAgentConfig):
@@ -48,7 +48,7 @@ class PingDisable(Agent):
         if self.preserved_state.is_ping_disabled:
             warnings.warn(
                 "ICMP ignore is already turned on. "
-                "Running this minion will not be a no-operation"
+                "Running this agent will be a no-operation"
             )
         else:
             SysCtl.set(self.sysctl_var, b"1")

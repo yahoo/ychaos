@@ -9,10 +9,10 @@ from typing import Any, Dict, List, Optional, Union
 
 from pydantic import Field, FilePath, SecretStr, validator
 
-from ychaos.agents.index import AgentType
-from ychaos.testplan import SchemaModel
-from ychaos.testplan.common import Secret
-from ychaos.utils.builtins import FQDN, AEnum
+from ..agents.index import AgentType
+from ..utils.builtins import FQDN, AEnum
+from . import SchemaModel
+from .common import Secret
 
 
 class TargetDefinition(SchemaModel):

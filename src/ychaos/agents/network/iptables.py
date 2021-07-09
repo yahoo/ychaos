@@ -16,14 +16,14 @@ from pydantic import (
     validate_arguments,
 )
 
-from ychaos.agents.agent import (
+from ..agent import (
     Agent,
     AgentMonitoringDataPoint,
     AgentState,
     TimedAgentConfig,
 )
-from ychaos.agents.exceptions import AgentError
-from ychaos.agents.utils.annotations import log_agent_lifecycle
+from ..exceptions import AgentError
+from ..utils.annotations import log_agent_lifecycle
 
 __all__ = ["IPTablesBlockConfig", "IPTablesBlock", "DNSBlockConfig", "DNSBlock"]
 
@@ -56,7 +56,7 @@ def iptables_command_builder(
 
 class IPTablesBlockConfig(TimedAgentConfig):
     name = "block_ports"
-    desc = "This minion modifies the iptables rules to block traffic to specified ports or endpoint"
+    desc = "This agent modifies the iptables rules to block traffic to specified ports or endpoint"
     is_sudo = True
     incoming_ports: Optional[List[int]] = Field(
         description="List of incoming ports to block",

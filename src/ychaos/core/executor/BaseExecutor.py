@@ -2,11 +2,9 @@
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 from abc import ABC, abstractmethod
 
-from ychaos.core.exceptions.executor_errors import (
-    YChaosTargetConfigConditionFailedError,
-)
-from ychaos.testplan.schema import TestPlan
-from ychaos.utils.hooks import EventHook
+from ...testplan.schema import TestPlan
+from ...utils.hooks import EventHook
+from ..exceptions.executor_errors import YChaosTargetConfigConditionFailedError
 
 
 class BaseExecutor(EventHook, ABC):
@@ -33,7 +31,7 @@ class BaseExecutor(EventHook, ABC):
 
     def _get_target_type(self):
         # To avoid circular import
-        from ychaos.testplan.attack import TargetType
+        from ...testplan.attack import TargetType
 
         return TargetType(self.__target_type__)
 

@@ -4,8 +4,8 @@ import functools
 import time
 from queue import LifoQueue
 
-from ychaos.agents.agent import Agent, AgentConfig, TimedAgentConfig
-from ychaos.agents.utils.annotations import log_agent_lifecycle
+from ..agent import Agent, AgentConfig, TimedAgentConfig
+from ..utils.annotations import log_agent_lifecycle
 
 NoOpAgentConfig = functools.partial(AgentConfig, name="no_op")
 

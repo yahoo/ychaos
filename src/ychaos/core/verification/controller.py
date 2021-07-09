@@ -5,27 +5,20 @@ from typing import Dict, List, Optional, Type
 
 from pydantic import validate_arguments
 
-from ychaos.app_logger import AppLogger
-from ychaos.core.verification.data import (
-    VerificationData,
-    VerificationStateData,
-)
-from ychaos.core.verification.plugins.BaseVerificationPlugin import (
-    BaseVerificationPlugin,
-)
-from ychaos.core.verification.plugins.HTTPRequestVerificationPlugin import (
+from ...app_logger import AppLogger
+from ...testplan import SystemState
+from ...testplan.schema import TestPlan
+from ...utils.hooks import EventHook
+from ...utils.yaml import Dumper
+from .data import VerificationData, VerificationStateData
+from .plugins.BaseVerificationPlugin import BaseVerificationPlugin
+from .plugins.HTTPRequestVerificationPlugin import (
     HTTPRequestVerificationPlugin,
 )
-from ychaos.core.verification.plugins.PythonModuleVerificationPlugin import (
+from .plugins.PythonModuleVerificationPlugin import (
     PythonModuleVerificationPlugin,
 )
-from ychaos.core.verification.plugins.SDv4VerificationPlugin import (
-    SDv4VerificationPlugin,
-)
-from ychaos.testplan import SystemState
-from ychaos.testplan.schema import TestPlan
-from ychaos.utils.hooks import EventHook
-from ychaos.utils.yaml import Dumper
+from .plugins.SDv4VerificationPlugin import SDv4VerificationPlugin
 
 # Enum value to corresponding Plugin Map
 

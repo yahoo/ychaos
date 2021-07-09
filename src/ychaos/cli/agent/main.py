@@ -3,9 +3,9 @@
 
 from argparse import ArgumentParser, Namespace
 
-from ychaos.cli import YChaosSubCommand
-from ychaos.cli.agent.attack import Attack
-from ychaos.utils.argparse import SubCommandParsersAction
+from ...utils.argparse import SubCommandParsersAction
+from .. import YChaosSubCommand
+from .attack import Attack
 
 __all__ = ["Agent"]
 

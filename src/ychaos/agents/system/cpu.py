@@ -8,14 +8,10 @@ from queue import LifoQueue
 
 from pydantic import Field, validate_arguments
 
-from ychaos.agents.agent import (
-    Agent,
-    AgentMonitoringDataPoint,
-    TimedAgentConfig,
-)
-from ychaos.agents.utils.annotations import log_agent_lifecycle
-from ychaos.utils.builtins import BuiltinUtils
-from ychaos.utils.dependency import DependencyUtils
+from ...utils.builtins import BuiltinUtils
+from ...utils.dependency import DependencyUtils
+from ..agent import Agent, AgentMonitoringDataPoint, TimedAgentConfig
+from ..utils.annotations import log_agent_lifecycle
 
 __all__ = ["CPUBurnConfig", "CPUBurn"]
 

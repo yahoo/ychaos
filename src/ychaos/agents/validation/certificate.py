@@ -17,15 +17,10 @@ from pydantic import (
     validator,
 )
 
-from ychaos.agents.agent import (
-    Agent,
-    AgentConfig,
-    AgentMonitoringDataPoint,
-    AgentPriority,
-)
-from ychaos.agents.utils.annotations import log_agent_lifecycle
-from ychaos.utils.builtins import AEnum
-from ychaos.utils.dependency import DependencyUtils
+from ...utils.builtins import AEnum
+from ...utils.dependency import DependencyUtils
+from ..agent import Agent, AgentConfig, AgentMonitoringDataPoint, AgentPriority
+from ..utils.annotations import log_agent_lifecycle
 
 (X509,) = DependencyUtils.import_from(
     "OpenSSL.crypto",
@@ -37,7 +32,7 @@ pyopenssl = DependencyUtils.import_module("requests.packages.urllib3.contrib.pyo
 
 class ServerCertValidationConfig(AgentConfig):
     name = "server_cert_validation"
-    desc = "This minion retrieves SSL certificates from server and validates it"
+    desc = "This agent retrieves SSL certificates from server and validates it"
     priority = AgentPriority.LOW_PRIORITY
 
     urls: List[AnyHttpUrl] = Field(
@@ -139,9 +134,7 @@ class CertificateFileConfig(BaseModel):
 
 class CertificateFileValidationConfig(AgentConfig):
     name = "cert_file_validation"
-    desc = (
-        "This minion decodes the local certificates and validates for expiry/critical"
-    )
+    desc = "This agent decodes the local certificates and validates for expiry/critical"
     priority = AgentPriority.LOW_PRIORITY
 
     expiry_threshold: timedelta = Field(

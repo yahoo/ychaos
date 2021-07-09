@@ -9,9 +9,9 @@ from pydantic import ValidationError
 from rich.console import Console
 from rich.panel import Panel
 
-from ychaos.cli.exceptions import YChaosCLIError
-from ychaos.testplan.schema import TestPlan
-from ychaos.utils.argparse import SubCommand
+from ..testplan.schema import TestPlan
+from ..utils.argparse import SubCommand
+from .exceptions import YChaosCLIError
 
 
 class YChaosArgumentParser(ArgumentParser):

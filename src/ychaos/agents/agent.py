@@ -51,7 +51,9 @@ class AgentMonitoringDataPoint(BaseModel):
 
 class AgentConfig(BaseModel):
     """
-    The configuration of the agent that is to be run.
+    The configuration of the agent that is to be run. This is the base configuration
+    for any agent. Custom configuration attributes can be added to individual agent by inheriting
+    this model.
     """
 
     name: str = Field(..., description="A one word identifier for the Agent.")
@@ -84,6 +86,7 @@ class AgentConfig(BaseModel):
         """
         The Fallback factory method to use where the Agent
         instance depends on the configuration
+
         Returns:
             An agent subclass of Agent
         """
@@ -92,7 +95,9 @@ class AgentConfig(BaseModel):
 
 class TimedAgentConfig(AgentConfig):
     """
-    The configuration of the agent which is constrained by a duration
+    The configuration of the agent which is constrained by a duration. This configuration
+    is used for agents that are supposed to run for a particular amount of time before going
+    to teardown state.
     """
 
     duration: int = Field(

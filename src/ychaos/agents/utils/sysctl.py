@@ -38,7 +38,7 @@ class SysCtl:
 
     @classmethod
     @validate_arguments
-    def set(cls, variable: str, value: Union[bytes, str]) -> bool:
+    def set(cls, variable: str, value: Union[str, bytes]) -> bool:
         """
         Set a sysctl variable with a custom value. The value and the variable are shell escaped to
         avoid shell injection.

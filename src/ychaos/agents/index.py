@@ -58,6 +58,6 @@ class AgentType(AEnum):
     )
 
     # Special Contrib agent
-    CONTRIB = "contrib", SimpleNamespace(
+    CONTRIB = "contrib", SimpleNamespace(  # pragma: no cover
         schema=ContribAgentConfig, agent_defn=lambda config: config.get_agent()
     )

@@ -19,7 +19,7 @@ class PingDisableConfig(TimedAgentConfig):
     name = "ping_disable"
     description = "This agent disables the system to respond to ping/icmp packets"
 
-    priority = AgentPriority.MODERATE_PRIOTITY
+    priority = AgentPriority.MODERATE_PRIORITY
     is_sudo = True
 
 

@@ -12,6 +12,7 @@ from pydantic import AnyHttpUrl, Field, PositiveInt, SecretStr, validator
 from ..utils.builtins import AEnum, BuiltinUtils
 from . import SchemaModel, SystemState
 from .common import Secret
+from .metrics import MetricsVerificationCriteria
 
 
 class PythonModuleVerification(SchemaModel):
@@ -50,8 +51,6 @@ class HTTPRequestVerification(SchemaModel):
     The user can also specify a `count` attribute requesting the tool to make
     `count` number of requests to the same endpoints.
     """
-
-    _http_methods = ("GET", "POST", "HEAD", "PATCH", "DELETE")
 
     count: int = Field(
         default=1,
@@ -103,12 +102,9 @@ class HTTPRequestVerification(SchemaModel):
         gt=0,
     )
 
-    @validator("method", pre=True)
-    def validate_method(cls, v):
-        if v in cls._http_methods:
-            return v
-        else:
-            raise ValueError("Unknown HTTP method")
+    _validate_method = validator("method", pre=True, allow_reuse=True)(
+        BuiltinUtils.Request.validate_method
+    )
 
 
 class SDv4Verification(SchemaModel):
@@ -141,17 +137,51 @@ class SDv4Verification(SchemaModel):
     job_timeout: PositiveInt = Field(default=3600, description="Job Timeout in seconds")
 
 
+class OpenTSDBVerification(SchemaModel):
+    """
+    The OpenTSDB Verification Plugin gets the metrics from an OpenTSDB server and compares it with the
+    provided comparison parameters in the testplan. If the condition passes
+    """
+
+    url: AnyHttpUrl = Field(
+        ..., description="The OpenTSDB server URL to get the metrics from"
+    )
+
+    method: str = Field(
+        default="GET",
+        description="The HTTP method used to query the metrics from OpenTSDB server.",
+        examples=["GET", "POST"],
+    )
+
+    query: Dict[str, Any] = Field(
+        default=dict(), description="The OpenTSDB query sent to the server."
+    )
+
+    criteria: List[MetricsVerificationCriteria] = Field(
+        ...,
+        description="Metrics verification criteria. All the criteria part of this list must pass for the verification to be successful",
+    )
+
+    _validate_method = validator("method", pre=True, allow_reuse=True)(
+        BuiltinUtils.Request.validate_method
+    )
+
+
 class VerificationType(AEnum):
     """
     Defines the Type of plugin to be used for verification.
-    """
 
-    # The metadata object will contain the following attributes
-    # 1. schema : The Schema class of the VerificationType
+    The metadata object will contain the following attributes
+    1. schema : The Schema class of the VerificationType
+    """
 
     PYTHON_MODULE = "python_module", SimpleNamespace(schema=PythonModuleVerification)
     HTTP_REQUEST = "http_request", SimpleNamespace(schema=HTTPRequestVerification)
-    SDV4_VERIFICATION = "sdv4", SimpleNamespace(schema=SDv4Verification)
+    SDV4_VERIFICATION = (
+        "sdv4",
+        SimpleNamespace(schema=SDv4Verification),
+    )
+    OPENTSDB_VERIFICATION = "tsdb", SimpleNamespace(schema=OpenTSDBVerification)
 
 
 class VerificationConfig(SchemaModel):

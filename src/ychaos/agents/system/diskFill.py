@@ -55,13 +55,6 @@ class DiskFillConfig(TimedAgentConfig):
         partition_size_available = stat.free
         return math.floor(self.partition_pct * partition_size_available)
 
-    # def _fill_disk(self, size: int, partition: Path):
-    #     f = open(partition/'filler.txt', "wb")
-    #     f.seek(size-1)
-    #     f.write(b"\0")
-    #     f.close()
-    #     # TODO: Implement max file size to split required disk fill
-
 
 class DiskFill(Agent):
     max_file_size: int = 1024 * 1024 * 1024 * 20  # Max file size is 20GB

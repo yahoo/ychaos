@@ -1,0 +1,46 @@
+description: >
+    A valid example testplan for demonstrating the usage of OpenTSDB
+    verification plugin
+verification:
+    -   states:
+            - STEADY
+        type: tsdb
+        config:
+            url: https://tsdb.resilience.yahoo.com/metrics
+            method: POST
+            query:
+                # Refer to OpenTSDB API to construct a query
+                start: '30m-ago'
+                end: 'now'
+                queries:
+                    -   aggregator: zimsum
+                        metric: system.cpu.used
+                        downsample: 15m-avg-nan
+                        filters:
+                            -   type: literal_or
+                                tagk: host
+                                filter: mockhost.resilience.cloud
+                                groupBy: true
+                            -   type: literal_or
+                                tagk: _aggregate
+                                filter: raw
+                                groupBy: true
+            criteria:
+                # All of these conditions must pass to mark
+                # the verification as successful.
+                -   aggregator: latest
+                    conditionals:
+                        # Any of these conditions can pass to mark
+                        # the verification as successful.
+                        -   comparator: "<="     # `le` also works
+                            value: 50
+                -   aggregator: latest
+                    conditionals:
+                        -   comparator: ">"     # `gt` also works
+                            value: 20
+
+# No Operations
+attack:
+    target_type: self
+    agents:
+        - type: no_op

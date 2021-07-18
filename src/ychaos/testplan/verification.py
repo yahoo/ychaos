@@ -170,10 +170,10 @@ class OpenTSDBVerification(SchemaModel):
 class VerificationType(AEnum):
     """
     Defines the Type of plugin to be used for verification.
-
-    The metadata object will contain the following attributes
-    1. schema : The Schema class of the VerificationType
     """
+
+    # The metadata object will contain the following attributes
+    # 1. schema : The Schema class of the VerificationType
 
     PYTHON_MODULE = "python_module", SimpleNamespace(schema=PythonModuleVerification)
     HTTP_REQUEST = "http_request", SimpleNamespace(schema=HTTPRequestVerification)

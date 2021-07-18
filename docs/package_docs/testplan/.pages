@@ -4,3 +4,4 @@ nav:
     - schema: schema.md
     - validator: validator.md
     - verification: verification.md
+    - metrics: metrics.md

@@ -11,6 +11,10 @@ from . import SchemaModel
 
 
 class TimeSeriesDataAggregator:
+    """
+    The class containing the implementations of different Time Series data Aggregator
+    """
+
     @classmethod
     def get_filtered_data(cls, data: Dict[datetime, float]) -> Dict[datetime, float]:
         """
@@ -122,8 +126,8 @@ class TimeSeriesDataAggregator:
 
 class MetricsAggregator(AEnum):
     """
-    The Metrics aggregator options. Allows the user to transform the
-    time series data into some comparable data.
+    The Metrics aggregator options. Allows the user to transform a
+    time series data into comparable data.
     """
 
     AVG = "avg", SimpleNamespace(

@@ -53,11 +53,11 @@ class DiskFillConfig(TimedAgentConfig):
         """
         stat = shutil.disk_usage(self.partition)
         partition_size_available = stat.free
-        return math.floor(self.partition_pct * partition_size_available)
+        return math.floor(self.partition_pct / 100 * partition_size_available)
 
 
 class DiskFill(Agent):
-    max_file_size: int = 1024 * 1024 * 1024 * 20  # Max file size is 20GB
+    MAX_FILE_SIZE: int = 1024 * 1024 * 1024 * 20  # Max file size is 20GB
 
     def monitor(self) -> LifoQueue:
         super(DiskFill, self).monitor()
@@ -83,12 +83,14 @@ class DiskFill(Agent):
         space_remaining = size
         index = 0
         while space_remaining > 0:
+            if self.stop_async_run:
+                break
             tmp = space_remaining
-            cur_file_size = self.max_file_size
-            space_remaining = space_remaining - self.max_file_size
+            cur_file_size = self.MAX_FILE_SIZE
+            space_remaining = space_remaining - self.MAX_FILE_SIZE
             if space_remaining <= 0:
                 cur_file_size = tmp
-            f = open(tmp_dir / "filler{in}.txt".replace("{in}", str(index)), "wb")
+            f = open(tmp_dir / f"filler{index}.txt", "wb")
             f.seek(cur_file_size - 1)
             f.write(b"\0")
             f.close()
@@ -98,4 +100,5 @@ class DiskFill(Agent):
     def teardown(self) -> None:
         super(DiskFill, self).teardown()
         tmp_dir = self.config.partition / "temp"
-        shutil.rmtree(tmp_dir)
+        if tmp_dir.exists():
+            shutil.rmtree(tmp_dir)

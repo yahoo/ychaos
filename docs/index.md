@@ -68,4 +68,4 @@ You can install the package using pip or directly from Github
     cd ychaos
     python setup.py develop easy_install ychaos[<subpackage>]
     ```
-Ychaos tool can be used with python3.6+ and must have pip3 and virtualenv pre-installed
+Ychaos tool can be used with python3.6+ and must have pip3 pre-installed

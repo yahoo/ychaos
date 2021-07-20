@@ -1,5 +1,6 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
+import json
 from pathlib import Path
 from unittest import TestCase
 
@@ -54,6 +55,133 @@ class TestMachineTargetExecutor(TestCase):
             executor.ansible_context.play_source["hosts"]
             in ["mockhost01.ychaos.yahoo.com", "mockhost02.ychaos.yahoo.com"]
         )
+
+    def test_machine_executor_playbook_tasks_sanity(self):
+        mock_valid_testplan = TestPlan.load_file(
+            self.testplans_directory.joinpath("valid/testplan2.yaml")
+        )
+        executor = MachineTargetExecutor(mock_valid_testplan)
+        executor.prepare()
+
+        expected_tasks = [
+            dict(
+                name="Check current working directory",
+                action=dict(module="command", args=dict(cmd="pwd")),
+                register="result_pwd",
+                changed_when="false",
+            ),
+            dict(
+                name="Check if python3 installed",
+                action=dict(module="command", args=dict(cmd="which python3")),
+                register="result_which_python3",
+                changed_when="false",
+                failed_when=["result_which_python3.rc != 0"],
+            ),
+            dict(
+                name="Create a virtual environment",
+                register="result_pip",
+                action=dict(
+                    module="pip",
+                    chdir="{{result_pwd.stdout}}",
+                    name="pip",
+                    state="latest",
+                    virtualenv="ychaos_env",
+                    virtualenv_command="{{result_which_python3.stdout}} -m venv",
+                ),
+                failed_when=["result_pip.state == 'absent'"],
+                vars=dict(ansible_python_interpreter="{{result_which_python3.stdout}}"),
+            ),
+            dict(
+                name="Install ychaos[agents]",
+                register="result_pip_install_ychaos_agents",
+                action=dict(
+                    module="pip",
+                    chdir="{{result_pwd.stdout}}",
+                    name="ychaos[agents]",
+                    virtualenv="ychaos_env",
+                ),
+                failed_when=["result_pip_install_ychaos_agents.state == 'absent'"],
+                vars=dict(ansible_python_interpreter="{{result_which_python3.stdout}}"),
+            ),
+            dict(
+                name="Create a workspace directory for storing local report files",
+                register="result_create_workspace",
+                action=dict(
+                    module="file",
+                    path="{{result_pwd.stdout}}/ychaos_ws",
+                    state="directory",
+                    mode="0755",
+                ),
+            ),
+            dict(
+                name="Copy testplan from local to remote",
+                register="result_testplan_file",
+                action=dict(
+                    module="copy",
+                    content=json.dumps(
+                        mock_valid_testplan.to_serialized_dict(), indent=4
+                    ),
+                    dest="{{result_create_workspace.path}}/testplan.json",
+                ),
+            ),
+            dict(
+                name="Run YChaos Agent",
+                ignore_errors="yes",
+                action=dict(
+                    module="shell",
+                    cmd=" ".join(
+                        [
+                            "source {{result_pip.virtualenv}}/bin/activate",
+                            "&&",
+                            "ychaos --log-file {{result_create_workspace.path}}/ychaos.log",
+                            "agent attack --testplan {{result_testplan_file.dest}} --attack-report-yaml {{result_create_workspace.path}}/attack_report.yaml",
+                        ],
+                    ),
+                ),
+            ),
+            dict(
+                name="Zip workspace directory",
+                action=dict(
+                    module="community.general.archive",
+                    path="{{result_create_workspace.path}}",
+                    dest="{{result_create_workspace.path}}/ychaos.zip",
+                    format="zip",
+                ),
+            ),
+            dict(
+                name="Copy Workspace directory to local",
+                action=dict(
+                    module="fetch",
+                    src="{{result_create_workspace.path}}/ychaos.zip",
+                    dest=str(
+                        mock_valid_testplan.attack.get_target_config().report_dir.resolve()
+                    )
+                    + "/ychaos_{{inventory_hostname}}.zip",
+                ),
+            ),
+            dict(
+                name="Delete YChaos Workspace on host",
+                action=dict(
+                    module="file",
+                    path="{{result_create_workspace.path}}",
+                    state="absent",
+                ),
+            ),
+            dict(
+                name="Delete Virtual environment",
+                action=dict(
+                    module="file",
+                    path="{{result_pip.virtualenv}}",
+                    state="absent",
+                ),
+            ),
+        ]
+        playbook_tasks = executor.ansible_context.play_source["tasks"]
+
+        self.assertEqual(len(playbook_tasks), len(expected_tasks))
+
+        for i, task in enumerate(playbook_tasks):
+            self.assertDictEqual(task, expected_tasks[i])
 
     def test_machine_executor_prepare_with_single_host(self):
         mock_valid_testplan = TestPlan.load_file(

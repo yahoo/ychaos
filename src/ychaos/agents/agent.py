@@ -33,7 +33,7 @@ class AgentState(IntEnum):
 class AgentPriority(IntEnum):
     VERY_HIGH_PRIORITY = 0
     HIGH_PRIORITY = 1
-    MODERATE_PRIOTITY = 2
+    MODERATE_PRIORITY = 2
     LOW_PRIORITY = 3
     VERY_LOW_PRIORITY = 4
     UNDEFINED_PRIORITY = -1

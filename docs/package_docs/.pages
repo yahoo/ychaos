@@ -1,7 +1,0 @@
-nav:
-    - ychaos.testplan: testplan
-    - ychaos.agents: agents
-    - ychaos.core: core
-    - ychaos.cli: cli
-    - ychaos.utils: utils
-title: Package Documentation

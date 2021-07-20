@@ -1,6 +1,0 @@
-version: 1
-push:
-
-  - screwdriver:7419
-  - screwdriver:7419pr
-

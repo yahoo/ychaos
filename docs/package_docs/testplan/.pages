@@ -1,6 +1,0 @@
-nav:
-    - attack: attack.md
-    - common: common.md
-    - schema: schema.md
-    - validator: validator.md
-    - verification: verification.md

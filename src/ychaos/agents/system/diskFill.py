@@ -27,7 +27,7 @@ class DiskFillConfig(TimedAgentConfig):
     name = "disk_fill"
     description = "This agent fills up disk space."
 
-    priority = AgentPriority.MODERATE_PRIOTITY
+    priority = AgentPriority.MODERATE_PRIORITY
 
     partition: Path = Field(
         description="The Filepath of directory or partition to fill",

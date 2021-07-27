@@ -1,2 +1,3 @@
 nav:
     - cpu: cpu.md
+    - disable ping: icmp.md

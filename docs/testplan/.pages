@@ -2,4 +2,5 @@ nav:
     - Test Plan: index.md
     - Schema: testplan/schema/index.html
     - Target Specification: target_spec.md
+    - Sample Test Plan: sample_test_plan.md
 title: Testplan

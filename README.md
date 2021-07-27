@@ -63,7 +63,7 @@ pip install ".[<subpackage>]"
 
 ## Usage
 
-Refer to the [documentation](https://yahoo.github.io/) to know about the usage.
+Refer to the [documentation](https://yahoo.github.io/ychaos) to know about the usage.
 
 ## Maintainers
 

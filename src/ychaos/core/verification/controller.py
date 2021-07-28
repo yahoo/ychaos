@@ -76,6 +76,14 @@ class VerificationController(EventHook):
             def callable_hook(verify_list: List[bool]): ...
         ```
 
+    === "on_plugin_not_found"
+        Hook that gets called when a plugin available in schema is not ready for usage/not implemented.
+        This case is possible for the plugins that are in Beta/development phase
+
+        ```python
+            def callable_hook(index:int, plugin_type: VerificationType): ...
+        ```
+
     ---
     Each of the hooks get called on a certain event. The caller can register as many hooks for a particular event,
     by calling the `register_hook(event_name, hook_method)` method. All the hooks are executed sequentially. The best example
@@ -86,6 +94,7 @@ class VerificationController(EventHook):
         "on_start",
         "on_each_plugin_start",
         "on_each_plugin_end",
+        "on_plugin_not_found",
         "on_end",
     )
 
@@ -148,9 +157,17 @@ class VerificationController(EventHook):
                     msg=f"Starting {verification_plugin.type.value} verification"
                 )
                 plugin_class = VERIFICATION_PLUGIN_MAP.get(
-                    verification_plugin.type.value
+                    verification_plugin.type.value, None
                 )
-                assert plugin_class is not None
+
+                if plugin_class is None:
+                    # This can happen when a new plugin is not implemented yet, but is
+                    # available in the schema
+                    self.execute_hooks(
+                        "on_plugin_not_found", index, verification_plugin.type
+                    )
+                    continue
+
                 plugin = plugin_class(verification_plugin.config, data)
 
                 # Call all the hooks that were registered for `verification_plugin_start`.

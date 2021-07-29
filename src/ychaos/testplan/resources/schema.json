@@ -46,7 +46,8 @@
             "enum": [
                 "python_module",
                 "http_request",
-                "sdv4"
+                "sdv4",
+                "noop"
             ]
         },
         "VerificationConfig": {

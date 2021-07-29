@@ -189,3 +189,24 @@ class TestVerificationCommand(TestCase):
         self.assertTrue(
             "The system is verified to be in steady state" in app.get_console_output()
         )
+
+    def test_verification_for_valid_testplan_with_unimplemented_plugin(self):
+        args = Namespace()
+        args.cls = self.cls
+
+        testplan_path = self.testplans_directory.joinpath("valid/testplan6.yaml")
+
+        # Required Arguments for VerificationCommand
+        args.testplan = str(testplan_path.resolve())
+        args.state = "steady"
+
+        # Create a Mocked CLI App
+        app = MockApp(args)
+        args.app = app
+
+        self.assertEqual(0, args.cls.main(args))
+
+        self.assertTrue(
+            "The verification plugin type=noop[0] is not available for use."
+            in app.get_console_output()
+        )

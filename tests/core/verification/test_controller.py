@@ -8,6 +8,7 @@ from unittest import TestCase
 from ychaos.core.verification.controller import VerificationController
 from ychaos.testplan import SystemState
 from ychaos.testplan.schema import TestPlan
+from ychaos.testplan.verification import VerificationConfig, VerificationType
 
 
 class TestVerificationController(TestCase):
@@ -89,3 +90,33 @@ class TestVerificationController(TestCase):
         self.assertListEqual(
             verification_data, verification_controller.get_encoded_verification_data()
         )
+
+    def test_verification_controller_for_plugin_not_found(self):
+        self.mock_testplan.verification[0] = VerificationConfig(
+            states=[
+                SystemState.STEADY,
+            ],
+            type=VerificationType.NOOP,
+            config=dict(),
+        )
+
+        verification_controller = VerificationController(
+            self.mock_testplan, SystemState.STEADY, list()
+        )
+
+        class MockOnPluginNotFoundHook:
+            def __init__(self):
+                self.test_var = False
+
+            def __call__(self, *args):
+                self.test_var = True
+
+        mock_on_plugin_not_found_hook = MockOnPluginNotFoundHook()
+        verification_controller.register_hook(
+            "on_plugin_not_found", mock_on_plugin_not_found_hook
+        )
+
+        is_verified = verification_controller.execute()
+        self.assertTrue(is_verified)
+
+        self.assertTrue(mock_on_plugin_not_found_hook.test_var)

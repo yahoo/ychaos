@@ -8,7 +8,7 @@ from typing import Any, Optional
 from ..core.verification.controller import VerificationController
 from ..core.verification.data import VerificationStateData
 from ..testplan import SystemState
-from ..testplan.verification import VerificationConfig
+from ..testplan.verification import VerificationConfig, VerificationType
 from . import YChaosCLIHook, YChaosTestplanInputSubCommand
 
 __all__ = ["Verify"]
@@ -125,6 +125,12 @@ class Verify(YChaosTestplanInputSubCommand):
                     f"Running [i]{self.state.value.lower()}[/i] state verification of type={config.type.value}[{index}]"
                 )
 
+        class OnPluginNotFoundHook(VerificationHook):
+            def __call__(self, index: int, plugin_type: VerificationType):
+                self.console.log(
+                    f"The verification plugin type=[i]{plugin_type.value}[/i][{index}] is not available for use."
+                )
+
         class OnEachPluginEndHook(VerificationHook):
             def __call__(
                 self,
@@ -149,6 +155,9 @@ class Verify(YChaosTestplanInputSubCommand):
         )
         verification_controller.register_hook(
             "on_each_plugin_end", OnEachPluginEndHook(self.app, self.state)
+        )
+        verification_controller.register_hook(
+            "on_plugin_not_found", OnPluginNotFoundHook(self.app, self.state)
         )
 
         self.console.log(

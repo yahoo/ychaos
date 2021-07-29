@@ -19,6 +19,7 @@ from .special.NoOpAgent import (
     NoOpTimedAgentConfig,
 )
 from .system.cpu import CPUBurn, CPUBurnConfig
+from .system.icmp import PingDisable, PingDisableConfig
 from .validation.certificate import (
     CertificateFileValidation,
     CertificateFileValidationConfig,
@@ -60,4 +61,8 @@ class AgentType(AEnum):
     # Special Contrib agent
     CONTRIB = "contrib", SimpleNamespace(
         schema=ContribAgentConfig, agent_defn=lambda config: config.get_agent()
+    )
+
+    DISABLE_PING = "disable_ping", SimpleNamespace(
+        schema=PingDisableConfig, agent_defn=PingDisable
     )

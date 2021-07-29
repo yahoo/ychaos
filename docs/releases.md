@@ -2,7 +2,12 @@
 
 ## Version 0.x.x
 
-## Next release (Version 0.1.0)
+## Next Release (0.2.0)
+
+1. Fix throwing error when a verification plugin implementation is not found or in development stage
+by [Shashank Sharma](https://github.com/shashankrnr32)
+
+## Version 0.1.0
 
 1. Add documentation to YChaos by [Shashank Sharma](https://github.com/shashankrnr32)
    

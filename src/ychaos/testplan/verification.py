@@ -141,6 +141,10 @@ class SDv4Verification(SchemaModel):
     job_timeout: PositiveInt = Field(default=3600, description="Job Timeout in seconds")
 
 
+class NoOpConfig(SchemaModel):
+    pass
+
+
 class VerificationType(AEnum):
     """
     Defines the Type of plugin to be used for verification.
@@ -152,6 +156,9 @@ class VerificationType(AEnum):
     PYTHON_MODULE = "python_module", SimpleNamespace(schema=PythonModuleVerification)
     HTTP_REQUEST = "http_request", SimpleNamespace(schema=HTTPRequestVerification)
     SDV4_VERIFICATION = "sdv4", SimpleNamespace(schema=SDv4Verification)
+
+    # For Testing purpose, cannot be used by users.
+    NOOP = "noop", SimpleNamespace(schema=NoOpConfig)
 
 
 class VerificationConfig(SchemaModel):

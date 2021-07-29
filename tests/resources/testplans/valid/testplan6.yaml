@@ -1,0 +1,11 @@
+description: A valid mock testplan file with un-implemented verification plugin
+verification:
+    - states:
+          - CHAOS
+          - STEADY
+      type: noop
+      config: {}
+attack:
+    target_type: self
+    agents:
+        - type: no_op

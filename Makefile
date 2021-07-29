@@ -21,11 +21,15 @@ autogen:
 	ychaos manual --file docs/cli/manual.md > /dev/null
 
 # Builds documentation and serves on http://localhost:8000
-.PHONEY: doc
+.PHONY: doc
 doc:
 	chmod +x develop/doc.sh
 	./develop/doc.sh
 
-.PHONEY: docbuild
+.PHONY: docbuild
 docbuild:
 	mkdocs build
+
+.PHONY: schema
+schema:
+	python3 develop/autogen_schema.py

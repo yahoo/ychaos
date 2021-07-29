@@ -127,7 +127,7 @@ jobs:
         environment:
             PUBLISH: True
             TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
-        template: python-2104/package_python
+        template: python/package_python
         requires: [version_test_pypi]
 
     # Release Pipeline to publish package to PyPi
@@ -170,7 +170,7 @@ jobs:
             - test_validation_py39
 
     package_publish_pypi:
-        template: python-2104/package_python
+        template: python/package_python
         environment:
             PUBLISH: True
         requires: [version_pypi]

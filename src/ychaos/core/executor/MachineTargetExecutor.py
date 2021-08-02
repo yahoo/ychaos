@@ -215,20 +215,38 @@ class MachineTargetExecutor(BaseExecutor):
                     ],
                 ),
                 dict(
-                    name="Create a virtual environment and install ychaos[agents]",
+                    name="Create a virtual environment",
                     register="result_pip",
+                    action=dict(
+                        module="pip",
+                        chdir="{{result_pwd.stdout}}",
+                        name="pip",
+                        state="latest",
+                        virtualenv="ychaos_env",
+                        virtualenv_command="{{result_which_python3.stdout}} -m venv",
+                    ),
+                    failed_when=[
+                        # Failed in these following reasons
+                        # 1. pip not installed
+                        # 2. Failed to installed latest pip version
+                        "result_pip.state == 'absent'"
+                    ],
+                    vars=dict(
+                        ansible_python_interpreter="{{result_which_python3.stdout}}"
+                    ),
+                ),
+                dict(
+                    name="Install ychaos[agents]",
+                    register="result_pip_install_ychaos_agents",
                     action=dict(
                         module="pip",
                         chdir="{{result_pwd.stdout}}",
                         name="ychaos[agents]",
                         virtualenv="ychaos_env",
-                        virtualenv_python="python3",
                     ),
                     failed_when=[
-                        # Failed in these following reasons
-                        # 1. pip not installed
-                        # 2. Unable to install required packages
-                        "result_pip.state == 'absent'"
+                        # Failed if unable to install ychaos[agents]
+                        "result_pip_install_ychaos_agents.state == 'absent'"
                     ],
                     vars=dict(
                         ansible_python_interpreter="{{result_which_python3.stdout}}"

@@ -5,7 +5,7 @@ This section of the document contains the steps to get started with YChaos.
     pip install ychaos[chaos]
     ``` 
 1. Create a valid test plan. (Refer Ychaos test plan [schema](/ychaos/testplan/))
-1. Ensure the target hosts selected for testing have python3.6+, pip3 and virtualenv package pre-installed
+1. Ensure the target hosts selected for testing have python3.6+ and pip3 package pre-installed
 1. Execute the test plan 
     ```bash
     ychaos execute -t ./testplan.json

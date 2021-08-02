@@ -7,6 +7,8 @@
 1. Fix throwing error when a verification plugin implementation is not found or in development stage
 by [Shashank Sharma](https://github.com/shashankrnr32)
 
+1. Remove the requirement of virtualenv package on remote host by using venv by [Alfin S Thomas](https://github.com/AlfinST)
+
 ## Version 0.1.0
 
 1. Add documentation to YChaos by [Shashank Sharma](https://github.com/shashankrnr32)
@@ -46,4 +48,4 @@ code (CLI) by [Shashank Sharma](https://github.com/shashankrnr32)
    - Add Optional dependency handler by [Shashank Sharma](https://github.com/shashankrnr32)
    - Add Logging module for YChaos by [Vijay Babu](https://github.com/vijaybabu4589)
    - Add Log Agent Lifecycle decorator by [Shashank Sharma](https://github.com/shashankrnr32)
-   - Allow custom log file via CLI by Shashank Sharma
+   - Allow custom log file via CLI by [Shashank Sharma](https://github.com/shashankrnr32)

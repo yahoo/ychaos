@@ -13,7 +13,7 @@ from mockito import unstub, when
 from ychaos.agents.network.traffic import TrafficBlock, TrafficBlockConfig
 
 
-class TestBlockTraffic(TestCase):
+class TestTrafficBlock(TestCase):
 
     targetFilePath = "/tmp/targetHostsFile"
     expectedTargetFilePath = f"{os.path.dirname(__file__)}/res/expectedTargetHosts"
@@ -42,6 +42,9 @@ class TestBlockTraffic(TestCase):
         with open(self.test_hostsfile, "w") as file:
             file.write("mockTest")
 
+        # For coverage
+        agent.monitor()
+
     def test_teardown_resets_the_host_file(self):
         block_traffic_config = TrafficBlockConfig(
             hosts=["thissitedoesnotexist.com", "thissitealsodoesnotexist.com"],
@@ -67,9 +70,11 @@ class TestBlockTraffic(TestCase):
 
     def test_run_modifes_hosts_file(self):
         block_traffic_config = TrafficBlockConfig(
-            hosts=["testredirect.com"], hostsfile=self.test_hostsfile
+            hosts=["testredirect.com"],
+            hostsfile=self.test_hostsfile,
+            backup_hostsfile=Path(NamedTemporaryFile(mode="w+", delete=False).name),
         )
-        self.assertIsNone(block_traffic_config.backup_hostsfile)
+        self.assertIsNotNone(block_traffic_config.backup_hostsfile)
 
         agent = TrafficBlock(block_traffic_config)
 

@@ -4,14 +4,12 @@ from argparse import Namespace
 from pathlib import Path
 from unittest import TestCase
 
+from mockito import mock, unstub, verify
+from rich.console import Console
+
 from ychaos.cli.exceptions import YChaosCLIError
 from ychaos.cli.mock import MockApp
 from ychaos.cli.testplan.validate import TestPlanValidatorCommand
-
-
-class MockYChaosCLIError(YChaosCLIError):
-    def handle(self) -> None:
-        assert True is True
 
 
 class TestYChaosCLIError(TestCase):
@@ -39,3 +37,28 @@ class TestYChaosCLIError(TestCase):
         error = YChaosCLIError(app=MockApp(args), message="Some Error occured")
         self.assertEqual(error.exitcode, 1)
         error.handle()
+
+    def test_exception_init_with_debug_mode(self):
+        args = Namespace(debug=True)
+        args.cls = TestPlanValidatorCommand
+
+        # Required Arguments for TestPlanValidatorCommand
+        args.paths = [
+            self.testplans_directory.joinpath("valid/"),
+        ]
+
+        # Create a Mocked CLI App
+        app = MockApp(args)
+        args.app = app
+
+        try:
+            # Populate exc_info for traceback
+            raise Exception("Unknown Error")
+        except:
+            error = YChaosCLIError(app=MockApp(args), message="Some Error occured")
+            error.app.console = mock(spec=Console)
+            error.handle()
+            verify(error.app.console, times=1).print_exception(extra_lines=2)
+
+    def tearDown(self) -> None:
+        unstub()

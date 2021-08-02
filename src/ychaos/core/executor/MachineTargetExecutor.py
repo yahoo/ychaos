@@ -260,10 +260,13 @@ class MachineTargetExecutor(BaseExecutor):
                     ignore_errors="yes",
                     action=dict(
                         module="shell",
-                        cmd=(
-                            "source {{result_pip.virtualenv}}/bin/activate"
-                            " && "
-                            "ychaos --log-file {{result_create_workspace.path}}/ychaos.log agent attack --testplan {{result_testplan_file.dest}} --attack-report-yaml {{result_create_workspace.path}}/attack_report.yaml"
+                        cmd=" ".join(
+                            [
+                                "source {{result_pip.virtualenv}}/bin/activate",
+                                "&&",
+                                "ychaos --log-file {{result_create_workspace.path}}/ychaos.log",
+                                "agent attack --testplan {{result_testplan_file.dest}} --attack-report-yaml {{result_create_workspace.path}}/attack_report.yaml",
+                            ]
                         ),
                     ),
                 ),

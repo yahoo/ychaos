@@ -5,6 +5,8 @@ verification:
           - STEADY
       type: noop
       config: {}
+
+# No Operations
 attack:
     target_type: self
     agents:

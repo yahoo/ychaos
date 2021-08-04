@@ -9,9 +9,13 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 from pydantic import AnyHttpUrl, Field, PositiveInt, SecretStr, validator
 
-from ..utils.builtins import AEnum, BuiltinUtils
-from . import SchemaModel, SystemState
-from .common import Secret
+from ...utils.builtins import AEnum, BuiltinUtils
+from .. import SchemaModel, SystemState
+from ..common import Secret
+from .plugins.metrics import (
+    MultipleConditionalsMetricsVerificationCriteria,
+    StateBoundMetricsVerificationCriteria,
+)
 
 
 class PythonModuleVerification(SchemaModel):
@@ -50,8 +54,6 @@ class HTTPRequestVerification(SchemaModel):
     The user can also specify a `count` attribute requesting the tool to make
     `count` number of requests to the same endpoints.
     """
-
-    _http_methods = ("GET", "POST", "HEAD", "PATCH", "DELETE")
 
     count: int = Field(
         default=1,
@@ -103,12 +105,9 @@ class HTTPRequestVerification(SchemaModel):
         gt=0,
     )
 
-    @validator("method", pre=True)
-    def validate_method(cls, v):
-        if v in cls._http_methods:
-            return v
-        else:
-            raise ValueError("Unknown HTTP method")
+    _validate_method = validator("method", pre=True, allow_reuse=True)(
+        BuiltinUtils.Request.validate_method
+    )
 
 
 class SDv4Verification(SchemaModel):
@@ -145,6 +144,56 @@ class NoOpConfig(SchemaModel):
     pass
 
 
+class OpenTSDBVerification(SchemaModel):
+    """
+    The OpenTSDB Verification Plugin gets the metrics from an OpenTSDB server and compares it with the
+    provided comparison parameters in the testplan. If the condition passes
+    """
+
+    url: AnyHttpUrl = Field(
+        ..., description="The OpenTSDB server URL to get the metrics from"
+    )
+
+    method: str = Field(
+        default="GET",
+        description="The HTTP method used to query the metrics from OpenTSDB server.",
+        examples=["GET", "POST"],
+    )
+
+    query: Dict[str, Any] = Field(
+        default=dict(), description="The OpenTSDB query sent to the server."
+    )
+
+    criteria: List[MultipleConditionalsMetricsVerificationCriteria] = Field(
+        default=list(),
+        description=(
+            "Metrics verification criteria without state information."
+            "All the criteria part of this list must pass for the verification to be successful"
+        ),
+    )
+
+    state_bound_criteria: List[StateBoundMetricsVerificationCriteria] = Field(
+        default=list(),
+        description=(
+            "Metrics verification criteria with state. "
+            "All the criteria part of this list must pass for the verification to be successful"
+        ),
+    )
+
+    @validator("state_bound_criteria", pre=True, always=True)
+    def _criteria_validation(cls, v, values):
+        # The input must contain atleast one of "criteria" or "state_bound_criteria"
+        if not v and not values.get("criteria", list()):
+            raise ValueError(
+                "Either criteria or state_bound_criteria must be present for this configuration."
+            )
+        return v
+
+    _validate_method = validator("method", pre=True, allow_reuse=True)(
+        BuiltinUtils.Request.validate_method
+    )
+
+
 class VerificationType(AEnum):
     """
     Defines the Type of plugin to be used for verification.
@@ -155,7 +204,11 @@ class VerificationType(AEnum):
 
     PYTHON_MODULE = "python_module", SimpleNamespace(schema=PythonModuleVerification)
     HTTP_REQUEST = "http_request", SimpleNamespace(schema=HTTPRequestVerification)
-    SDV4_VERIFICATION = "sdv4", SimpleNamespace(schema=SDv4Verification)
+    SDV4_VERIFICATION = (
+        "sdv4",
+        SimpleNamespace(schema=SDv4Verification),
+    )
+    OPENTSDB_VERIFICATION = "tsdb", SimpleNamespace(schema=OpenTSDBVerification)
 
     # For Testing purpose, cannot be used by users.
     NOOP = "noop", SimpleNamespace(schema=NoOpConfig)

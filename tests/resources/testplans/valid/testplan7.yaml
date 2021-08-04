@@ -1,0 +1,48 @@
+description: >
+    A valid example testplan for demonstrating the usage of OpenTSDB
+    verification plugin
+verification:
+    -   states:
+            - STEADY
+            - CHAOS
+            - RECOVERED
+        type: tsdb
+        config:
+            url: https://tsdb.resilience.yahoo.com/metrics
+            method: POST
+            query:
+                # Refer to OpenTSDB API to construct a query
+                start: '30m-ago'
+                end: 'now'
+                queries:
+                    -   aggregator: zimsum
+                        metric: api.latency
+                        downsample: 15m-avg-nan
+                        filters:
+                            -   type: literal_or
+                                tagk: host
+                                filter: mockhost.resilience.yahoo.cloud
+                                groupBy: true
+                            -   type: literal_or
+                                tagk: _aggregate
+                                filter: raw
+                                groupBy: true
+            state_bound_criteria:
+                # All of these conditions must pass to mark
+                # the verification as successful.
+                -   aggregator: latest
+                    criteria:
+                        STEADY:
+                            comparator: "<="
+                            value: 300
+                        CHAOS:
+                            comparator: "%%"
+                            value: [0, 40]  # A 40% increase in the latency
+                        RECOVERED:
+                            comparator: "<="
+                            value: 300
+# No Operations
+attack:
+    target_type: self
+    agents:
+        - type: no_op

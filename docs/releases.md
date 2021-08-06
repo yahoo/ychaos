@@ -2,14 +2,14 @@
 
 ## Version 0.x.x
 
-## Next Release (0.2.0)
+### Version 0.2.0
 
 1. Fix throwing error when a verification plugin implementation is not found or in development stage
 by [Shashank Sharma](https://github.com/shashankrnr32)
 
 1. Remove the requirement of virtualenv package on remote host by using venv by [Alfin S Thomas](https://github.com/AlfinST)
 
-## Version 0.1.0
+### Version 0.1.0
 
 1. Add documentation to YChaos by [Shashank Sharma](https://github.com/shashankrnr32)
    

@@ -19,6 +19,7 @@ from .special.NoOpAgent import (
     NoOpTimedAgentConfig,
 )
 from .system.cpu import CPUBurn, CPUBurnConfig
+from .system.disk import DiskFill, DiskFillConfig
 from .system.icmp import PingDisable, PingDisableConfig
 from .validation.certificate import (
     CertificateFileValidation,
@@ -66,3 +67,5 @@ class AgentType(AEnum):
     DISABLE_PING = "disable_ping", SimpleNamespace(
         schema=PingDisableConfig, agent_defn=PingDisable
     )
+
+    DISK_FILL = "disk_fill", SimpleNamespace(schema=DiskFillConfig, agent_defn=DiskFill)

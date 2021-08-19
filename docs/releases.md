@@ -2,6 +2,10 @@
 
 ## Version 0.x.x
 
+### Version 0.3.0
+
+1. Add Disk Fill Agent by [Lakshmi Kannan](https://github.com/lakshmi-k05)
+
 ### Version 0.2.0
 
 1. Fix throwing error when a verification plugin implementation is not found or in development stage
@@ -49,10 +53,3 @@ code (CLI) by [Shashank Sharma](https://github.com/shashankrnr32)
    - Add Logging module for YChaos by [Vijay Babu](https://github.com/vijaybabu4589)
    - Add Log Agent Lifecycle decorator by [Shashank Sharma](https://github.com/shashankrnr32)
    - Allow custom log file via CLI by [Shashank Sharma](https://github.com/shashankrnr32)
-
-### Version 0.3.0
-
-1. Add additional improvements (CI/Documentation/Package/Dev)
-
-    - Add Disk Fill Agent by [Lakshmi Kannan](https://github.com/lakshmi-k05)
-   

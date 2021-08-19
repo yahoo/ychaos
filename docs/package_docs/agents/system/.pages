@@ -1,4 +1,4 @@
 nav:
     - cpu: cpu.md
-    - disable ping: icmp.md
+    - icmp: icmp.md
     - disk: disk.md

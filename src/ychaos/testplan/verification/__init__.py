@@ -175,7 +175,7 @@ class OpenTSDBVerification(SchemaModel):
     state_bound_criteria: List[StateBoundMetricsVerificationCriteria] = Field(
         default=list(),
         description=(
-            "Metrics verification criteria with state. "
+            "Metrics verification criteria with state."
             "All the criteria part of this list must pass for the verification to be successful"
         ),
     )

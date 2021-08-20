@@ -135,7 +135,7 @@ class MetricsAggregator(AEnum):
 
     AVG = "avg", SimpleNamespace(
         aggregate=TimeSeriesDataAggregator.avg,
-        __desc__="Gets the Average of all the datapoints",
+        __desc__="Gets the Average of all valid datapoints",
     )
 
     LATEST = "latest", SimpleNamespace(

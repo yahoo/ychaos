@@ -19,7 +19,7 @@ verification:
                         filters:
                             -   type: literal_or
                                 tagk: host
-                                filter: mockhost.resilience.cloud
+                                filter: mockhost.resilience.yahoo.cloud
                                 groupBy: true
                             -   type: literal_or
                                 tagk: _aggregate

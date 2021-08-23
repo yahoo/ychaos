@@ -3,4 +3,5 @@ nav:
     - common: common.md
     - schema: schema.md
     - validator: validator.md
-    - verification: verification.md
+    - verification: verification
+    - metrics: metrics.md

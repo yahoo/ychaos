@@ -1,0 +1,3 @@
+nav:
+    - __init__: index.md
+    - plugins: plugins

@@ -1,8 +1,7 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 
-from argparse import ArgumentParser, Namespace
-from typing import Any
+from argparse import ArgumentParser
 
 from ...utils.argparse import SubCommandParsersAction
 from .. import YChaosSubCommand
@@ -31,7 +30,3 @@ class TestPlan(YChaosSubCommand):
         )
 
         return parser
-
-    @classmethod
-    def main(cls, args: Namespace) -> Any:  # pragma: no cover
-        pass

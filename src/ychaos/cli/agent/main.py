@@ -1,7 +1,7 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 
-from argparse import ArgumentParser, Namespace
+from argparse import ArgumentParser
 
 from ...utils.argparse import SubCommandParsersAction
 from .. import YChaosSubCommand
@@ -28,7 +28,3 @@ class Agent(YChaosSubCommand):
 
         test_plan_command_subparser.add_parser(cls=Attack)
         return parser
-
-    @classmethod
-    def main(cls, args: Namespace):
-        pass

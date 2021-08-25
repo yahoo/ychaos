@@ -5,8 +5,9 @@ from argparse import Namespace
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
-from mockito import unstub, verify, when
+from mockito import captor, unstub, verify, when
 
+from ychaos.cli import YChaosSubCommand
 from ychaos.cli.main import YChaos, main
 from ychaos.cli.mock import MockApp
 
@@ -106,6 +107,22 @@ class TestYChaosCLIApp(TestCase):
         args = Namespace(debug=True)
         app = MockApp(args=args)
         self.assertTrue(app.is_debug_mode())
+
+    def tearDown(self) -> None:
+        unstub()
+
+
+class TestYChaosCLISubcommand(TestCase):
+    def test_subcommand_for_noop(self):
+        args = Namespace()
+        args.app = MockApp(args=args)
+        log_captor = captor()
+        when(args.app.console).log(log_captor).thenReturn(0)
+
+        returncode = YChaosSubCommand.main(args)
+
+        self.assertEqual(returncode, 0)
+        self.assertEqual(log_captor.value, "This command does nothing..")
 
     def tearDown(self) -> None:
         unstub()

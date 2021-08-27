@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "09:00"
+      timezone: "Asia/Chennai"
+    commit-message:
+      prefix: "pip install_requires"
+      prefix-development: "pip extras_require"
+      include: "scope"
+    open-pull-requests-limit: 3
+    ignore:
+      - dependency-name: "ansible"
+    labels:
+      - "dependencies"

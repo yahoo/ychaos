@@ -3,7 +3,7 @@
 from abc import ABC
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import ValidationError
 from rich.console import Console
@@ -68,6 +68,11 @@ class YChaosSubCommand(SubCommand, ABC):
 
     def set_exitcode(self, exitcode=0):
         self._exitcode = exitcode
+
+    @classmethod
+    def main(cls, args: Namespace) -> Any:
+        args.app.console.log("This command does nothing..")
+        return 0
 
 
 class YChaosTestplanInputSubCommand(YChaosSubCommand, ABC):

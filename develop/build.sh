@@ -31,6 +31,13 @@ function flake8_validation() {
     echo "flake8 Style Validation passing"
 }
 
+function codespell_validation() {
+    echo "==============================================="
+    echo "Running codespell validation"
+    codespell src tests develop docs || { echo "codespell Validation Failed" ; exit 1; }
+    echo "codespell validation passing"
+}
+
 # Type Validation using mypy
 function type_validation() {
     echo "================================================"
@@ -67,5 +74,6 @@ fix_imports
 autogen_cli_docs
 
 flake8_validation
+codespell_validation
 type_validation
 security_validation

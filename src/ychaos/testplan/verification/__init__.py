@@ -182,7 +182,7 @@ class OpenTSDBVerification(SchemaModel):
 
     @validator("state_bound_criteria", pre=True, always=True)
     def _criteria_validation(cls, v, values):
-        # The input must contain atleast one of "criteria" or "state_bound_criteria"
+        # The input must contain at least one of "criteria" or "state_bound_criteria"
         if not v and not values.get("criteria", list()):
             raise ValueError(
                 "Either criteria or state_bound_criteria must be present for this configuration."

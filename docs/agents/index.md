@@ -35,6 +35,6 @@ The lifecycle of the agents are defined by these methods
 3. **teardown**: Bringing back the system back to how it was before the attack
 4. **monitor**: A special method that tracks the system, agent and its current status.
 
-Each and every agent that is defined should implement each of these lifecyle methods
+Each and every agent that is defined should implement each of these lifecycle methods
 to define their behaviour in the particular scenario. The base Agent is defined [here][ychaos.agents.agent.Agent].
 Any extending agent can implement this interface.

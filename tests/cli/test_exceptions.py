@@ -34,7 +34,7 @@ class TestYChaosCLIError(TestCase):
         app = MockApp(args)
         args.app = app
 
-        error = YChaosCLIError(app=MockApp(args), message="Some Error occured")
+        error = YChaosCLIError(app=MockApp(args), message="Some Error occurred")
         self.assertEqual(error.exitcode, 1)
         error.handle()
 
@@ -55,7 +55,7 @@ class TestYChaosCLIError(TestCase):
             # Populate exc_info for traceback
             raise Exception("Unknown Error")
         except:
-            error = YChaosCLIError(app=MockApp(args), message="Some Error occured")
+            error = YChaosCLIError(app=MockApp(args), message="Some Error occurred")
             error.app.console = mock(spec=Console)
             error.handle()
             verify(error.app.console, times=1).print_exception(extra_lines=2)

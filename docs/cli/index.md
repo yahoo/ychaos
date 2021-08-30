@@ -2,7 +2,7 @@
 
 YChaos CLI provides a set of commands that can be run
 from your console to perform various operations with YChaos.
-Starting with the testplan validation and upto performing attack
+Starting with the testplan validation and up to performing attack
 is a part of YChaos CLI.
 
 YChaos CLI's structure is defined below

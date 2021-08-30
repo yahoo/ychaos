@@ -87,8 +87,8 @@ class YChaos:
         ychaos_cli.add_argument(
             "--no-color",
             action="store_true",
-            default=False,
-            help="Disable color on console output",
+            default=bool(os.getenv("NO_COLOR", False)),
+            help="Disable color on console output ($NO_COLOR)",
         )
 
         # Arguments for creating HTML & Text Reports
@@ -114,10 +114,7 @@ class YChaos:
             type=Path,
             default=os.getenv("YCHAOS_LOG_FILE"),
             required=False,
-            help=(
-                "The file to store application logs. "
-                "Setting `YCHAOS_LOG_FILE` environment variable instead of this argument is also valid."
-            ),
+            help=("The file to store application logs. ($YCHAOS_LOG_FILE)"),
             metavar="path",
         )
 

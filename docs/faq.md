@@ -13,6 +13,30 @@ the chaos testing. Although we test the package thoroughly for each PATCH
 update, there might be unknown regressions/bugs introduced in the new PATCH versions.
 To avoid this, you can install the latest MINOR version.
 
+### I am running YChaos and ...
+
+#### The console is not able to emit control codes and ended up printing gibberish
+
+It seems the console you are running the CLI is not interactive. To disable interactive mode,
+in YChaos CLI output, set the `TERM` environment variable to "dumb"/"unknown". This will
+disable features that require movement of cursor.
+
+Example:
+```shell
+TERM=unknown ychaos validate testplan_folder/
+```
+
+You can also disable the colors emitted by the YChaos CLI by either setting `NO_COLOR`
+environment variable or calling YChaos CLI with `--no-color`.
+
+Example:
+The two commands mentioned below are equivalent.
+```shell
+NO_COLOR=true ychaos validate testplan_folder/
+ychaos --no-color validate testplan_folder/
+```
+
+
 ## I am a YChaos Contributor
 
 #### I do not like the way something is coded in this package. How do I bring the attention of this to the maintainers?

@@ -90,6 +90,16 @@ jobs:
         steps:
             - codecov: echo "Skip Codecov"
 
+    test_validation_py310:
+        template: python/validate_unittest
+        environment:
+            TOX_ARGS: --parallel all
+            TOX_ENVLIST: py310
+        requires: [ ~pr, ~commit ]
+        steps:
+            - prevalidate_code: yum install -y libffi libffi-devel
+            - codecov: echo "Skip Codecov"
+
     test_validation_py39:
         template: python/validate_unittest
         environment:

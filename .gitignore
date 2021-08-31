@@ -85,6 +85,7 @@ __pycache__/
 .idea/
 pip-wheel-metadata/
 venv*/
+.mypy_cache/
 artifacts/
 site/
 
@@ -98,3 +99,4 @@ docs/testplan/schema/*.html
 docs/testplan/schema/*.css
 docs/testplan/schema/*.js
 docs/cli/manual.md
+

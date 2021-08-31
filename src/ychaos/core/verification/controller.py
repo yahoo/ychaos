@@ -8,6 +8,7 @@ from pydantic import validate_arguments
 from ...app_logger import AppLogger
 from ...testplan import SystemState
 from ...testplan.schema import TestPlan
+from ...testplan.verification import VerificationConfig, VerificationType
 from ...utils.hooks import EventHook
 from ...utils.yaml import Dumper
 from .data import VerificationData, VerificationStateData
@@ -90,13 +91,15 @@ class VerificationController(EventHook):
     of this is to register a hook to print information on CLI.
     """
 
-    __hook_events__ = (
-        "on_start",
-        "on_each_plugin_start",
-        "on_each_plugin_end",
-        "on_plugin_not_found",
-        "on_end",
-    )
+    __hook_events__ = {
+        "on_start": EventHook.CallableType(),
+        "on_each_plugin_start": EventHook.CallableType(int, VerificationConfig),
+        "on_each_plugin_end": EventHook.CallableType(
+            int, VerificationConfig, VerificationStateData
+        ),
+        "on_plugin_not_found": EventHook.CallableType(int, VerificationType),
+        "on_end": EventHook.CallableType(List[bool]),
+    }
 
     @validate_arguments
     def __init__(

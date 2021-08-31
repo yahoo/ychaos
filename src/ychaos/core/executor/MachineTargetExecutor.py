@@ -1,5 +1,6 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
+import collections
 import json
 import random
 from types import SimpleNamespace
@@ -33,14 +34,23 @@ CallbackBase: Any  # For mypy
     "ansible.vars.manager", ("VariableManager",), raise_error=False
 )
 
+(TaskResult,) = DependencyUtils.import_from(
+    "ansible.executor.task_result", ("TaskResult",), raise_error=False
+)
+
+
 if CallbackBase:  # pragma: no cover
 
     class YChaosAnsibleResultCallback(CallbackBase, EventHook):
 
-        __hook_events__ = (
-            "on_target_unreachable",
-            "on_target_failed",
-            "on_target_passed",
+        __hook_events__ = collections.defaultdict(
+            EventHook.CallableType(TaskResult)
+        ).fromkeys(
+            (
+                "on_target_unreachable",
+                "on_target_failed",
+                "on_target_passed",
+            )
         )
 
         def __init__(self, *args, **kwargs):
@@ -131,15 +141,17 @@ class MachineTargetExecutor(BaseExecutor):
 
     __target_type__ = "machine"
 
-    __hook_events__ = (
-        "on_no_targets_found",
-        "on_start",
-        "on_target_unreachable",
-        "on_target_failed",
-        "on_target_passed",
-        "on_error",
-        "on_end",
-    )
+    # __taskresult_callable__ = EventHook.Callable(TaskResult)
+
+    __hook_events__ = {
+        "on_no_targets_found": EventHook.CallableType(),
+        "on_start": EventHook.CallableType(),
+        "on_target_unreachable": EventHook.CallableType(TaskResult),
+        "on_target_failed": EventHook.CallableType(TaskResult),
+        "on_target_passed": EventHook.CallableType(TaskResult),
+        "on_error": EventHook.CallableType(Exception),
+        "on_end": EventHook.CallableType(TaskResult),
+    }
 
     def __init__(self, testplan: TestPlan, *args, **kwargs):
         super(MachineTargetExecutor, self).__init__(testplan)

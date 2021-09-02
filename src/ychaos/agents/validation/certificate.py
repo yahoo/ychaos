@@ -23,11 +23,12 @@ from ..agent import Agent, AgentConfig, AgentMonitoringDataPoint, AgentPriority
 from ..utils.annotations import log_agent_lifecycle
 
 (X509,) = DependencyUtils.import_from(
-    "OpenSSL.crypto",
-    ("X509",),
+    "OpenSSL.crypto", ("X509",), raise_error=False, warn=False
 )
 
-pyopenssl = DependencyUtils.import_module("requests.packages.urllib3.contrib.pyopenssl")
+pyopenssl = DependencyUtils.import_module(
+    "requests.packages.urllib3.contrib.pyopenssl", raise_error=False, warn=False
+)
 
 
 class ServerCertValidationConfig(AgentConfig):
@@ -121,8 +122,19 @@ class CertificateFileType(AEnum):
         PEM: (pem) PEM Certificate format
     """
 
-    ASN1 = "asn1", SimpleNamespace(binder=pyopenssl.OpenSSL.crypto.FILETYPE_ASN1)  # type: ignore
-    PEM = "pem", SimpleNamespace(binder=pyopenssl.OpenSSL.crypto.FILETYPE_PEM)  # type: ignore
+    ASN1 = "asn1", SimpleNamespace()
+    PEM = "pem", SimpleNamespace()
+
+    def binder(self):
+        pyopenssl = DependencyUtils.import_module(
+            "requests.packages.urllib3.contrib.pyopenssl", raise_error=False
+        )
+        if self == self.PEM:
+            return pyopenssl.OpenSSL.crypto.FILETYPE_PEM
+        elif self == self.ASN1:
+            return pyopenssl.OpenSSL.crypto.FILETYPE_ASN1
+        else:  # pragma: no cover
+            raise Exception("Unknown Certificate FileType")
 
 
 class CertificateFileConfig(BaseModel):
@@ -175,7 +187,7 @@ class CertificateFileValidation(Agent):
             try:
                 assert pyopenssl is not None
                 cert = pyopenssl.OpenSSL.crypto.load_certificate(
-                    cert_path_config.type.metadata.binder,
+                    cert_path_config.type.binder(),
                     cert_path_config.path.read_bytes(),
                 )
 

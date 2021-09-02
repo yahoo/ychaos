@@ -56,6 +56,7 @@ class TestDependencyUtils(TestCase):
                 "ychaos.utils.dependency",
                 ("SomeUnknownAttribute",),
                 raise_error=True,
+                warn=False,
             )
 
     def test_import_attr_from_invalid_module(self):
@@ -63,5 +64,6 @@ class TestDependencyUtils(TestCase):
             "ychaos.some_unknown_module",
             ("SomeUnknownAttribute",),
             raise_error=False,
+            warn=False,
         )
         self.assertTupleEqual((None,), handler_class)

@@ -16,7 +16,7 @@ class DependencyUtils:
 
     @classmethod
     def import_module(
-        cls, name: str, message: str = None, raise_error: bool = True
+        cls, name: str, message: str = None, raise_error: bool = True, warn: bool = True
     ) -> Optional[Any]:
         """
         Calling this method with a module name is similar to calling
@@ -26,6 +26,7 @@ class DependencyUtils:
             name: Module name
             message: Error message to be printed on console when the import fails
             raise_error: Raise an error if the import fails
+            warn: Raise warning if the import fails
 
         Raises:
             ImportError: when `raise_error` is True and the module is not present
@@ -39,7 +40,9 @@ class DependencyUtils:
             if not message:
                 message = f"Dependency {name} is not installed."
 
-            warnings.warn(message)
+            if warn:
+                warnings.warn(message)
+
             if raise_error:
                 raise ImportError(message) from None
             else:
@@ -55,6 +58,7 @@ class DependencyUtils:
         attrs: Tuple[str, ...],
         message: str = None,
         raise_error: bool = True,
+        warn: bool = True,
     ) -> Tuple[Any, ...]:
         """
         Calling this method with a module and an attribute is similar to calling
@@ -77,6 +81,7 @@ class DependencyUtils:
             attrs: Tuple of attribute names from the module
             message: message to be printed in case of an error
             raise_error: Raise an error if the import fails
+            warn: Throw a warning if the import fails
 
         Raises:
             ImportError: when `raise_error` is true and `attr_name` cannot be imported from the `module_name`
@@ -85,7 +90,7 @@ class DependencyUtils:
             An attribute from module_name if exists, None otherwise
         """
         module = cls.import_module(
-            name=module_name, message=message, raise_error=raise_error
+            name=module_name, message=message, raise_error=raise_error, warn=warn
         )
 
         if not module:
@@ -99,7 +104,9 @@ class DependencyUtils:
                 except AttributeError as attr_error:
                     if not message:
                         message = f"cannot import {_attr_name} from {module_name}"
-                    warnings.warn(message)
+
+                    if warn:
+                        warnings.warn(message)
                     if raise_error:
                         raise ImportError(message) from None
                     else:

@@ -6,6 +6,9 @@
 
 1. Add Disk Fill Agent by [Lakshmi Kannan](https://github.com/lakshmi-k05)
 
+2. Fix importing non-required PyOpenSSL module by [Shashank Sharma](https://github.com/shashankrnr32)
+and [Vijay Babu](https://github.com/vijaybabu4589)
+
 ### Version 0.2.0
 
 1. Fix throwing error when a verification plugin implementation is not found or in development stage

@@ -45,35 +45,8 @@ class PythonModuleVerification(SchemaModel):
         return [shlex.quote(x) for x in self.arguments]
 
 
-class HTTPRequestVerification(SchemaModel):
-    """
-    Makes requests to the specified endpoints and verifies that
-    the service is returning a valid response along with verifying the
-    response time of the service being less than `latency` field.
+class HTTPRequestSchema(SchemaModel):
 
-    The user can also specify a `count` attribute requesting the tool to make
-    `count` number of requests to the same endpoints.
-    """
-
-    count: int = Field(
-        default=1,
-        description="Number of HTTP calls to be sent to each of the URL",
-        ge=1,
-    )
-    latency: int = Field(
-        default=50,
-        description="Expected Latency in ms. A latency below this value indicates successful verification",
-        ge=1,
-    )
-
-    status_codes: List[int] = Field(
-        default_factory=functools.partial(list, range(200, 300)),
-        description="The list of status code which will be the comparison factor for the HTTP responses",
-    )
-
-    urls: List[AnyHttpUrl] = Field(
-        default=list(), description="List of HTTP/s URLs to be requested"
-    )
     method: str = Field(default="GET", description="HTTP method to be used")
     headers: Dict[str, Union[SecretStr, Secret]] = Field(
         default=dict(), description="Headers to be sent with the request"
@@ -107,6 +80,37 @@ class HTTPRequestVerification(SchemaModel):
 
     _validate_method = validator("method", pre=True, allow_reuse=True)(
         BuiltinUtils.Request.validate_method
+    )
+
+
+class HTTPRequestVerification(HTTPRequestSchema):
+    """
+    Makes requests to the specified endpoints and verifies that
+    the service is returning a valid response along with verifying the
+    response time of the service being less than `latency` field.
+
+    The user can also specify a `count` attribute requesting the tool to make
+    `count` number of requests to the same endpoints.
+    """
+
+    count: int = Field(
+        default=1,
+        description="Number of HTTP calls to be sent to each of the URL",
+        ge=1,
+    )
+    latency: int = Field(
+        default=50,
+        description="Expected Latency in ms. A latency below this value indicates successful verification",
+        ge=1,
+    )
+
+    status_codes: List[int] = Field(
+        default_factory=functools.partial(list, range(200, 300)),
+        description="The list of status code which will be the comparison factor for the HTTP responses",
+    )
+
+    urls: List[AnyHttpUrl] = Field(
+        default=list(), description="List of HTTP/s URLs to be requested"
     )
 
 
@@ -144,7 +148,7 @@ class NoOpConfig(SchemaModel):
     pass
 
 
-class OpenTSDBVerification(SchemaModel):
+class OpenTSDBVerification(HTTPRequestSchema):
     """
     The OpenTSDB Verification Plugin gets the metrics from an OpenTSDB server and compares it with the
     provided comparison parameters in the testplan. If the condition passes
@@ -154,11 +158,8 @@ class OpenTSDBVerification(SchemaModel):
         ..., description="The OpenTSDB server URL to get the metrics from"
     )
 
-    method: str = Field(
-        default="GET",
-        description="The HTTP method used to query the metrics from OpenTSDB server.",
-        examples=["GET", "POST"],
-    )
+    # Override method to change default value
+    method: str = Field(default="POST", description="HTTP method to be used")
 
     query: Dict[str, Any] = Field(
         default=dict(), description="The OpenTSDB query sent to the server."

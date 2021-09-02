@@ -4,10 +4,23 @@ from datetime import datetime, timedelta, timezone
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
+from urllib3.contrib import pyopenssl
+
 from ychaos.agents.validation.certificate import (
+    CertificateFileType,
     CertificateFileValidation,
     CertificateFileValidationConfig,
 )
+
+
+class TestCertificateFileType(TestCase):
+    def test_binder(self):
+        self.assertEqual(
+            CertificateFileType.PEM.binder(), pyopenssl.OpenSSL.crypto.FILETYPE_PEM
+        )
+        self.assertEqual(
+            CertificateFileType.ASN1.binder(), pyopenssl.OpenSSL.crypto.FILETYPE_ASN1
+        )
 
 
 class TestCertificateFileValidation(TestCase):

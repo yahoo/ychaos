@@ -133,8 +133,8 @@ class CertificateFileType(AEnum):
             return pyopenssl.OpenSSL.crypto.FILETYPE_PEM
         elif self == self.ASN1:
             return pyopenssl.OpenSSL.crypto.FILETYPE_ASN1
-        else:
-            raise Exception()
+        else:  # pragma: no cover
+            raise Exception("Unknown Certificate FileType")
 
 
 class CertificateFileConfig(BaseModel):

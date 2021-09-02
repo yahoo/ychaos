@@ -34,7 +34,7 @@ function flake8_validation() {
 function codespell_validation() {
     echo "==============================================="
     echo "Running codespell validation"
-    codespell src tests develop docs || { echo "codespell Validation Failed" ; exit 1; }
+    codespell src tests develop docs --skip "*.css" || { echo "codespell Validation Failed" ; exit 1; }
     echo "codespell validation passing"
 }
 

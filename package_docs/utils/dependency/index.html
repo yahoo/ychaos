@@ -1571,7 +1571,7 @@ in the YChaos package.</p>
 
 
 <h3 class="doc doc-heading" id="ychaos.utils.dependency.DependencyUtils.import_from">
-<code class="codehilite language-python"><span class="n">import_from</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+<code class="codehilite language-python"><span class="n">import_from</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-classmethod"><code>classmethod</code></small>
@@ -1627,6 +1627,12 @@ in the YChaos package.</p>
         <td><p>Raise an error if the import fails</p></td>
         <td><code>True</code></td>
       </tr>
+      <tr>
+        <td><code>warn</code></td>
+        <td><code>bool</code></td>
+        <td><p>Throw a warning if the import fails</p></td>
+        <td><code>True</code></td>
+      </tr>
   </tbody>
 </table>
 <p><strong>Exceptions:</strong></p>
@@ -1669,6 +1675,7 @@ in the YChaos package.</p>
     <span class="n">attrs</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
     <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">raise_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">warn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calling this method with a module and an attribute is similar to calling</span>
@@ -1691,6 +1698,7 @@ in the YChaos package.</p>
 <span class="sd">        attrs: Tuple of attribute names from the module</span>
 <span class="sd">        message: message to be printed in case of an error</span>
 <span class="sd">        raise_error: Raise an error if the import fails</span>
+<span class="sd">        warn: Throw a warning if the import fails</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ImportError: when `raise_error` is true and `attr_name` cannot be imported from the `module_name`</span>
@@ -1699,7 +1707,7 @@ in the YChaos package.</p>
 <span class="sd">        An attribute from module_name if exists, None otherwise</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">module</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="n">raise_error</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="n">raise_error</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="n">warn</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">module</span><span class="p">:</span>
@@ -1713,7 +1721,9 @@ in the YChaos package.</p>
             <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">attr_error</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="p">:</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cannot import </span><span class="si">{</span><span class="n">_attr_name</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">raise_error</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -1732,7 +1742,7 @@ in the YChaos package.</p>
 
 
 <h3 class="doc doc-heading" id="ychaos.utils.dependency.DependencyUtils.import_module">
-<code class="codehilite language-python"><span class="n">import_module</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+<code class="codehilite language-python"><span class="n">import_module</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-classmethod"><code>classmethod</code></small>
@@ -1774,6 +1784,12 @@ in the YChaos package.</p>
         <td><p>Raise an error if the import fails</p></td>
         <td><code>True</code></td>
       </tr>
+      <tr>
+        <td><code>warn</code></td>
+        <td><code>bool</code></td>
+        <td><p>Raise warning if the import fails</p></td>
+        <td><code>True</code></td>
+      </tr>
   </tbody>
 </table>
 <p><strong>Exceptions:</strong></p>
@@ -1810,7 +1826,7 @@ in the YChaos package.</p>
           <summary>Source code in <code>utils/dependency.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span> <span class="nf">import_module</span><span class="p">(</span>
-    <span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">raise_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">raise_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">warn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calling this method with a module name is similar to calling</span>
@@ -1820,6 +1836,7 @@ in the YChaos package.</p>
 <span class="sd">        name: Module name</span>
 <span class="sd">        message: Error message to be printed on console when the import fails</span>
 <span class="sd">        raise_error: Raise an error if the import fails</span>
+<span class="sd">        warn: Raise warning if the import fails</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ImportError: when `raise_error` is True and the module is not present</span>
@@ -1833,7 +1850,9 @@ in the YChaos package.</p>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Dependency </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is not installed.&quot;</span>
 
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">raise_error</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
         <span class="k">else</span><span class="p">:</span>

@@ -81,13 +81,13 @@ class Coordinator(EventHook):
     ---
     """
 
-    __hook_events__ = (
-        "on_attack_start",
-        "on_attack_completed",
-        "on_each_agent_start",
-        "on_each_agent_teardown",
-        "on_each_agent_stop",
-    )
+    __hook_events__ = {
+        "on_attack_start": EventHook.CallableType(),
+        "on_attack_completed": EventHook.CallableType(),
+        "on_each_agent_start": EventHook.CallableType(str),
+        "on_each_agent_teardown": EventHook.CallableType(str),
+        "on_each_agent_stop": EventHook.CallableType(str),
+    }
     DEFAULT_DURATION = 3
     THREAD_TIMEOUT = 300
 

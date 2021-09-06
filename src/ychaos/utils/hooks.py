@@ -1,7 +1,7 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 import collections
-from typing import Callable, Dict, List, Tuple
+from typing import Callable, Dict, List
 
 
 class InvalidEventHookError(KeyError):
@@ -9,10 +9,18 @@ class InvalidEventHookError(KeyError):
 
 
 class EventHook(object):
+    @classmethod
+    def CallableType(cls, *arg_types):
+        """
+        Returns an Alias of Callable that takes in `arg_types`
+        """
+        # IGNORE: `Callable' must be used as 'Callable[[arg, ...], result]`
+        # The Argument types are casted to List before passing.
+        return Callable[list(arg_types), None]
 
-    __hook_events__: Tuple[str, ...] = tuple()
+    __hook_events__: Dict[str, Callable[..., None]] = dict()
     """
-    Lists the valid hooks that can be registered for this
+    Lists the valid hooks (and corresponding valid Callable mapping) that can be registered for this
     particular object. The `register_hook()` method checks this list
     for the hooks that are being registered.
     """

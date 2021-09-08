@@ -5,7 +5,11 @@ use it with YChaos infrastructure. You can use the `python_module` verification
 plugin for this purpose.
 
 You can write your own python file with the program logic of what you want
-to be verified and configure the testplans in the below fashion
+to be verified and configure the testplans in the below fashion.
+
+To view the schema of the configurations available for the plugin, 
+visit [Verification Plugin][ychaos.testplan.verification.PythonModuleVerification] in
+package documentation.
 
 ```yaml
 description: A Demo Testplan
@@ -27,7 +31,7 @@ attack:
         - type: no_op
 ```
 
-With the above testplan, you can run the [`verify`](../cli/manual.md#ychaos-verify) subcommand of YChaos
+With the above testplan, you can run the [`verify`](../../cli/manual.md#ychaos-verify) subcommand of YChaos
 to run your custom python script with some arguments and YChaos
 will check for the return value of the script to assert that the system
 state is as expected.

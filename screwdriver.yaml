@@ -53,7 +53,7 @@ jobs:
         steps:
             - postinstall_dependencies: pip install -U .[pep8]
             - validate_code: flake8 src/ychaos
-            - postvalidate_code: codespell src tests develop docs
+            - postvalidate_code: codespell --skip "*.css" src tests develop docs
 
     # Code Format Validation using `black`
     code_format_validation:

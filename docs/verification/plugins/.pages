@@ -1,0 +1,4 @@
+nav:
+    - HTTP Request Plugin: http_request.md
+    - Python Module Plugin: python_module.md
+title: Plugins

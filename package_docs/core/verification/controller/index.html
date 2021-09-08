@@ -605,10 +605,61 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2" type="checkbox" id="__nav_4_2" >
+      
+      <label class="md-nav__link" for="__nav_4_2">
+        Plugins
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Plugins" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_2">
+          <span class="md-nav__icon md-icon"></span>
+          Plugins
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../../../../verification/python_module/" class="md-nav__link">
+      <a href="../../../../verification/plugins/http_request/" class="md-nav__link">
+        HTTP Request Plugin
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../verification/plugins/python_module/" class="md-nav__link">
         Python Module Plugin
       </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../verification/plugins/sdv4/" class="md-nav__link">
+        Screwdriver Build Plugin
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -1636,7 +1687,7 @@ of this is to register a hook to print information on CLI.</p>
 
 
 <h3 class="doc doc-heading" id="ychaos.core.verification.controller.VerificationController.__hook_events__">
-<code class="codehilite language-python"><span class="n">__hook_events__</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span></code>
+<code class="codehilite language-python"><span class="n">__hook_events__</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">NoneType</span><span class="p">]]</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
@@ -1646,7 +1697,7 @@ of this is to register a hook to print information on CLI.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Lists the valid hooks that can be registered for this
+      <p>Lists the valid hooks (and corresponding valid Callable mapping) that can be registered for this
 particular object. The <code>register_hook()</code> method checks this list
 for the hooks that are being registered.</p>
     </div>

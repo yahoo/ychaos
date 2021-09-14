@@ -114,7 +114,7 @@ attack:
 ```yaml
 description: Verify Steady state by checking Request latency is below 100ms
 verification:
-  - delay_before: 10
+  - delay_before: 10000
     states:
       - 'STEADY'
     type: 'http_request'
@@ -138,7 +138,7 @@ attack:
 ```yaml
 description: Use Screwdriver job to verify Steady state   
 verification:
-  - delay_before: 10
+  - delay_before: 10000
     states:
       - 'STEADY'
     type: 'sdv4'

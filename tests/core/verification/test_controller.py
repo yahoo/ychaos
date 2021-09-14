@@ -1,9 +1,11 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 import json
+import time
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
+from mockito import when, verify, unstub
 
 from ychaos.core.verification.controller import VerificationController
 from ychaos.testplan import SystemState
@@ -120,3 +122,27 @@ class TestVerificationController(TestCase):
         self.assertTrue(is_verified)
 
         self.assertTrue(mock_on_plugin_not_found_hook.test_var)
+
+    def test_verification_controller_to_not_sleep_for_delay_before_if_in_different_system_state(
+        self,
+    ):
+
+        when(time).sleep(0).thenReturn(None)
+        verification_controller = VerificationController(
+            self.mock_testplan, SystemState.RECOVERED, list()
+        )
+        verification_controller.execute()
+        verify(time, times=1).sleep(0)
+
+    def test_verification_controller_to_sleep_for_delay_before_if_in_right_system_state(
+        self,
+    ):
+        when(time).sleep(0).thenReturn(None)
+        verification_controller = VerificationController(
+            self.mock_testplan, SystemState.STEADY, list()
+        )
+        verification_controller.execute()
+        verify(time, times=2).sleep(0)
+
+    def tearDown(self) -> None:
+        unstub()

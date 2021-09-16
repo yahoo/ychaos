@@ -1,4 +1,4 @@
 nav:
     - Home: index.md
-    - Python Module Plugin: python_module.md
+    - Plugins: plugins
 title: Verification

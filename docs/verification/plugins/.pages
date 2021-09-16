@@ -1,0 +1,5 @@
+nav:
+    - HTTP Request Plugin: http_request.md
+    - Python Module Plugin: python_module.md
+    - Screwdriver Build Plugin: sdv4.md
+title: Plugins

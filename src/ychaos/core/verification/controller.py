@@ -151,9 +151,6 @@ class VerificationController(EventHook):
             zip(self.testplan.verification, self.verification_data)
         ):
 
-            # Delay before verifying
-            time.sleep(verification_plugin.delay_before)
-
             assert isinstance(verification_plugin.states, List)  # For mypy
             if self.current_state in verification_plugin.states:
                 self.logger.info(
@@ -172,6 +169,9 @@ class VerificationController(EventHook):
                     continue
 
                 plugin = plugin_class(verification_plugin.config, data)
+
+                # Delay before verifying
+                time.sleep(verification_plugin.delay_before / 1000)
 
                 # Call all the hooks that were registered for `verification_plugin_start`.
                 self.execute_hooks("on_each_plugin_start", index, verification_plugin)
@@ -193,7 +193,7 @@ class VerificationController(EventHook):
                 data.add_data(self.current_state, None)
 
             # Delay after verifying
-            time.sleep(verification_plugin.delay_after)
+            time.sleep(verification_plugin.delay_after / 1000)
 
         # Call all the hooks that were registered for `verification_end`.
         self.execute_hooks("on_end", _verify_list)

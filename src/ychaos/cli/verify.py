@@ -3,7 +3,9 @@
 from abc import ABC
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, Union
+
+from pydantic import validate_arguments
 
 from ..core.verification.controller import VerificationController
 from ..core.verification.data import VerificationStateData
@@ -87,9 +89,8 @@ class Verify(YChaosTestplanInputSubCommand):
         except IsADirectoryError as is_directory:
             self.set_exitcode(1)
             self.console.print(
-                ":file_folder: The input path ({path}) is not a valid state data file".format(
-                    path=self.state_data_path
-                )
+                f":file_folder: The input path ({self.state_data_path}) is not a valid state data file",
+                style="indian_red",
             )
         except FileNotFoundError as file_not_found_error:
             self.set_exitcode(1)
@@ -100,6 +101,39 @@ class Verify(YChaosTestplanInputSubCommand):
                 style="indian_red",
             )
         return None
+
+    @validate_arguments(config=dict(arbitrary_types_allowed=True))
+    def _generate_verification_report(
+        self,
+        verification_controller: VerificationController,
+        output_format: str,
+        report_file_path: Union[Path, str],
+    ):
+        self.console.log(
+            f"Writing {self.state.value.lower()} state verification data to {report_file_path}, format={output_format}"
+        )
+        report_output_base_path = Path(report_file_path).parent
+
+        try:
+            if not report_output_base_path.is_dir():
+                report_output_base_path.mkdir(parents=True, exist_ok=True)
+        except PermissionError as permission_error:
+            self.console.log(
+                ":file_folder: [italic]Permission denied to create report directory[/italic]",
+                style="indian_red",
+            )
+            return
+
+        try:
+            with open(report_file_path, "w") as fp:
+                verification_controller.dump_verification(
+                    fp, output_format=output_format
+                )
+        except PermissionError as permission_error:
+            self.console.log(
+                ":file_folder: [italic]Permission denied to create report file[/italic]",
+                style="indian_red",
+            )
 
     def verify_system_state(self):
         testplan = self.get_validated_test_plan(self.test_plan_path)
@@ -181,18 +215,18 @@ class Verify(YChaosTestplanInputSubCommand):
 
         self.console.line()
         if self.dump_json:
-            self.console.log(
-                f"Dumping {self.state.value.lower()} state verification data to {self.dump_json}"
+            self._generate_verification_report(
+                verification_controller,
+                report_file_path=self.dump_json,
+                output_format="json",
             )
-            with open(self.dump_json, "w") as fp:
-                verification_controller.dump_verification_json(fp)
 
         if self.dump_yaml:
-            self.console.log(
-                f"Dumping {self.state.value.lower()} state verification data to {self.dump_yaml}"
+            self._generate_verification_report(
+                verification_controller,
+                report_file_path=self.dump_yaml,
+                output_format="yaml",
             )
-            with open(self.dump_yaml, "w") as fp:
-                verification_controller.dump_verification_yaml(fp)
 
     @classmethod
     def main(cls, args: Namespace) -> Any:  # pragma: no cover

@@ -1,13 +1,18 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
+import builtins
 import json
 from argparse import Namespace
 from pathlib import Path
-from tempfile import NamedTemporaryFile
+from tempfile import NamedTemporaryFile, TemporaryDirectory
 from unittest import TestCase
+
+from mockito import unstub, when
 
 from ychaos.cli.mock import MockApp
 from ychaos.cli.verify import Verify
+from ychaos.core.verification.controller import VerificationController
+from ychaos.testplan import SystemState
 from ychaos.testplan.schema import TestPlan
 
 
@@ -210,3 +215,81 @@ class TestVerificationCommand(TestCase):
             "The verification plugin type=noop[0] is not available for use."
             in app.get_console_output()
         )
+
+    def test_generate_verification_report_directory_failure(self):
+        mock_testplan = TestPlan.load_file(
+            self.testplans_directory.joinpath("valid/testplan1.yaml")
+        )
+        verification_controller = VerificationController(
+            mock_testplan, SystemState.STEADY, list()
+        )
+
+        self.assertEqual(verification_controller.testplan, mock_testplan)
+        self.assertEqual(
+            len(verification_controller.verification_data),
+            len(mock_testplan.verification),
+        )
+
+        args = Namespace()
+        args.cls = self.cls
+        app = MockApp(args)
+
+        args.app = app
+        args.testplan = str(self.testplans_directory.joinpath("valid/testplan1.yaml"))
+        args.state = "steady"
+
+        temp_state_data_file_json = f"{TemporaryDirectory().name}/test/report_file.json"
+        args.dump_json = temp_state_data_file_json
+
+        with when(Path).mkdir(parents=True, exist_ok=True).thenRaise(PermissionError()):
+
+            self.cls(**vars(args))._generate_verification_report(
+                verification_controller,
+                output_format="json",
+                report_file_path=temp_state_data_file_json,
+            )
+            self.assertTrue(
+                "Permission denied to create report directory"
+                in app.get_console_output()
+            )
+
+    def test_generate_verification_report_file_failure(self):
+        mock_testplan = TestPlan.load_file(
+            self.testplans_directory.joinpath("valid/testplan1.yaml")
+        )
+        verification_controller = VerificationController(
+            mock_testplan, SystemState.STEADY, list()
+        )
+
+        self.assertEqual(verification_controller.testplan, mock_testplan)
+        self.assertEqual(
+            len(verification_controller.verification_data),
+            len(mock_testplan.verification),
+        )
+
+        args = Namespace()
+        args.cls = self.cls
+        app = MockApp(args)
+
+        args.app = app
+        args.testplan = str(self.testplans_directory.joinpath("valid/testplan1.yaml"))
+        args.state = "steady"
+
+        temp_state_data_file_json = NamedTemporaryFile("w+")
+        args.dump_json = temp_state_data_file_json.name
+
+        with when(builtins).open(Path(temp_state_data_file_json.name), "w").thenRaise(
+            PermissionError()
+        ):
+
+            self.cls(**vars(args))._generate_verification_report(
+                verification_controller,
+                output_format="json",
+                report_file_path=temp_state_data_file_json.name,
+            )
+            self.assertTrue(
+                "Permission denied to create report file" in app.get_console_output()
+            )
+
+    def teardown(self):
+        unstub()

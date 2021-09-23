@@ -5,7 +5,9 @@ import time
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
-from mockito import when, verify, unstub
+
+import yaml
+from mockito import unstub, verify, when
 
 from ychaos.core.verification.controller import VerificationController
 from ychaos.testplan import SystemState
@@ -84,7 +86,7 @@ class TestVerificationController(TestCase):
         is_verified = verification_controller.execute()
         self.assertTrue(is_verified)
 
-        verification_controller.dump_verification_json(mock_data_file)
+        verification_controller.dump_verification(mock_data_file, output_format="json")
 
         mock_data_file.seek(0)
         verification_data = json.loads(Path(mock_data_file.name).read_text())
@@ -92,6 +94,24 @@ class TestVerificationController(TestCase):
         self.assertListEqual(
             verification_data, verification_controller.get_encoded_verification_data()
         )
+
+    def test_verfication_controller_dump_yaml_data(self):
+        mock_data_file = NamedTemporaryFile("w+")
+        verification_controller = VerificationController(
+            self.mock_testplan, SystemState.STEADY, list()
+        )
+        verification_controller.testplan.verification[0].config["path"] = __file__
+        is_verified = verification_controller.execute()
+        self.assertTrue(is_verified)
+
+        verification_controller.dump_verification(mock_data_file, output_format="yaml")
+
+        with open(mock_data_file.name) as f:
+            verification_data = yaml.safe_load(f)
+            self.assertListEqual(
+                verification_data,
+                verification_controller.get_encoded_verification_data(),
+            )
 
     def test_verification_controller_for_plugin_not_found(self):
         self.mock_testplan.verification[0] = VerificationConfig(

@@ -203,6 +203,12 @@ class VerificationController(EventHook):
     def get_encoded_verification_data(self):
         return [data.encoded_dict() for data in self.verification_data]
 
+    def dump_verification(self, fp, output_format):
+        if output_format == "json":
+            self.dump_verification_json(fp)
+        else:
+            self.dump_verification_yaml(fp)
+
     def dump_verification_json(self, fp):
         import json
 

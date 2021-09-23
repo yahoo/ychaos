@@ -46,6 +46,9 @@ class PythonModuleVerification(SchemaModel):
 
 
 class HTTPRequestSchema(SchemaModel):
+    """
+    The Base class for Plugin that make a HTTP Network call.
+    """
 
     method: str = Field(default="GET", description="HTTP method to be used")
     headers: Dict[str, Union[SecretStr, Secret]] = Field(

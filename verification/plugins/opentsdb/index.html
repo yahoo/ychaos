@@ -11,21 +11,21 @@
       
       
       
-        <link rel="canonical" href="https://yahoo.github.io/ychaos/get_started/">
+        <link rel="canonical" href="https://yahoo.github.io/ychaos/verification/plugins/opentsdb/">
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.3.0">
     
     
       
-        <title>Get Started - YChaos - The Resilience Toolkit</title>
+        <title>OpenTSDB Metrics Plugin - YChaos - The Resilience Toolkit</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.8b42a75e.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.8b42a75e.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.3f5d1f46.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.3f5d1f46.min.css">
         
           
           
@@ -44,7 +44,7 @@
     
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
     
       
@@ -63,12 +63,17 @@
     <body dir="ltr" data-md-color-scheme="" data-md-color-primary="white" data-md-color-accent="">
   
     
-    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    <script>function __prefix(e){return new URL("../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#opentsdb-metrics-verification-plugin" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -79,7 +84,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="YChaos - The Resilience Toolkit" class="md-header__button md-logo" aria-label="YChaos - The Resilience Toolkit" data-md-component="logo">
+    <a href="../../.." title="YChaos - The Resilience Toolkit" class="md-header__button md-logo" aria-label="YChaos - The Resilience Toolkit" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -98,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Get Started
+              OpenTSDB Metrics Plugin
             
           </span>
         </div>
@@ -172,15 +177,13 @@
         
   
   
-    
-  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link md-tabs__link--active">
+      <a href="../../.." class="md-tabs__link">
         YChaos
       </a>
     </li>
@@ -196,7 +199,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../agents/" class="md-tabs__link">
+      <a href="../../../agents/" class="md-tabs__link">
         Agents
       </a>
     </li>
@@ -212,7 +215,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../testplan/" class="md-tabs__link">
+      <a href="../../../testplan/" class="md-tabs__link">
         Testplan
       </a>
     </li>
@@ -222,13 +225,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../verification/" class="md-tabs__link">
+      <a href="../../" class="md-tabs__link md-tabs__link--active">
         Verification
       </a>
     </li>
@@ -244,7 +249,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../cli/" class="md-tabs__link">
+      <a href="../../../cli/" class="md-tabs__link">
         YChaos CLI
       </a>
     </li>
@@ -265,7 +270,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../package_docs/testplan/attack/" class="md-tabs__link">
+      <a href="../../../package_docs/testplan/attack/" class="md-tabs__link">
         Package Documentation
       </a>
     </li>
@@ -295,7 +300,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="YChaos - The Resilience Toolkit" class="md-nav__button md-logo" aria-label="YChaos - The Resilience Toolkit" data-md-component="logo">
+    <a href="../../.." title="YChaos - The Resilience Toolkit" class="md-nav__button md-logo" aria-label="YChaos - The Resilience Toolkit" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -325,14 +330,12 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
       
       
       
@@ -355,7 +358,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         Home
       </a>
     </li>
@@ -367,19 +370,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../get_started/" class="md-nav__link">
         Get Started
       </a>
-      
     </li>
   
 
@@ -391,7 +386,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../releases/" class="md-nav__link">
+      <a href="../../../releases/" class="md-nav__link">
         Changelog
       </a>
     </li>
@@ -405,7 +400,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contribution/" class="md-nav__link">
+      <a href="../../../contribution/" class="md-nav__link">
         Contribution
       </a>
     </li>
@@ -419,7 +414,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dependencies/" class="md-nav__link">
+      <a href="../../../dependencies/" class="md-nav__link">
         Project Dependencies
       </a>
     </li>
@@ -433,7 +428,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../code_of_conduct/" class="md-nav__link">
+      <a href="../../../code_of_conduct/" class="md-nav__link">
         Code Of Conduct
       </a>
     </li>
@@ -447,7 +442,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq/" class="md-nav__link">
+      <a href="../../../faq/" class="md-nav__link">
         FAQ
       </a>
     </li>
@@ -495,7 +490,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../agents/" class="md-nav__link">
+      <a href="../../../agents/" class="md-nav__link">
         Home
       </a>
     </li>
@@ -509,7 +504,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../agents/contrib/" class="md-nav__link">
+      <a href="../../../agents/contrib/" class="md-nav__link">
         Contrib
       </a>
     </li>
@@ -557,7 +552,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../testplan/" class="md-nav__link">
+      <a href="../../../testplan/" class="md-nav__link">
         Test Plan
       </a>
     </li>
@@ -571,7 +566,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../testplan/schema/index.html" class="md-nav__link">
+      <a href="../../../testplan/schema/index.html" class="md-nav__link">
         Schema
       </a>
     </li>
@@ -585,7 +580,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../testplan/target_spec/" class="md-nav__link">
+      <a href="../../../testplan/target_spec/" class="md-nav__link">
         Target Specification
       </a>
     </li>
@@ -599,7 +594,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../testplan/sample_test_plan/" class="md-nav__link">
+      <a href="../../../testplan/sample_test_plan/" class="md-nav__link">
         Sample Test Plan
       </a>
     </li>
@@ -619,12 +614,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
       
       
       
@@ -647,7 +644,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../verification/" class="md-nav__link">
+      <a href="../../" class="md-nav__link">
         Home
       </a>
     </li>
@@ -659,12 +656,14 @@
               
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2" type="checkbox" id="__nav_4_2" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2" type="checkbox" id="__nav_4_2" checked>
       
       
       
@@ -687,7 +686,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../verification/plugins/http_request/" class="md-nav__link">
+      <a href="../http_request/" class="md-nav__link">
         HTTP Request Plugin
       </a>
     </li>
@@ -701,7 +700,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../verification/plugins/python_module/" class="md-nav__link">
+      <a href="../python_module/" class="md-nav__link">
         Python Module Plugin
       </a>
     </li>
@@ -715,7 +714,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../verification/plugins/sdv4/" class="md-nav__link">
+      <a href="../sdv4/" class="md-nav__link">
         Screwdriver Build Plugin
       </a>
     </li>
@@ -727,11 +726,51 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../verification/plugins/opentsdb/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          OpenTSDB Metrics Plugin
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         OpenTSDB Metrics Plugin
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example-testplans" class="md-nav__link">
+    Example Testplans
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -784,7 +823,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/" class="md-nav__link">
+      <a href="../../../cli/" class="md-nav__link">
         YChaos CLI
       </a>
     </li>
@@ -798,7 +837,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/manual/" class="md-nav__link">
+      <a href="../../../cli/manual/" class="md-nav__link">
         CLI Usage
       </a>
     </li>
@@ -872,7 +911,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/testplan/attack/" class="md-nav__link">
+      <a href="../../../package_docs/testplan/attack/" class="md-nav__link">
         attack
       </a>
     </li>
@@ -886,7 +925,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/testplan/common/" class="md-nav__link">
+      <a href="../../../package_docs/testplan/common/" class="md-nav__link">
         common
       </a>
     </li>
@@ -900,7 +939,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/testplan/schema/" class="md-nav__link">
+      <a href="../../../package_docs/testplan/schema/" class="md-nav__link">
         schema
       </a>
     </li>
@@ -914,7 +953,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/testplan/validator/" class="md-nav__link">
+      <a href="../../../package_docs/testplan/validator/" class="md-nav__link">
         validator
       </a>
     </li>
@@ -954,7 +993,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/testplan/verification/" class="md-nav__link">
+      <a href="../../../package_docs/testplan/verification/" class="md-nav__link">
         __init__
       </a>
     </li>
@@ -994,7 +1033,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/testplan/verification/plugins/metrics/" class="md-nav__link">
+      <a href="../../../package_docs/testplan/verification/plugins/metrics/" class="md-nav__link">
         metrics
       </a>
     </li>
@@ -1022,7 +1061,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../metrics.md" class="md-nav__link">
+      <a href="../../../metrics.md" class="md-nav__link">
         metrics
       </a>
     </li>
@@ -1069,7 +1108,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/agents/agent/" class="md-nav__link">
+      <a href="../../../package_docs/agents/agent/" class="md-nav__link">
         agent
       </a>
     </li>
@@ -1083,7 +1122,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/agents/coordinator/" class="md-nav__link">
+      <a href="../../../package_docs/agents/coordinator/" class="md-nav__link">
         coordinator
       </a>
     </li>
@@ -1097,7 +1136,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/agents/contrib/" class="md-nav__link">
+      <a href="../../../package_docs/agents/contrib/" class="md-nav__link">
         contrib
       </a>
     </li>
@@ -1137,7 +1176,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/agents/system/cpu/" class="md-nav__link">
+      <a href="../../../package_docs/agents/system/cpu/" class="md-nav__link">
         cpu
       </a>
     </li>
@@ -1151,7 +1190,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/agents/system/icmp/" class="md-nav__link">
+      <a href="../../../package_docs/agents/system/icmp/" class="md-nav__link">
         icmp
       </a>
     </li>
@@ -1165,7 +1204,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/agents/system/disk/" class="md-nav__link">
+      <a href="../../../package_docs/agents/system/disk/" class="md-nav__link">
         disk
       </a>
     </li>
@@ -1212,7 +1251,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/agents/network/iptables/" class="md-nav__link">
+      <a href="../../../package_docs/agents/network/iptables/" class="md-nav__link">
         iptables
       </a>
     </li>
@@ -1226,7 +1265,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/agents/network/traffic/" class="md-nav__link">
+      <a href="../../../package_docs/agents/network/traffic/" class="md-nav__link">
         traffic
       </a>
     </li>
@@ -1273,7 +1312,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/agents/validation/certificate/" class="md-nav__link">
+      <a href="../../../package_docs/agents/validation/certificate/" class="md-nav__link">
         certificate
       </a>
     </li>
@@ -1353,7 +1392,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/core/verification/controller/" class="md-nav__link">
+      <a href="../../../package_docs/core/verification/controller/" class="md-nav__link">
         controller
       </a>
     </li>
@@ -1367,7 +1406,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/core/verification/data/" class="md-nav__link">
+      <a href="../../../package_docs/core/verification/data/" class="md-nav__link">
         data
       </a>
     </li>
@@ -1414,7 +1453,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/core/executor/BaseExecutor/" class="md-nav__link">
+      <a href="../../../package_docs/core/executor/BaseExecutor/" class="md-nav__link">
         BaseExecutor
       </a>
     </li>
@@ -1428,7 +1467,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/core/executor/MachineTargetExecutor/" class="md-nav__link">
+      <a href="../../../package_docs/core/executor/MachineTargetExecutor/" class="md-nav__link">
         MachineTargetExecutor
       </a>
     </li>
@@ -1482,7 +1521,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/cli/main/" class="md-nav__link">
+      <a href="../../../package_docs/cli/main/" class="md-nav__link">
         main
       </a>
     </li>
@@ -1496,7 +1535,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/cli/mock/" class="md-nav__link">
+      <a href="../../../package_docs/cli/mock/" class="md-nav__link">
         mock
       </a>
     </li>
@@ -1510,7 +1549,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/cli/manual/" class="md-nav__link">
+      <a href="../../../package_docs/cli/manual/" class="md-nav__link">
         manual
       </a>
     </li>
@@ -1524,7 +1563,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/cli/verify/" class="md-nav__link">
+      <a href="../../../package_docs/cli/verify/" class="md-nav__link">
         veriify
       </a>
     </li>
@@ -1564,7 +1603,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/cli/agent/attack/" class="md-nav__link">
+      <a href="../../../package_docs/cli/agent/attack/" class="md-nav__link">
         attack
       </a>
     </li>
@@ -1618,7 +1657,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/utils/hooks/" class="md-nav__link">
+      <a href="../../../package_docs/utils/hooks/" class="md-nav__link">
         hooks
       </a>
     </li>
@@ -1632,7 +1671,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../package_docs/utils/dependency/" class="md-nav__link">
+      <a href="../../../package_docs/utils/dependency/" class="md-nav__link">
         dependency
       </a>
     </li>
@@ -1660,53 +1699,103 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example-testplans" class="md-nav__link">
+    Example Testplans
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/yahoo/ychaos/edit/master/docs/get_started.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/yahoo/ychaos/edit/master/docs/verification/plugins/opentsdb.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                  <h1>Get Started</h1>
-                
-                <p>This section of the document contains the steps to get started with YChaos.</p>
+                <h1 id="opentsdb-metrics-verification-plugin">OpenTSDB Metrics Verification Plugin<a class="headerlink" href="#opentsdb-metrics-verification-plugin" title="Permanent link">&para;</a></h1>
+<p>The Metrics verification plugin allows the users of YChaos to verify the
+state of the system using OpenTSDB Metrics. If a particular infrastructure is
+sending the metrics to an OpenTSDB server, then YChaos can be used to request
+the metrics and compare it with a particular comparison logic to assert if the system is
+in an expected state</p>
+<p>To view the configurations available for OpenTSDB Verification plugin, visit the
+schema definition available <a href="../../../package_docs/testplan/verification/#ychaos.testplan.verification.OpenTSDBVerification">here</a> in
+package documentation.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>OpenTSDB is a scalable Time Series Database. To know more about OpenTSDB, visit
+<a href="http://opentsdb.net/">http://opentsdb.net/</a></p>
+</div>
+<h2 id="example-testplans">Example Testplans<a class="headerlink" href="#example-testplans" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Install ychaos 
-    <div class="highlight"><pre><span></span><code>pip install ychaos<span class="o">[</span>chaos<span class="o">]</span>
-</code></pre></div></li>
-<li>Create a valid test plan. (Refer Ychaos test plan <a href="/ychaos/testplan/">schema</a>)</li>
-<li>Ensure the target hosts selected for testing have python3.6+ and pip3 package pre-installed</li>
-<li>Execute the test plan 
-    <div class="highlight"><pre><span></span><code>ychaos execute -t ./testplan.json
-</code></pre></div></li>
+<li>A demo testplan</li>
 </ol>
-<div class="admonition note">
-<p>Final report, log file will be stored in the path specified in the test plan</p>
-</div>
-<h4 id="simple-test-plan-configured-to-perform-cpu-burn-for-60-seconds">Simple test plan configured to perform CPU burn for 60 seconds<a class="headerlink" href="#simple-test-plan-configured-to-perform-cpu-burn-for-60-seconds" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A simple test plan with CPU burn configured</span>
-<span class="nt">attack</span><span class="p">:</span>
-  <span class="nt">target_type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">machine</span>
-  <span class="nt">target_config</span><span class="p">:</span>
-    <span class="nt">blast_radius</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>
-    <span class="nt">ssh_config</span><span class="p">:</span>
-      <span class="nt">user</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">testUser</span>
-      <span class="nt">password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">testUserPassword</span>
-    <span class="nt">hostnames</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">mocktargethost.namespace.cloud</span>
-    <span class="nt">report_dir</span><span class="p">:</span> <span class="s">&quot;./&quot;</span>
-  <span class="nt">agents</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpu_burn</span>
+<div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A Demo Testplan</span>
+<span class="nt">verification</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">states</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">STEADY</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tsdb</span>
     <span class="nt">config</span><span class="p">:</span>
-      <span class="nt">start_delay</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-      <span class="nt">duration</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">60</span>
+        <span class="nt">url</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://tsdb.ychaos.yahoo.com/api/query</span>
+        <span class="nt">criteria</span><span class="p">:</span>
+          <span class="c1"># All the Criterion must pass for YChaos to mark the state as expected (Boolean AND)</span>
+          <span class="p p-Indicator">-</span> <span class="nt">aggregator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">avg</span>
+            <span class="nt">conditionals</span><span class="p">:</span>
+              <span class="c1"># Any of the conditional can pass for YChaos to mark this criteria passed (Boolean OR)</span>
+              <span class="p p-Indicator">-</span> <span class="nt">comparator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">==</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">30.56</span>
+
+        <span class="c1"># Refer to docs http://opentsdb.net/docs/build/html/api_http/query/index.html</span>
+        <span class="nt">query</span><span class="p">:</span> <span class="p p-Indicator">{</span>
+          <span class="s">&quot;start&quot;</span><span class="p p-Indicator">:</span> <span class="nv">1356998400</span><span class="p p-Indicator">,</span>
+          <span class="s">&quot;end&quot;</span><span class="p p-Indicator">:</span> <span class="nv">1356998460</span><span class="p p-Indicator">,</span>
+          <span class="s">&quot;queries&quot;</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span>
+            <span class="p p-Indicator">{</span>
+              <span class="s">&quot;aggregator&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;sum&quot;</span><span class="p p-Indicator">,</span>
+              <span class="s">&quot;metric&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;sys.cpu.0&quot;</span><span class="p p-Indicator">,</span>
+              <span class="s">&quot;rate&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;true&quot;</span><span class="p p-Indicator">,</span>
+              <span class="s">&quot;tags&quot;</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">{</span>
+                <span class="s">&quot;host&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;*&quot;</span><span class="p p-Indicator">,</span>
+                <span class="s">&quot;dc&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;lga&quot;</span>
+              <span class="p p-Indicator">}</span>
+            <span class="p p-Indicator">}</span>
+          <span class="p p-Indicator">]</span>
+        <span class="p p-Indicator">}</span>
+
+<span class="nt">attack</span><span class="p">:</span>
+    <span class="nt">target_type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">machine</span>
+    <span class="nt">agents</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no_op</span>
 </code></pre></div>
-<div class="admonition note">
-<p>Ensure ssh user specified in test plan has access to the host. Ychaos supports private key or password based authentication for sshing to target hosts.</p>
-</div>
                 
               
               
@@ -1726,7 +1815,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home" rel="prev">
+        <a href="../sdv4/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Screwdriver Build Plugin" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -1735,20 +1824,20 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Home
+              Screwdriver Build Plugin
             </div>
           </div>
         </a>
       
       
         
-        <a href="../releases/" class="md-footer__link md-footer__link--next" aria-label="Next: Changelog" rel="next">
+        <a href="../../../cli/" class="md-footer__link md-footer__link--next" aria-label="Next: YChaos CLI" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Changelog
+              YChaos CLI
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -1793,10 +1882,10 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.f8263e09.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.f8263e09.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.4fc53ad4.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.4fc53ad4.min.js"></script>
       
     
   </body>

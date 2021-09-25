@@ -6,8 +6,28 @@
 
 1. Add Disk Fill Agent by [Lakshmi Kannan](https://github.com/lakshmi-k05)
 
-2. Fix importing non-required PyOpenSSL module by [Shashank Sharma](https://github.com/shashankrnr32)
+1. Fix importing non-required PyOpenSSL module by [Shashank Sharma](https://github.com/shashankrnr32)
 and [Vijay Babu](https://github.com/vijaybabu4589)
+
+1. Dependabot integration to the repository by [Irfan Mohammad ](https://github.com/nafri-irfan96)
+
+1. Integrate codespell to the repository by [Shashank Sharma](https://github.com/shashankrnr32)
+
+1. Add No-Color Docs to FAQ by [Shashank Sharma](https://github.com/shashankrnr32)
+
+1. Python3.10 validation in CI build by [Shashank Sharma](https://github.com/shashankrnr32)
+
+1. Fix importing not-needed PyOpenSSL dependency by [Shashank Sharma](https://github.com/shashankrnr32)
+
+1. Add Callable Mapping to Hooks by [Shashank Sharma](https://github.com/shashankrnr32)
+
+1. Add documentation for HTTP Request & SDv4 verification plugin by [Shashank Sharma](https://github.com/shashankrnr32)
+
+1. refactor delay_before after checking state by [Alfin S Thomas](https://github.com/AlfinST)
+
+1. Handle dump yaml/json File not found error by [Sushil Karimbumkara](https://github.com/sushilkar)
+
+1. Implement and documentation of OpenTSDB Verification Plugin by [Shashank Sharma](https://github.com/shashankrnr32)
 
 ### Version 0.2.0
 

@@ -10,7 +10,7 @@ from ychaos.core.exceptions.executor_errors import (
 from ychaos.core.executor.SelfTargetExecutor import SelfTargetExecutor
 from ychaos.testplan.schema import TestPlan
 
-from mockito import when, ANY, verify, unstub
+from mockito import expect, when, ANY, unstub
 
 
 class MockHookForTesting:
@@ -150,8 +150,8 @@ class TestSelfTargetExecutor(TestCase):
         )
         executor = SelfTargetExecutor(mock_valid_testplan)
         executor.prepare()
+        expect(executor.ansible_context.tqm, times=1).run(ANY).thenReturn(True)
 
-        when(executor.ansible_context.tqm).run(ANY).thenReturn(True)
         mock_hook_on_start = MockHookForTesting()
         mock_hook_on_end = MockHookForTesting()
         mock_hook_on_error = MockHookForTesting()
@@ -165,7 +165,6 @@ class TestSelfTargetExecutor(TestCase):
         )  # executor.execute() calls prepare again so mocking here
         executor.execute()
 
-        verify(executor.ansible_context.tqm, times=1).run(ANY)
         self.assertTrue(mock_hook_on_start.test_value)
         self.assertTrue(mock_hook_on_end.test_value)
         self.assertFalse(mock_hook_on_error.test_value)
@@ -177,7 +176,7 @@ class TestSelfTargetExecutor(TestCase):
         executor = SelfTargetExecutor(mock_valid_testplan)
 
         executor.prepare()
-        when(executor.ansible_context.tqm).run(ANY).thenRaise(RuntimeError)
+        expect(executor.ansible_context.tqm, times=1).run(ANY).thenRaise(RuntimeError)
         mock_hook_on_start = MockHookForTesting()
         mock_hook_on_end = MockHookForTesting()
         mock_hook_on_error = MockHookForTesting()
@@ -189,7 +188,6 @@ class TestSelfTargetExecutor(TestCase):
         when(executor).prepare().thenReturn(True)
         executor.execute()
 
-        verify(executor.ansible_context.tqm, times=1).run(ANY)
         self.assertTrue(mock_hook_on_start.test_value)
         self.assertFalse(mock_hook_on_end.test_value)
         self.assertTrue(mock_hook_on_error.test_value)

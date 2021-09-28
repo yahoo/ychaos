@@ -2,7 +2,7 @@
 
 ## I have no idea why I am here!
 
-Great! You can start with YChaos [here](index.md)
+Great! You can start with YChaos [here](index.md).
 
 ## I am a YChaos user
 
@@ -41,13 +41,13 @@ ychaos --no-color validate testplan_folder/
 
 #### I do not like the way something is coded in this package. How do I bring the attention of this to the maintainers?
 
-Its not wrong to design things better than they are right now. Create a Github issue
+It's not wrong to design things better than they are right now. Create a Github issue
 explaining what you do not like and how you would change it. If the change
 is approved, you can always contribute to the repository. We would likely
 not make this change to the repo.
 
 This is the same for suggesting adding a new feature to YChaos. Discuss and contribute.
-In the case of new features, we might actually contribute if its worthwhile.
+In the case of new features, we might actually contribute if it's worthwhile.
 
 #### How do I add a new optional 3rd party package to the tool.
 
@@ -61,9 +61,9 @@ and also dev packages.
 
 #### How do I run a single Unittest from command line?
 
-We recommend you to use an IDE for development. (Preferably PyCharm)
+We recommend you to use an IDE for development (preferably PyCharm),
 which will provide you the feature of running a single unittest suite or a single test
-out of the box. If you still like to run it via command line you can use the below command.
+out of the box. If you still like to run it via the command line, you can use the below command.
 
 ```bash
 pytest <TEST_SUITE> -k "<TEST_NAME>"
@@ -95,8 +95,8 @@ as a same release. A patch version with this update should not be released.
 
 #### How do I release a backward incompatible YChaos Testplan?
 
-Its always ideal to keep the testplan backward compatible as much as possible.
-This may not possible based on the new usecases coming in.
+It's always ideal to keep the testplan backward compatible as much as possible.
+This may not be possible based on the new usecases coming in.
 All the changes that break the current setup should be part of one Pull
 Request. The PR owner should also update the minor version of the package
 in this PR. A new minor version should be released upon merging this PR.
@@ -104,5 +104,5 @@ in this PR. A new minor version should be released upon merging this PR.
 #### Do I need to release all the commits as a new patch version?
 
 Yes. This is part of the repository pipeline and this behaviour should not
-be changed. Every single commit, should automatically release a new version
+be changed. Every single commit should automatically release a new version
 of the package.

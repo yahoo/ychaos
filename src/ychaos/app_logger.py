@@ -4,6 +4,8 @@
 import logging
 import os
 import time
+from logging.handlers import QueueHandler, QueueListener
+from queue import Queue
 from typing import Optional, Union
 
 from .settings import DevSettings, ProdSettings, Settings
@@ -13,6 +15,8 @@ from .utils.logging import StructLogger
 class AppLogger:
 
     __instance: Optional[StructLogger] = None
+    __log_queue: Queue = Queue(-1)
+    _listener: Optional[QueueListener] = None
 
     def __init__(self):
         """
@@ -34,10 +38,16 @@ class AppLogger:
         formatter.datefmt = "%Y-%m-%d %H:%M:%S"
 
         if settings.CONFIG == "prod" and settings.LOG_FILE_PATH is not None:
+            queue_handler = QueueHandler(self.__class__.__log_queue)
+
             file_handler = logging.FileHandler(settings.LOG_FILE_PATH, "w")
             file_handler.setLevel(logging.DEBUG)
             file_handler.setFormatter(formatter)
-            self.__class__.__instance.addHandler(file_handler)
+
+            self.__class__.__instance.addHandler(queue_handler)
+            self.__class__._listener = QueueListener(
+                self.__class__.__log_queue, file_handler
+            )
 
     @classmethod
     def get_logger(cls, name: str):
@@ -46,3 +56,13 @@ class AppLogger:
 
         assert isinstance(cls.__instance, StructLogger)
         return cls.__instance.getChild(name)
+
+    @classmethod
+    def start(cls):
+        if cls._listener:
+            cls._listener.start()
+
+    @classmethod
+    def stop(cls):
+        if cls._listener:
+            cls._listener.stop()

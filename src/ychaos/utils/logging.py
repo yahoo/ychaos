@@ -3,6 +3,7 @@
 
 import logging
 from logging import DEBUG, ERROR, INFO, WARNING, Logger
+from queue import Queue
 from typing import Optional, Set
 
 
@@ -11,6 +12,7 @@ class StructLogger(Logger):
         super().__init__(name)
         logging.setLoggerClass(self.__class__)
         self._binder = dict()
+        self.__queue = Queue()
 
     def _build_msg(self, msg="", **kwargs) -> str:
         bind_msg = " ".join([f"{k}={v}" for k, v in self._binder.items()])

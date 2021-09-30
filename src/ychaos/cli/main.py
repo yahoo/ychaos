@@ -170,6 +170,7 @@ class App:
         AppLogger()
 
     def start(self) -> None:
+        AppLogger.start()
         self.console.clear()
         self.console.rule(
             title=self.settings.APP_DESC,
@@ -188,6 +189,8 @@ class App:
         Returns:
             List of commands starting with `ychaos` and ending at the sub-command invoked
         """
+        logger = AppLogger.get_logger("HELLO")
+        logger.info("HELLO WORLD")
         _args = vars(self.args)
 
         parent = self.settings.PROG
@@ -285,6 +288,8 @@ class App:
 
         if self.args.html_report:
             self.console.save_html(self.args.html_report)
+
+        AppLogger.stop()
 
 
 class YChaosRoot(YChaosSubCommand):

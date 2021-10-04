@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 from ..core.executor.MachineTargetExecutor import MachineTargetExecutor
+from ..core.executor.SelfTargetExecutor import SelfTargetExecutor
 from ..testplan.attack import TargetType
 from . import YChaosCLIHook, YChaosTestplanInputSubCommand
 
@@ -35,19 +36,18 @@ class Execute(YChaosTestplanInputSubCommand):
 
     # Section: Hooks for each Target Type
 
-    def _register_machine_target_hooks(self) -> None:
+    def _register_target_hooks(self) -> None:
         """
-        Registers all the CLI hooks for Machine Target Type executor
+        Registers all the CLI hooks for target executor
         Returns:
             None
         """
-        assert isinstance(self.executor, MachineTargetExecutor)
+        assert isinstance(self.executor, (MachineTargetExecutor, SelfTargetExecutor))
+        target_type = self.executor.__target_type__
 
         class OnTargetExecutorStart(YChaosCLITargetExecutorHook):
             def __call__(self):
-                self.console.log(
-                    f"Starting attack. executor={MachineTargetExecutor.__target_type__}"
-                )
+                self.console.log(f"Starting attack. executor={target_type}")
 
         class OnTargetUnreachableHook(YChaosCLITargetExecutorHook):
             def __call__(self, result):
@@ -70,18 +70,23 @@ class Execute(YChaosTestplanInputSubCommand):
             "on_target_unreachable", OnTargetUnreachableHook(self.app)
         )
         self.executor.register_hook("on_target_failed", OnTargetFailedHook(self.app))
-        self.executor.register_hook(
-            "on_no_targets_found", OnNoTargetsFoundHook(self.app)
-        )
+
+        if self.testplan.attack.target_type != TargetType.SELF:
+            self.executor.register_hook(
+                "on_no_targets_found", OnNoTargetsFoundHook(self.app)
+            )
 
     def build_executor(self):
         if self.testplan.attack.target_type == TargetType.MACHINE:
             self.executor = MachineTargetExecutor(testplan=self.testplan)
-            self._register_machine_target_hooks()
+
         elif self.testplan.attack.target_type == TargetType.SELF:
-            raise NotImplementedError()
+            self.executor = SelfTargetExecutor(testplan=self.testplan)
+
         else:
             raise NotImplementedError()
+
+        self._register_target_hooks()
 
     def run(self):
         self.executor.execute()

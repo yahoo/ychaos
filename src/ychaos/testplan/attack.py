@@ -16,7 +16,10 @@ from .common import Secret
 
 
 class TargetDefinition(SchemaModel):
-    pass
+    report_dir: Path = Field(
+        default=Path("./"),
+        description="The report directory to store execution files. Defaults to current directory",
+    )
 
 
 class SSHConfig(SchemaModel):
@@ -99,11 +102,6 @@ class MachineTargetDefinition(TargetDefinition):
             "List of hosts to be always excluded out of the attack."
             "The filtering criteria will always exclude the hosts in this list"
         ),
-    )
-
-    report_dir: Path = Field(
-        default=".",
-        description="The report directory to store remote execution files. Defaults to current directory",
     )
 
     def iterate_hostfiles(self):

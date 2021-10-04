@@ -5,11 +5,13 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
-from mockito import unstub
+from mockito import when, verify, ANY, unstub
 
 from ychaos.cli.execute import Execute
 from ychaos.cli.mock import MockApp
 from ychaos.testplan.schema import TestPlan
+
+from ansible.executor.task_queue_manager import TaskQueueManager
 
 
 class TestVerificationCommand(TestCase):
@@ -63,6 +65,28 @@ class TestVerificationCommand(TestCase):
         self.assertTrue(
             "No targets found for attack. Bailing out.." in app.get_console_output()
         )
+
+    def test_execute_for_self_target(self):
+        temp_testplan_file = NamedTemporaryFile("w+")
+
+        args = Namespace()
+        args.cls = self.cls
+
+        app = MockApp(args)
+        args.app = app
+
+        testplan = TestPlan.load_file(
+            self.testplans_directory.joinpath("valid/testplan6.yaml")
+        )
+        testplan.export_to_file(temp_testplan_file.name)
+
+        args.testplan = self.testplans_directory.joinpath(temp_testplan_file.name)
+
+        when(TaskQueueManager).run(ANY).thenReturn(True)
+
+        self.assertEqual(0, args.cls.main(args))
+        self.assertTrue("Starting attack. executor=self" in app.get_console_output())
+        verify(TaskQueueManager, times=1).run(ANY)
 
     def tearDown(self) -> None:
         unstub()

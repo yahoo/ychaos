@@ -1,14 +1,13 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 import json
-
 from types import SimpleNamespace
 
 from ...app_logger import AppLogger
-from .BaseExecutor import BaseExecutor
-from ...utils.dependency import DependencyUtils
 from ...testplan.schema import TestPlan
+from ...utils.dependency import DependencyUtils
 from ...utils.hooks import EventHook
+from .BaseExecutor import BaseExecutor
 
 (YChaosAnsibleResultCallback,) = DependencyUtils.import_from(
     "ychaos.core.executor.common", ("YChaosAnsibleResultCallback",), raise_error=False

@@ -2,8 +2,9 @@
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 import collections
 from typing import Any
-from ...utils.hooks import EventHook
+
 from ...utils.dependency import DependencyUtils
+from ...utils.hooks import EventHook
 
 CallbackBase: Any  # For mypy
 

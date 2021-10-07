@@ -4,13 +4,13 @@ import json
 from pathlib import Path
 from unittest import TestCase
 
+from mockito import ANY, expect, unstub, when
+
 from ychaos.core.exceptions.executor_errors import (
     YChaosTargetConfigConditionFailedError,
 )
 from ychaos.core.executor.SelfTargetExecutor import SelfTargetExecutor
 from ychaos.testplan.schema import TestPlan
-
-from mockito import expect, when, ANY, unstub
 
 
 class MockHookForTesting:

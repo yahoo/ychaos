@@ -5,13 +5,12 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
-from mockito import when, verify, ANY, unstub
+from ansible.executor.task_queue_manager import TaskQueueManager
+from mockito import ANY, unstub, verify, when
 
 from ychaos.cli.execute import Execute
 from ychaos.cli.mock import MockApp
 from ychaos.testplan.schema import TestPlan
-
-from ansible.executor.task_queue_manager import TaskQueueManager
 
 
 class TestVerificationCommand(TestCase):

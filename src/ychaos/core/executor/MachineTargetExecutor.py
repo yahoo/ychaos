@@ -12,11 +12,17 @@ from ...utils.hooks import EventHook
 from .BaseExecutor import BaseExecutor
 
 (YChaosAnsibleResultCallback,) = DependencyUtils.import_from(
-    "ychaos.core.executor.common", ("YChaosAnsibleResultCallback",), raise_error=False, warn=False
+    "ychaos.core.executor.common",
+    ("YChaosAnsibleResultCallback",),
+    raise_error=False,
+    warn=False,
 )
 
 (TaskQueueManager,) = DependencyUtils.import_from(
-    "ansible.executor.task_queue_manager", ("TaskQueueManager",), raise_error=False, warn=False
+    "ansible.executor.task_queue_manager",
+    ("TaskQueueManager",),
+    raise_error=False,
+    warn=False,
 )
 (InventoryManager,) = DependencyUtils.import_from(
     "ansible.inventory.manager", ("InventoryManager",), raise_error=False, warn=False

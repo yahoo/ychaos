@@ -5,7 +5,7 @@
 ### Version 0.4.0
 
 1. Add `SelfTargetExecutor`, that runs the agents on the same machine from where 
-YChaos is triggerred by [Alfin S Thomas](https://github.com/AlfinST)
+YChaos is triggered by [Alfin S Thomas](https://github.com/AlfinST)
 
 ### Version 0.3.0
 

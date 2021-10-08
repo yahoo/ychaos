@@ -9,10 +9,10 @@ from ...utils.hooks import EventHook
 CallbackBase: Any  # For mypy
 
 (CallbackBase,) = DependencyUtils.import_from(
-    "ansible.plugins.callback", ("CallbackBase",), raise_error=False
+    "ansible.plugins.callback", ("CallbackBase",), raise_error=False, warn=False
 )
 (TaskResult,) = DependencyUtils.import_from(
-    "ansible.executor.task_result", ("TaskResult",), raise_error=False
+    "ansible.executor.task_result", ("TaskResult",), raise_error=False, warn=False
 )
 
 if CallbackBase:  # pragma: no cover

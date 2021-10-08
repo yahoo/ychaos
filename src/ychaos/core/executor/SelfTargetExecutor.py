@@ -10,28 +10,34 @@ from ...utils.hooks import EventHook
 from .BaseExecutor import BaseExecutor
 
 (YChaosAnsibleResultCallback,) = DependencyUtils.import_from(
-    "ychaos.core.executor.common", ("YChaosAnsibleResultCallback",), raise_error=False
+    "ychaos.core.executor.common",
+    ("YChaosAnsibleResultCallback",),
+    raise_error=False,
+    warn=False,
 )
 
 (TaskQueueManager,) = DependencyUtils.import_from(
-    "ansible.executor.task_queue_manager", ("TaskQueueManager",), raise_error=False
+    "ansible.executor.task_queue_manager",
+    ("TaskQueueManager",),
+    raise_error=False,
+    warn=False,
 )
 (InventoryManager,) = DependencyUtils.import_from(
-    "ansible.inventory.manager", ("InventoryManager",), raise_error=False
+    "ansible.inventory.manager", ("InventoryManager",), raise_error=False, warn=False
 )
 (DataLoader,) = DependencyUtils.import_from(
-    "ansible.parsing.dataloader", ("DataLoader",), raise_error=False
+    "ansible.parsing.dataloader", ("DataLoader",), raise_error=False, warn=False
 )
 (Play,) = DependencyUtils.import_from(
-    "ansible.playbook.play", ("Play",), raise_error=False
+    "ansible.playbook.play", ("Play",), raise_error=False, warn=False
 )
 
 (VariableManager,) = DependencyUtils.import_from(
-    "ansible.vars.manager", ("VariableManager",), raise_error=False
+    "ansible.vars.manager", ("VariableManager",), raise_error=False, warn=False
 )
 
 (TaskResult,) = DependencyUtils.import_from(
-    "ansible.executor.task_result", ("TaskResult",), raise_error=False
+    "ansible.executor.task_result", ("TaskResult",), raise_error=False, warn=False
 )
 
 

@@ -20,6 +20,10 @@ class TestAppLogger(TestCase):
         self.assertIsInstance(AppLogger.get_logger("test"), StructLogger)
         self.assertEqual(len(AppLogger._AppLogger__instance.handlers), 1)
 
+        AppLogger.start()
+        self.assertIsNotNone(AppLogger._listener)
+        AppLogger.stop()
+
     def test_logging_dev_setup(self):
         Settings("dev")
         settings: DevSettings = Settings.get_instance()
@@ -28,6 +32,10 @@ class TestAppLogger(TestCase):
 
         AppLogger()
         self.assertEqual(len(AppLogger._AppLogger__instance.handlers), 0)
+
+        AppLogger.start()
+        self.assertIsNone(AppLogger._listener)
+        AppLogger.stop()
 
     def test_logging_when_instance_not_initialized(self):
         Settings("prod")

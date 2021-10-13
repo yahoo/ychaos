@@ -189,8 +189,6 @@ class App:
         Returns:
             List of commands starting with `ychaos` and ending at the sub-command invoked
         """
-        logger = AppLogger.get_logger("HELLO")
-        logger.info("HELLO WORLD")
         _args = vars(self.args)
 
         parent = self.settings.PROG

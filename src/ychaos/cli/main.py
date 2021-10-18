@@ -170,6 +170,7 @@ class App:
         AppLogger()
 
     def start(self) -> None:
+        AppLogger.start()
         self.console.clear()
         self.console.rule(
             title=self.settings.APP_DESC,
@@ -285,6 +286,8 @@ class App:
 
         if self.args.html_report:
             self.console.save_html(self.args.html_report)
+
+        AppLogger.stop()
 
 
 class YChaosRoot(YChaosSubCommand):

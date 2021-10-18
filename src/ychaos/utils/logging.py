@@ -3,7 +3,6 @@
 
 import logging
 from logging import DEBUG, ERROR, INFO, WARNING, Logger
-from queue import Queue
 from typing import Optional, Set
 
 

@@ -15,7 +15,7 @@ from .utils.logging import StructLogger
 class AppLogger:
 
     __instance: Optional[StructLogger] = None
-    __log_queue: Queue = Queue(-1)
+    __log_queue: Queue = Queue(maxsize=1000)
     _listener: Optional[QueueListener] = None
 
     def __init__(self):

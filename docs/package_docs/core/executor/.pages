@@ -1,3 +1,4 @@
 nav:
     - BaseExecutor: BaseExecutor.md
     - MachineTargetExecutor: MachineTargetExecutor.md
+    - SelfTargetExecutor: SelfTargetExecutor.md

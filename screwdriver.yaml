@@ -143,6 +143,17 @@ jobs:
         template: python/package_python
         requires: [version_test_pypi]
 
+    # publish latest ychaos version to docker hub
+    publish_test_docker:
+        secrets:
+            - DOCKER_REGISTRY_USER
+            - DOCKER_REGISTRY_TOKEN
+        environment:
+            DOCKER_REPO: ychaos/ychaos
+        template: sd/dind@latest
+        requires: [package_publish_test_pypi]
+
+
     # Release Pipeline to publish package to PyPi
     # This is manually triggered by the maintainers
     # to publish a new version release to PyPi

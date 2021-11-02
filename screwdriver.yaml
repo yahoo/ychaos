@@ -13,6 +13,22 @@ shared:
             statuses:
                 - ABORTED
                 - FAILURE
+    annotations:
+        docker_login: &docker_login |
+            apk add git
+            git clone https://github.com/screwdriver-cd/toolbox.git ci
+            ./ci/git-latest.sh
+            docker login --username $DOCKER_REGISTRY_USER --password $DOCKER_REGISTRY_TOKEN
+
+        docker_build: &docker_build |
+            DOCKER_TAG=`cat VERSION`
+            docker build --build-arg PY_VERSION=$PY_VERSION -t $DOCKER_REPO:py$PY_VERSION-latest .
+            docker tag $DOCKER_REPO:latest $DOCKER_REPO:py$PY_VERSION-$DOCKER_TAG
+            docker images
+
+        docker_publish: &docker_publish |
+            docker push $DOCKER_REPO:py$PY_VERSION-latest
+            docker push $DOCKER_REPO:py$PY_VERSION-$DOCKER_TAG
 
 jobs:
     # Validation jobs
@@ -143,15 +159,19 @@ jobs:
         template: python/package_python
         requires: [version_test_pypi]
 
-    # publish latest ychaos version to docker hub
-    publish_test_docker:
+    publish_test_docker_PY36:
+        image: docker:dind
         secrets:
             - DOCKER_REGISTRY_USER
             - DOCKER_REGISTRY_TOKEN
         environment:
             DOCKER_REPO: ychaos/ychaos
-        template: sd/dind@latest
+            PY_VERSION: 3.6
         requires: [package_publish_test_pypi]
+        steps:
+            - login: *docker_login
+            - build: *docker_build
+            - publish: *docker_publish
 
 
     # Release Pipeline to publish package to PyPi

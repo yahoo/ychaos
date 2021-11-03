@@ -162,23 +162,6 @@ jobs:
         template: python/package_python
         requires: [version_test_pypi]
 
-    publish_test_docker_PY36:
-        annotations:
-            screwdriver.cd/dockerEnabled: true
-        image: docker:dind
-        secrets:
-            - DOCKER_REGISTRY_USER
-            - DOCKER_REGISTRY_TOKEN
-        environment:
-            DOCKER_REPO: ychaos/ychaos
-            PY_VERSION: 3.6
-        requires: [package_publish_test_pypi]
-        steps:
-            - login: *docker_login
-            - build: *docker_build
-            - publish: *docker_publish
-
-
     # Release Pipeline to publish package to PyPi
     # This is manually triggered by the maintainers
     # to publish a new version release to PyPi
@@ -223,6 +206,75 @@ jobs:
         environment:
             PUBLISH: True
         requires: [version_pypi]
+
+    # Publish YChaos image with Python 3.6 and make this image as default Latest image
+    publish_docker_py36:
+        annotations:
+            screwdriver.cd/dockerEnabled: true
+        image: docker:dind
+        secrets:
+            - DOCKER_REGISTRY_USER
+            - DOCKER_REGISTRY_TOKEN
+        environment:
+            DOCKER_REPO: ychaos/ychaos
+            PY_VERSION: 3.6
+        requires: [package_publish_pypi]
+        steps:
+            - login: *docker_login
+            - build: *docker_build
+            - latest_tag: docker tag $DOCKER_REPO:py$PY_VERSION-latest $DOCKER_REPO:latest
+            - publish: *docker_publish
+
+    # Publish YChaos image with Python 3.7
+    publish_docker_py37:
+        annotations:
+            screwdriver.cd/dockerEnabled: true
+        image: docker:dind
+        secrets:
+            - DOCKER_REGISTRY_USER
+            - DOCKER_REGISTRY_TOKEN
+        environment:
+            DOCKER_REPO: ychaos/ychaos
+            PY_VERSION: 3.7
+        requires: [package_publish_pypi]
+        steps:
+            - login: *docker_login
+            - build: *docker_build
+            - publish: *docker_publish
+
+    # Publish YChaos image with Python 3.8
+    publish_docker_py38:
+        annotations:
+            screwdriver.cd/dockerEnabled: true
+        image: docker:dind
+        secrets:
+            - DOCKER_REGISTRY_USER
+            - DOCKER_REGISTRY_TOKEN
+        environment:
+            DOCKER_REPO: ychaos/ychaos
+            PY_VERSION: 3.8
+        requires: [package_publish_pypi]
+        steps:
+            - login: *docker_login
+            - build: *docker_build
+            - publish: *docker_publish
+
+    # Publish YChaos image with Python 3.9
+    publish_docker_py39:
+        annotations:
+            screwdriver.cd/dockerEnabled: true
+        image: docker:dind
+        secrets:
+            - DOCKER_REGISTRY_USER
+            - DOCKER_REGISTRY_TOKEN
+        environment:
+            DOCKER_REPO: ychaos/ychaos
+            PY_VERSION: 3.9
+        requires: [package_publish_pypi]
+        steps:
+            - login: *docker_login
+            - build: *docker_build
+            - publish: *docker_publish
 
     doc_publish:
         template: python/documentation

@@ -69,3 +69,18 @@ You can install the package using pip or directly from Github
     python setup.py develop easy_install ychaos[<subpackage>]
     ```
 Ychaos tool can be used with python3.6+ and must have pip3 pre-installed
+
+## Docker hub
+
+Python version specific YChaos images are published with each release of YChaos, at present Python `3.6`, `3.7`, `3.8`, `3.9` based images are available at [Docker hub](https://hub.docker.com/r/ychaos/ychaos).
+
+=== "Docker"
+    ```
+    docker pull ychaos/ychaos
+    ```
+    Above command will pull the latest Python 3.6 based YChaos image. 
+    For any other Python version specific images use
+    ```
+    docker pull ychaos/ychaos:py<version>-latest
+    ```
+    Refer [Docker tags](https://hub.docker.com/r/ychaos/ychaos/tags) for all the available Image tags

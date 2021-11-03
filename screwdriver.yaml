@@ -13,20 +13,23 @@ shared:
             statuses:
                 - ABORTED
                 - FAILURE
+
     annotations:
         docker_login: &docker_login |
+            # Fetch current git version and Log into Docker using the developer account. Secrets are stored in SD Secrets.
             apk add git
             git clone https://github.com/screwdriver-cd/toolbox.git ci
             ./ci/git-latest.sh
             docker login --username $DOCKER_REGISTRY_USER --password $DOCKER_REGISTRY_TOKEN
 
         docker_build: &docker_build |
+            # Build docker image and tag image with <PY_VERSION>-latest and <PY_VERSION>-<GIT_VERSION>. PY_VERSION is passed as SD ENV variable
             DOCKER_TAG=`cat VERSION`
-            docker build --build-arg PY_VERSION=$PY_VERSION -t $DOCKER_REPO:py$PY_VERSION-latest .
-            docker tag $DOCKER_REPO:latest $DOCKER_REPO:py$PY_VERSION-$DOCKER_TAG
+            docker build --build-arg PY_VERSION=$PY_VERSION -t $DOCKER_REPO:py$PY_VERSION-latest -t $DOCKER_REPO:py$PY_VERSION-$DOCKER_TAG .
             docker images
 
         docker_publish: &docker_publish |
+            # Publish images to Docker Hub
             docker push $DOCKER_REPO:py$PY_VERSION-latest
             docker push $DOCKER_REPO:py$PY_VERSION-$DOCKER_TAG
 
@@ -160,6 +163,8 @@ jobs:
         requires: [version_test_pypi]
 
     publish_test_docker_PY36:
+        annotations:
+            screwdriver.cd/dockerEnabled: true
         image: docker:dind
         secrets:
             - DOCKER_REGISTRY_USER

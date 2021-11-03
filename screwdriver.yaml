@@ -222,8 +222,9 @@ jobs:
         steps:
             - login: *docker_login
             - build: *docker_build
-            - latest_tag: docker tag $DOCKER_REPO:py$PY_VERSION-latest $DOCKER_REPO:latest
+            - latest_tag: docker tag $DOCKER_REPO:py$PY_VERSION-latest $DOCKER_REPO:latest && docker images
             - publish: *docker_publish
+            - publish_latest_tag: docker push $DOCKER_REPO:latest
 
     # Publish YChaos image with Python 3.7
     publish_docker_py37:

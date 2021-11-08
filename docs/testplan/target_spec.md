@@ -25,3 +25,6 @@ each of the target types available in the package.
         attributes: False
         show_root_full_path: False
    
+## Localhost (`self`)
+
+::: ychaos.testplan.attack.SelfTargetDefinition

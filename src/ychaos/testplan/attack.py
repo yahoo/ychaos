@@ -167,11 +167,12 @@ class MachineTargetDefinition(TargetDefinition):
 
 class SelfTargetDefinition(TargetDefinition):
     """
-        Represents the configuration when the target is your local machine
-        . To use this as a target, `target_type` should be equal to
-        `self`.
-         You can avoid specifying `target_config` for this target type.
+    Represents the configuration when the target is your local machine
+    . To use this as a target, `target_type` should be equal to
+    `self`.
+     You can avoid specifying `target_config` for this target type.
     """
+
     pass
 
 

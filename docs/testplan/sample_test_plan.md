@@ -23,6 +23,7 @@ attack:
 description: Increase CPU utilisation on all the cores for 60 seconds on local machine
 attack:
   target_type: self
+  # target_config not needed for this target_type
   agents:
     - type: cpu_burn
       config:

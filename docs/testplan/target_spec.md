@@ -25,3 +25,13 @@ each of the target types available in the package.
         attributes: False
         show_root_full_path: False
    
+## Self (`self`)
+
+::: ychaos.testplan.attack.SelfTargetDefinition
+    selection:
+        filters:
+        - "!"
+    rendering:
+        heading_level: 4
+        attributes: False
+        show_root_full_path: False

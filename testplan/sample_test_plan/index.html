@@ -14,7 +14,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/testplan/sample_test_plan/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.4">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
     
     
       
@@ -22,7 +22,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.db9e7362.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.a57b2b03.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.3f5d1f46.min.css">
@@ -1436,6 +1436,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../package_docs/core/executor/SelfTargetExecutor/" class="md-nav__link">
+        SelfTargetExecutor
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -1674,7 +1688,7 @@
                 
                 <p>This section of the document contains some example testplans for you to get started quickly on the project</p>
 <h4 id="cpu-burn">CPU Burn<a class="headerlink" href="#cpu-burn" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Increase CPU utilisation on all the cores for 60 seconds</span>
+<div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Increase CPU utilisation on all the cores for 60 seconds for a target host</span>
 <span class="nt">attack</span><span class="p">:</span>
   <span class="nt">target_type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">machine</span>
   <span class="nt">target_config</span><span class="p">:</span>
@@ -1689,6 +1703,15 @@
     <span class="p p-Indicator">-</span> <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpu_burn</span>
       <span class="nt">config</span><span class="p">:</span>
         <span class="nt">start_delay</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span> <span class="c1"># Start Burn CPU with 10s delay</span>
+        <span class="nt">duration</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">60</span> <span class="c1"># Burn CPU for 60s</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Increase CPU utilisation on all the cores for 60 seconds on local machine</span>
+<span class="nt">attack</span><span class="p">:</span>
+  <span class="nt">target_type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">self</span>
+  <span class="c1"># target_config not needed for this target_type</span>
+  <span class="nt">agents</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpu_burn</span>
+      <span class="nt">config</span><span class="p">:</span>
         <span class="nt">duration</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">60</span> <span class="c1"># Burn CPU for 60s</span>
 </code></pre></div>
 <h4 id="disable-ping">Disable Ping<a class="headerlink" href="#disable-ping" title="Permanent link">&para;</a></h4>
@@ -1901,10 +1924,10 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.8397ff9e.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.1e84347e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.b1047164.min.js"></script>
       
     
   </body>

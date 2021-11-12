@@ -14,7 +14,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/">
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.4">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
     
     
       
@@ -22,7 +22,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.db9e7362.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.a57b2b03.min.css">
       
         
         <link rel="stylesheet" href="assets/stylesheets/palette.3f5d1f46.min.css">
@@ -379,6 +379,8 @@
       </a>
       
         
+
+
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
@@ -416,6 +418,13 @@
         <li class="md-nav__item">
   <a href="#installation" class="md-nav__link">
     Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-hub" class="md-nav__link">
+    Docker hub
   </a>
   
 </li>
@@ -1494,6 +1503,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="package_docs/core/executor/SelfTargetExecutor/" class="md-nav__link">
+        SelfTargetExecutor
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -1723,6 +1746,8 @@
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
+
+
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
@@ -1760,6 +1785,13 @@
         <li class="md-nav__item">
   <a href="#installation" class="md-nav__link">
     Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-hub" class="md-nav__link">
+    Docker hub
   </a>
   
 </li>
@@ -1837,7 +1869,25 @@ python setup.py develop easy_install ychaos<span class="o">[</span>&lt;subpackag
 </code></pre></div>
 </div>
 </div>
-<p>Ychaos tool can be used with python3.6+ and must have pip3 pre-installed</p>
+<p>If you are interested in installing all the above subpackages together,
+you can run</p>
+<div class="highlight"><pre><span></span><code>pip install ychaos<span class="o">[</span>all<span class="o">]</span>
+</code></pre></div>
+<p>YChaos tool can be used with python3.6+ and must have pip3 pre-installed</p>
+<h2 id="docker-hub">Docker hub<a class="headerlink" href="#docker-hub" title="Permanent link">&para;</a></h2>
+<p>Python version specific YChaos images are published with each release of YChaos, at present Python <code>3.6</code>-<code>3.9</code> 
+based images are available on <a href="https://hub.docker.com/r/ychaos/ychaos">Docker hub</a>.</p>
+<div class="tabbed-set" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><label for="__tabbed_2_1">Docker</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code>docker pull ychaos/ychaos
+</code></pre></div>
+<p>Above command will pull the latest Python 3.6 based YChaos image. 
+For any other Python version specific images use</p>
+<div class="highlight"><pre><span></span><code>docker pull ychaos/ychaos:py&lt;version&gt;-latest
+</code></pre></div>
+<p>Refer <a href="https://hub.docker.com/r/ychaos/ychaos/tags">Docker tags</a> 
+for all the available Image tags</p>
+</div>
+</div>
                 
               
               
@@ -1909,10 +1959,10 @@ python setup.py develop easy_install ychaos<span class="o">[</span>&lt;subpackag
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "assets/javascripts/workers/search.8397ff9e.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "assets/javascripts/workers/search.fcfe8b6d.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="assets/javascripts/bundle.1e84347e.min.js"></script>
+      <script src="assets/javascripts/bundle.b1047164.min.js"></script>
       
     
   </body>

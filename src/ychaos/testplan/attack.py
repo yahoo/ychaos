@@ -1,6 +1,7 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 import getpass
+import os
 import re
 from enum import Enum
 from pathlib import Path
@@ -35,6 +36,15 @@ class SSHConfig(SchemaModel):
         default=None,
         description="The password that will be used to login to the hosts.",
     )
+    ssh_common_args: str = Field(
+        default=os.getenv("ANSIBLE_SSH_COMMON_ARGS", ""),
+        description="The common Arguments to be used while SSHing to a host with Ansible (`$ANSIBLE_SSH_COMMON_ARGS`)",
+    )
+
+    @validator("ssh_common_args", always=True)
+    def set_ssh_common_args_env(cls, v):
+        os.environ["ANSIBLE_SSH_COMMON_ARGS"] = v
+        return v
 
 
 class MachineTargetDefinition(TargetDefinition):
@@ -65,7 +75,8 @@ class MachineTargetDefinition(TargetDefinition):
     )
 
     ssh_config: SSHConfig = Field(
-        ..., description="The configuration used to SSH to the target machines."
+        default=SSHConfig(),
+        description="The configuration used to SSH to the target machines.",
     )
 
     hostnames: List[FQDN] = Field(

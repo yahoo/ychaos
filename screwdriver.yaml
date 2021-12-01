@@ -9,7 +9,7 @@ shared:
     settings:
         email:
             addresses:
-                - ychaos-alerts@verizonmedia.com
+                - ychaos-alerts@yahooinc.com
             statuses:
                 - ABORTED
                 - FAILURE

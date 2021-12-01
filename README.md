@@ -67,7 +67,7 @@ Refer to the [documentation](https://yahoo.github.io/ychaos) to know about the u
 
 ## Maintainers
 
-[The Resilience Team @yahoo](mailto://ychaos-dev@verizonmedia.com)
+[The Resilience Team @yahoo](mailto://ychaos-dev@yahooinc.com)
 
 ## License
 

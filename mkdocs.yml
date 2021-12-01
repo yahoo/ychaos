@@ -3,12 +3,12 @@ edit_uri: edit/master/docs/
 extra:
     config_override: false
     doc_owner: Resilience Team
-    doc_owner_shortid: ychaos-dev@verizonmedia.com
+    doc_owner_shortid: ychaos-dev@yahooinc.com
     version:
         provider: mike
     social:
         - icon: material/email
-          link: mailto://ychaos-dev@verizonmedia.com
+          link: mailto://ychaos-dev@yahooinc.com
           name: Mail Resilience Team
 
 extra_css: []

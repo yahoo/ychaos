@@ -6,7 +6,7 @@ from enum import Enum, EnumMeta
 from types import DynamicClassAttribute, SimpleNamespace
 from typing import Any, Iterable, List, Optional, Type, TypeVar
 
-T = TypeVar("T")
+T = TypeVar("T", bound=Enum)
 
 
 class BuiltinUtils:
@@ -106,7 +106,7 @@ class AEnum(Enum, metaclass=EnumMeta):
     def __new__(cls: Type[T], value, metadata: Optional[SimpleNamespace] = None):
         obj = object.__new__(cls)
         obj._value_ = value
-        obj.metadata = metadata
+        obj.metadata = metadata  # type: ignore
 
         # Add Aliases to Serializer Dictionary
         for alias in getattr(metadata, "__aliases__", tuple()):

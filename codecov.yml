@@ -12,7 +12,7 @@ coverage:
                 # basic
                 enabled: yes
                 target: auto
-                threshold: 0%
+                threshold: 0.15%
                 base: auto
                 paths:
                     - "src"

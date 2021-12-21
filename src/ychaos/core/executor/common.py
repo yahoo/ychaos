@@ -1,6 +1,5 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
-import collections
 from typing import Any
 
 from ...utils.dependency import DependencyUtils
@@ -22,14 +21,13 @@ if CallbackBase:  # pragma: no cover
         This is a callback plugin which help performing actions as results from running the ansible playbook comes in.
         """
 
-        __hook_events__ = collections.defaultdict(
-            EventHook.CallableType(TaskResult)
-        ).fromkeys(
+        __hook_events__ = dict.fromkeys(
             (
                 "on_target_unreachable",
                 "on_target_failed",
                 "on_target_passed",
-            )
+            ),
+            EventHook.CallableType(TaskResult),
         )
 
         def __init__(self, *args, **kwargs):

@@ -1,6 +1,7 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 import json
+import yaml
 from pathlib import Path
 from unittest import TestCase
 
@@ -288,6 +289,40 @@ class TestMachineTargetExecutor(TestCase):
 
         executor.execute()
         self.assertTrue(mock_hook_target_unreachable.test_value)
+
+    def test_machine_executor_with_valid_contrib_agent_testplan(self):
+
+        with open(
+            Path(__file__)
+            .joinpath("../../../resources/contribAgent/contribAgentTestplan.yaml")
+            .resolve()
+        ) as f:
+            tp = yaml.safe_load(f)
+        tp["attack"]["agents"][0]["config"]["path"] = Path(
+            "../../resources/contribAgent/dummy_agent.py"
+        ).absolute()
+        mock_valid_testplan = TestPlan(**tp)
+        executor = MachineTargetExecutor(mock_valid_testplan)
+
+    def test_machine_executor_when_agent_type_is_contrib(self):
+        with open(
+            Path(__file__)
+            .joinpath("../../../resources/contribAgent/contribAgentTestplan.yaml")
+            .resolve()
+        ) as f:
+            tp = yaml.safe_load(f)
+        tp["attack"]["agents"][0]["config"]["path"] = Path(
+            "../../resources/contribAgent/dummy_agent.py"
+        ).absolute()
+        mock_valid_testplan = TestPlan(**tp)
+        executor = MachineTargetExecutor(mock_valid_testplan)
+        executor.prepare()
+        playbook_tasks = list(
+            map(lambda x: x["name"], executor.ansible_context.play_source["tasks"])
+        )
+        self.assertNotIn("Copy testplan from local to remote", playbook_tasks)
+        self.assertIn("Copy new testplan to remote", playbook_tasks)
+        self.assertIn("Copy dummy_agent.py to remote", playbook_tasks)
 
     def tearDown(self) -> None:
         unstub()

@@ -3,8 +3,9 @@
 import json
 import random
 from types import SimpleNamespace
-
+from pathlib import Path
 from ...app_logger import AppLogger
+from ...agents.index import AgentType
 from ...testplan.attack import MachineTargetDefinition
 from ...testplan.schema import TestPlan
 from ...utils.dependency import DependencyUtils
@@ -152,7 +153,6 @@ class MachineTargetExecutor(BaseExecutor):
         hosts = ",".join(self.testplan.attack.get_target_config().get_effective_hosts())
         if len(self.testplan.attack.get_target_config().get_effective_hosts()) == 1:
             hosts += ","
-
         self.ansible_context.inventory = InventoryManager(
             loader=self.ansible_context.loader, sources=hosts
         )
@@ -305,6 +305,41 @@ class MachineTargetExecutor(BaseExecutor):
                 ),
             ],
         )
+
+        modified_testplan = self.testplan.to_serialized_dict()
+        contrib_agent_present = False
+        for i, agent in enumerate(self.testplan.attack.agents):
+            if agent.type == AgentType.CONTRIB:
+                contrib_agent_present = True
+                filename = Path(
+                    modified_testplan["attack"]["agents"][i]["config"]["path"]
+                )
+                task = dict(
+                    name="Copy " + filename.name + " to remote",
+                    register="copy_contrib_agent_" + filename.stem,
+                    action=dict(
+                        module="copy",
+                        src=modified_testplan["attack"]["agents"][i]["config"]["path"],
+                        dest="{{result_create_workspace.path}}/" + filename.name,
+                    ),
+                )
+                self.ansible_context.play_source["tasks"].insert(6, task)
+                modified_testplan["attack"]["agents"][i]["config"][
+                    "path"
+                ] = "./ychaos_ws/{}".format(filename.name)
+
+        if contrib_agent_present:
+            self.ansible_context.play_source["tasks"].pop(5)
+            modified_testplan_task = dict(
+                name="Copy new testplan to remote",
+                register="result_testplan_file",
+                action=dict(
+                    module="copy",
+                    content=json.dumps(modified_testplan, indent=4),
+                    dest="{{result_create_workspace.path}}/testplan.json",
+                ),
+            )
+            self.ansible_context.play_source["tasks"].insert(6, modified_testplan_task)
 
     def execute(self) -> None:
         self.prepare()

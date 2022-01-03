@@ -17,10 +17,9 @@ with a sample structure given below.
 from ychaos.agents.agent import Agent, AgentConfig
 from ychaos.agents.utils.annotations import log_agent_lifecycle
 from queue import LifoQueue
-from pydantic import BaseModel
 
 
-class MyAwesomeAgentConfig(BaseModel):
+class MyAwesomeAgentConfig(AgentConfig):
     name: str = "my_awesome_agent"
     description: str = "This is an invincible agent"
     
@@ -79,8 +78,8 @@ schema for more details.
             "agents": [
                 {
                     "type": "contrib",
-                    "path": "/tmp/awesome_agent.py",
                     "config": {
+                        "path": "/tmp/awesome_agent.py",
                         "key1": "value1",
                         "key2": "value2"
                     }
@@ -98,8 +97,8 @@ schema for more details.
         target_type: self     # Your preferred target type
         agents:
         -   type: contrib
-            path: "/tmp/awesome_agent.py"
             config:
+                path: "/tmp/awesome_agent.py"
                 key1: value1
                 key2: value2
     ```

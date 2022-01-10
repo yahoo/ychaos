@@ -298,9 +298,11 @@ class TestMachineTargetExecutor(TestCase):
             .resolve()
         ) as f:
             tp = yaml.safe_load(f)
-        tp["attack"]["agents"][0]["config"]["path"] = Path(
-            "../../resources/contribAgent/dummy_agent.py"
-        ).absolute()
+        tp["attack"]["agents"][0]["config"]["path"] = (
+            Path(__file__)
+            .joinpath("../../../resources/contribAgent/dummy_agent.py")
+            .resolve()
+        )
         mock_valid_testplan = TestPlan(**tp)
         executor = MachineTargetExecutor(mock_valid_testplan)
 
@@ -311,9 +313,11 @@ class TestMachineTargetExecutor(TestCase):
             .resolve()
         ) as f:
             tp = yaml.safe_load(f)
-        tp["attack"]["agents"][0]["config"]["path"] = Path(
-            "../../resources/contribAgent/dummy_agent.py"
-        ).absolute()
+        tp["attack"]["agents"][0]["config"]["path"] = (
+            Path(__file__)
+            .joinpath("../../../resources/contribAgent/dummy_agent.py")
+            .resolve()
+        )
         mock_valid_testplan = TestPlan(**tp)
         executor = MachineTargetExecutor(mock_valid_testplan)
         executor.prepare()

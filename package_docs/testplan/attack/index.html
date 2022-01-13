@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/testplan/attack/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.6">
     
     
       
@@ -21,10 +21,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.62128196.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.cd566b2a.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.9204c3b2.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.e6a45f82.min.css">
         
           
           
@@ -44,7 +44,7 @@
     
       <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../../..":"../../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -2199,6 +2199,35 @@ AgentExecutionConfig            (<span title="ychaos.testplan.SchemaModel">Schem
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/attack.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">AgentExecutionConfig</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+
+    <span class="nb">type</span><span class="p">:</span> <span class="n">AgentType</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Defines the agent type to be executed on the target. &quot;</span>
+            <span class="s2">&quot;The configuration of agent is determined by this attribute&quot;</span>
+        <span class="p">),</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cpu_burn&quot;</span><span class="p">,</span> <span class="s2">&quot;no_op&quot;</span><span class="p">,</span> <span class="s2">&quot;ping_disable&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The Agent configuration for a particular agent type&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_agent_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_parse_agent_configuration</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;type&quot;</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">AgentType</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="k">return</span> <span class="n">v</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2289,6 +2318,52 @@ AttackConfig            (<span title="ychaos.testplan.SchemaModel">SchemaModel</
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/attack.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">AttackConfig</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+
+    <span class="n">target_type</span><span class="p">:</span> <span class="n">TargetType</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Defines the target type which will be used as a target for the execution of agents. &quot;</span>
+            <span class="s2">&quot;The target_type configuration is determined the type mentioned in this attribute&quot;</span>
+        <span class="p">),</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">,</span> <span class="s2">&quot;machine&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="n">target_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Defines the targets for running the agents.&quot;</span>
+            <span class="s2">&quot;This can be set to null to imply that the framework should run all the agents within the same system where the executor has been invoked&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">mode</span><span class="p">:</span> <span class="n">AttackMode</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">AttackMode</span><span class="o">.</span><span class="n">SEQUENTIAL</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Define the execution mode for the attack&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">agents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AgentExecutionConfig</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;List of agents to be executed on the Target. &quot;</span>
+            <span class="s2">&quot;Each of the item of execution configuration will infer a type of agent and a configuration of the agent&quot;</span>
+        <span class="p">),</span>
+        <span class="n">min_items</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_target_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_type</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">target_config</span><span class="p">)</span>
+
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;target_config&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_parse_target_configuration</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;target_type&quot;</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TargetType</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="s2">&quot;target_type&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="k">return</span> <span class="n">v</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2421,6 +2496,17 @@ AttackMode            (<span title="enum.Enum">Enum</span>)
 
       <p>Defines the type of execution mode for executing the configured Agents</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/attack.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">AttackMode</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the type of execution mode for executing the configured Agents</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">CONCURRENT</span> <span class="o">=</span> <span class="s2">&quot;concurrent&quot;</span>
+    <span class="n">SEQUENTIAL</span> <span class="o">=</span> <span class="s2">&quot;sequential&quot;</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2517,6 +2603,137 @@ The filtering criteria will always exclude the hosts in this list</p></td>
 using <code>hostfiles</code>. The tool will dynamically validate each of the entry while reading the files.</p>
 </div>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/attack.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">MachineTargetDefinition</span><span class="p">(</span><span class="n">TargetDefinition</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents the configuration when the target is a Virtual machine</span>
+<span class="sd">    or Baremetal. To use this as a target, `target_type` should be equal to</span>
+<span class="sd">    `machine`</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        blast_radius: The percentage of targets to be attacked. **This is a required field**</span>
+<span class="sd">        ssh_config: The SSH Configuration to be used while logging into the hosts. See [SSHConfig][ychaos.testplan.attack.SSHConfig]</span>
+<span class="sd">        hostnames: List of hosts as targets to run the agents on. These should be valid FQDNs.</span>
+<span class="sd">        hostpatterns: List of Host patterns with a single number range within the pattern</span>
+<span class="sd">        hostfiles:</span>
+<span class="sd">            List of files containing hostnames separated by a newline</span>
+<span class="sd">            The path provided can be an absolute path or a relative path from which the tool is invoked.</span>
+<span class="sd">        exclude:</span>
+<span class="sd">            List of hosts to be always excluded out of the attack.</span>
+<span class="sd">            The filtering criteria will always exclude the hosts in this list</span>
+
+<span class="sd">    Warning:</span>
+<span class="sd">        Testplan validator will not be able to validate each of the host entries if the targets are provided</span>
+<span class="sd">        using `hostfiles`. The tool will dynamically validate each of the entry while reading the files.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">blast_radius</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The percentage of targets to be attacked&quot;</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mi">100</span>
+    <span class="p">)</span>
+
+    <span class="n">ssh_config</span><span class="p">:</span> <span class="n">SSHConfig</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">SSHConfig</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The configuration used to SSH to the target machines.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">hostnames</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FQDN</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of hosts as targets to run the agents on. These should be valid FQDNs.&quot;</span><span class="p">,</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">[</span><span class="s2">&quot;myhost01.yahoo.com&quot;</span><span class="p">,</span> <span class="s2">&quot;myhost02.yahoo.com&quot;</span><span class="p">,</span> <span class="s2">&quot;mockhost.web.fe.yahoo.com&quot;</span><span class="p">],</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="n">hostpatterns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of Host patterns with a single number range within the pattern&quot;</span><span class="p">,</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">[</span><span class="s2">&quot;myhost[12-34].yahoo.com&quot;</span><span class="p">,</span> <span class="s2">&quot;hostpattern[00-10].mock.yahoo.com&quot;</span><span class="p">],</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="n">hostfiles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FilePath</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;List of files containing hostnames separated by a newline&quot;</span>
+            <span class="s2">&quot;The path provided can be an absolute path or a relative path from which the tool is invoked.&quot;</span>
+            <span class="s2">&quot;Note that the testplan will not validate each file during static validation.&quot;</span>
+        <span class="p">),</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">[</span><span class="s2">&quot;/home/awesomeuser/hostlist.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;/home/awesomeuser/tmp/inventory.txt&quot;</span><span class="p">]</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="n">exclude</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FQDN</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;List of hosts to be always excluded out of the attack.&quot;</span>
+            <span class="s2">&quot;The filtering criteria will always exclude the hosts in this list&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">iterate_hostfiles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostfiles</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">file</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="n">FQDN</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">iterate_hostpattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostpatterns</span><span class="p">:</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\[((\d+)-(\d+))\]&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">FQDN</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">range_start</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">range_end</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">range_start</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">range_end</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">FQDN</span><span class="p">(</span>
+                        <span class="n">v</span><span class="p">[:</span> <span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()]</span>
+                        <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">range_start</span><span class="p">))</span>
+                        <span class="o">+</span> <span class="n">v</span><span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">()</span> <span class="p">:]</span>
+                    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">expand_hostpatterns</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">FQDN</span><span class="p">]:</span>
+        <span class="n">expanded_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">hostname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterate_hostpattern</span><span class="p">():</span>
+            <span class="n">expanded_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hostname</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">expanded_list</span>
+
+    <span class="k">def</span> <span class="nf">expand_hostfiles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">expanded_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterate_hostfiles</span><span class="p">():</span>
+            <span class="n">expanded_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">expanded_list</span>
+
+    <span class="k">def</span> <span class="nf">get_effective_hosts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="nb">set</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">expand_hostpatterns</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">expand_hostfiles</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostnames</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exclude</span><span class="p">))</span>
+        <span class="p">)</span>
+
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;hostpatterns&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">each_item</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">validate_hostpatterns</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\[((\d+)-(\d+))\]&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">FQDN</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">range_start</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">range_end</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">range_start</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">range_end</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">FQDN</span><span class="p">(</span>
+                    <span class="n">v</span><span class="p">[:</span> <span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()]</span>
+                    <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">range_start</span><span class="p">))</span>
+                    <span class="o">+</span> <span class="n">v</span><span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">()</span> <span class="p">:]</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2700,6 +2917,32 @@ SSHConfig            (<span title="ychaos.testplan.SchemaModel">SchemaModel</spa
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/attack.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">SSHConfig</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+    <span class="n">user</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">getpass</span><span class="o">.</span><span class="n">getuser</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The login user for SSH connection. Defaults to current user.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">private_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The private key file that will be used to login to the hosts.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">password</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SecretStr</span><span class="p">,</span> <span class="n">Secret</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The password that will be used to login to the hosts.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ssh_common_args</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;ANSIBLE_SSH_COMMON_ARGS&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The common Arguments to be used while SSHing to a host with Ansible (`$ANSIBLE_SSH_COMMON_ARGS`)&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;ssh_common_args&quot;</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">set_ssh_common_args_env</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ANSIBLE_SSH_COMMON_ARGS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">return</span> <span class="n">v</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2837,6 +3080,19 @@ SelfTargetDefinition            (<a title="ychaos.testplan.attack.TargetDefiniti
 <code>self</code>.
  You can avoid specifying <code>target_config</code> for this target type.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/attack.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">SelfTargetDefinition</span><span class="p">(</span><span class="n">TargetDefinition</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents the configuration when the target is your local machine</span>
+<span class="sd">    . To use this as a target, `target_type` should be equal to</span>
+<span class="sd">    `self`.</span>
+<span class="sd">     You can avoid specifying `target_config` for this target type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">pass</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2881,6 +3137,15 @@ TargetDefinition            (<span title="ychaos.testplan.SchemaModel">SchemaMod
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/attack.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">TargetDefinition</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+    <span class="n">report_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./&quot;</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The report directory to store execution files. Defaults to current directory&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2945,6 +3210,16 @@ TargetType            (<span title="ychaos.utils.builtins.AEnum">AEnum</span>)
 
       <p>An enumeration.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/attack.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">TargetType</span><span class="p">(</span><span class="n">AEnum</span><span class="p">):</span>
+
+    <span class="n">SELF</span> <span class="o">=</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">SelfTargetDefinition</span><span class="p">)</span>
+    <span class="c1"># The machine running the toolkit registers itself as the target to run all the agents</span>
+
+    <span class="n">MACHINE</span> <span class="o">=</span> <span class="s2">&quot;machine&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">MachineTargetDefinition</span><span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3058,10 +3333,10 @@ TargetType            (<span title="ychaos.utils.builtins.AEnum">AEnum</span>)
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.01824240.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.e0abf5b0.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.1514a9a0.min.js"></script>
       
     
   </body>

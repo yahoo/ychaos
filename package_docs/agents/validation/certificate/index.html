@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/agents/validation/certificate/">
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.6">
     
     
       
@@ -21,10 +21,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.62128196.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.cd566b2a.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.9204c3b2.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.e6a45f82.min.css">
         
           
           
@@ -44,7 +44,7 @@
     
       <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
     
-    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../../../..":"../../../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -2063,6 +2063,15 @@ CertificateFileConfig            (<span title="pydantic.main.BaseModel">BaseMode
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>agents/validation/certificate.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">CertificateFileConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">path</span><span class="p">:</span> <span class="n">FilePath</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Path to the certificate file&quot;</span><span class="p">)</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">CertificateFileType</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">CertificateFileType</span><span class="o">.</span><span class="n">PEM</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Type of the certificate file&quot;</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2171,6 +2180,30 @@ CertificateFileType            (<span title="ychaos.utils.builtins.AEnum">AEnum<
       </tr>
   </tbody>
 </table>
+        <details class="quote">
+          <summary>Source code in <code>agents/validation/certificate.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">CertificateFileType</span><span class="p">(</span><span class="n">AEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        ASN1: (asn1) ASN1 Certificate format</span>
+<span class="sd">        PEM: (pem) PEM Certificate format</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ASN1</span> <span class="o">=</span> <span class="s2">&quot;asn1&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
+    <span class="n">PEM</span> <span class="o">=</span> <span class="s2">&quot;pem&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">binder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">pyopenssl</span> <span class="o">=</span> <span class="n">DependencyUtils</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span>
+            <span class="s2">&quot;requests.packages.urllib3.contrib.pyopenssl&quot;</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEM</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pyopenssl</span><span class="o">.</span><span class="n">OpenSSL</span><span class="o">.</span><span class="n">crypto</span><span class="o">.</span><span class="n">FILETYPE_PEM</span>
+        <span class="k">elif</span> <span class="bp">self</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ASN1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pyopenssl</span><span class="o">.</span><span class="n">OpenSSL</span><span class="o">.</span><span class="n">crypto</span><span class="o">.</span><span class="n">FILETYPE_ASN1</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unknown Certificate FileType&quot;</span><span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2212,6 +2245,61 @@ CertificateFileValidation            (<a title="ychaos.agents.agent.Agent" href=
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>agents/validation/certificate.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">CertificateFileValidation</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LifoQueue</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CertificateFileValidation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">monitor</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status</span>
+
+    <span class="nd">@log_agent_lifecycle</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CertificateFileValidation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+
+    <span class="nd">@log_agent_lifecycle</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CertificateFileValidation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">cert_path_config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">cert_path_config</span><span class="o">.</span><span class="n">path</span><span class="p">),</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">cert_path_config</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">pyopenssl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="n">cert</span> <span class="o">=</span> <span class="n">pyopenssl</span><span class="o">.</span><span class="n">OpenSSL</span><span class="o">.</span><span class="n">crypto</span><span class="o">.</span><span class="n">load_certificate</span><span class="p">(</span>
+                    <span class="n">cert_path_config</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">binder</span><span class="p">(),</span>
+                    <span class="n">cert_path_config</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(),</span>
+                <span class="p">)</span>
+
+                <span class="n">cert_expiry_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                    <span class="n">cert</span><span class="o">.</span><span class="n">get_notAfter</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%SZ&quot;</span>
+                <span class="p">)</span>
+                <span class="n">cert_expiry_date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+
+                <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="nb">dict</span><span class="p">(</span>
+                        <span class="n">not_valid_after</span><span class="o">=</span><span class="n">cert_expiry_date</span><span class="p">,</span>
+                        <span class="n">is_expired</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">cert_expiry_date</span><span class="p">,</span>
+                        <span class="n">is_critical</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">expiry_threshold</span>
+                        <span class="o">&gt;=</span> <span class="n">cert_expiry_date</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="n">pyopenssl</span><span class="o">.</span><span class="n">OpenSSL</span><span class="o">.</span><span class="n">crypto</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="s2">&quot;decoding_error&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+                <span class="n">AgentMonitoringDataPoint</span><span class="p">(</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                    <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="nd">@log_agent_lifecycle</span>
+    <span class="k">def</span> <span class="nf">teardown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CertificateFileValidation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">teardown</span><span class="p">()</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2300,6 +2388,30 @@ CertificateFileValidationConfig            (<a title="ychaos.agents.agent.AgentC
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>agents/validation/certificate.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">CertificateFileValidationConfig</span><span class="p">(</span><span class="n">AgentConfig</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;cert_file_validation&quot;</span>
+    <span class="n">desc</span> <span class="o">=</span> <span class="s2">&quot;This agent decodes the local certificates and validates for expiry/critical&quot;</span>
+    <span class="n">priority</span> <span class="o">=</span> <span class="n">AgentPriority</span><span class="o">.</span><span class="n">LOW_PRIORITY</span>
+
+    <span class="n">expiry_threshold</span><span class="p">:</span> <span class="n">timedelta</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Expiry threshold&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">paths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">FilePath</span><span class="p">,</span> <span class="n">CertificateFileConfig</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of Certificate files to be validated&quot;</span><span class="p">,</span>
+        <span class="n">min_items</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;paths&quot;</span><span class="p">,</span> <span class="n">each_item</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_paths</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">CertificateFileConfig</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2387,6 +2499,73 @@ ServerCertValidation            (<a title="ychaos.agents.agent.Agent" href="../.
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>agents/validation/certificate.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">ServerCertValidation</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+    <span class="nd">@validate_arguments</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ServerCertValidationConfig</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ServerCertValidation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LifoQueue</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ServerCertValidation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">monitor</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status</span>
+
+    <span class="nd">@log_agent_lifecycle</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ServerCertValidation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_server_cert</span><span class="p">(</span><span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">timeout_</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">socket</span> <span class="kn">import</span> <span class="n">setdefaulttimeout</span>
+
+        <span class="n">setdefaulttimeout</span><span class="p">(</span><span class="n">timeout_</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">pyopenssl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">pyopenssl</span><span class="o">.</span><span class="n">OpenSSL</span><span class="o">.</span><span class="n">crypto</span><span class="o">.</span><span class="n">load_certificate</span><span class="p">(</span>
+            <span class="n">pyopenssl</span><span class="o">.</span><span class="n">OpenSSL</span><span class="o">.</span><span class="n">crypto</span><span class="o">.</span><span class="n">FILETYPE_PEM</span><span class="p">,</span>
+            <span class="n">pyopenssl</span><span class="o">.</span><span class="n">ssl</span><span class="o">.</span><span class="n">get_server_certificate</span><span class="p">((</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@log_agent_lifecycle</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">urls</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">port</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">url</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;443&quot;</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">url</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">port</span><span class="p">),</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">cert</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_server_cert</span><span class="p">(</span>
+                    <span class="n">url</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">port</span><span class="p">),</span> <span class="n">timeout_</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">timeout</span>
+                <span class="p">)</span>
+                <span class="n">cert_expiry_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                    <span class="n">cert</span><span class="o">.</span><span class="n">get_notAfter</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%SZ&quot;</span>
+                <span class="p">)</span>
+                <span class="n">cert_expiry_date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+
+                <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="nb">dict</span><span class="p">(</span>
+                        <span class="n">not_valid_after</span><span class="o">=</span><span class="n">cert_expiry_date</span><span class="p">,</span>
+                        <span class="n">is_expired</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">cert_expiry_date</span><span class="p">,</span>
+                        <span class="n">is_critical</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">expiry_threshold</span>
+                        <span class="o">&gt;=</span> <span class="n">cert_expiry_date</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">gaierror</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+                <span class="n">AgentMonitoringDataPoint</span><span class="p">(</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                    <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="nd">@log_agent_lifecycle</span>
+    <span class="k">def</span> <span class="nf">teardown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ServerCertValidation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">teardown</span><span class="p">()</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2477,6 +2656,27 @@ ServerCertValidationConfig            (<a title="ychaos.agents.agent.AgentConfig
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>agents/validation/certificate.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">ServerCertValidationConfig</span><span class="p">(</span><span class="n">AgentConfig</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;server_cert_validation&quot;</span>
+    <span class="n">desc</span> <span class="o">=</span> <span class="s2">&quot;This agent retrieves SSL certificates from server and validates it&quot;</span>
+    <span class="n">priority</span> <span class="o">=</span> <span class="n">AgentPriority</span><span class="o">.</span><span class="n">LOW_PRIORITY</span>
+
+    <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AnyHttpUrl</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of URLs which will be validated for their SSL certificate expiry&quot;</span><span class="p">,</span>
+        <span class="n">min_items</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">expiry_threshold</span><span class="p">:</span> <span class="n">timedelta</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Expiry threshold&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Default timeout to fetch the certificates in seconds&quot;</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2657,10 +2857,10 @@ ServerCertValidationConfig            (<a title="ychaos.agents.agent.AgentConfig
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.01824240.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.e0abf5b0.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.1514a9a0.min.js"></script>
       
     
   </body>

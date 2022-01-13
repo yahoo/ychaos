@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/verification/plugins/opentsdb/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.6">
     
     
       
@@ -21,10 +21,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.62128196.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.cd566b2a.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.9204c3b2.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.e6a45f82.min.css">
         
           
           
@@ -44,7 +44,7 @@
     
       <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../../..":"../../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -1776,42 +1776,42 @@ package documentation.</p>
 <ol>
 <li>A demo testplan</li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A Demo Testplan</span>
-<span class="nt">verification</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">states</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">STEADY</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tsdb</span>
-    <span class="nt">config</span><span class="p">:</span>
-        <span class="nt">url</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://tsdb.ychaos.yahoo.com/api/query</span>
-        <span class="nt">criteria</span><span class="p">:</span>
-          <span class="c1"># All the Criterion must pass for YChaos to mark the state as expected (Boolean AND)</span>
-          <span class="p p-Indicator">-</span> <span class="nt">aggregator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">avg</span>
-            <span class="nt">conditionals</span><span class="p">:</span>
-              <span class="c1"># Any of the conditional can pass for YChaos to mark this criteria passed (Boolean OR)</span>
-              <span class="p p-Indicator">-</span> <span class="nt">comparator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">==</span>
-                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">30.56</span>
+<div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A Demo Testplan</span><span class="w"></span>
+<span class="nt">verification</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">states</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STEADY</span><span class="w"></span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tsdb</span><span class="w"></span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://tsdb.ychaos.yahoo.com/api/query</span><span class="w"></span>
+<span class="w">        </span><span class="nt">criteria</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="c1"># All the Criterion must pass for YChaos to mark the state as expected (Boolean AND)</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">aggregator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avg</span><span class="w"></span>
+<span class="w">            </span><span class="nt">conditionals</span><span class="p">:</span><span class="w"></span>
+<span class="w">              </span><span class="c1"># Any of the conditional can pass for YChaos to mark this criteria passed (Boolean OR)</span><span class="w"></span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">comparator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">==</span><span class="w"></span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30.56</span><span class="w"></span>
 
-        <span class="c1"># Refer to docs http://opentsdb.net/docs/build/html/api_http/query/index.html</span>
-        <span class="nt">query</span><span class="p">:</span> <span class="p p-Indicator">{</span>
-          <span class="s">&quot;start&quot;</span><span class="p p-Indicator">:</span> <span class="nv">1356998400</span><span class="p p-Indicator">,</span>
-          <span class="s">&quot;end&quot;</span><span class="p p-Indicator">:</span> <span class="nv">1356998460</span><span class="p p-Indicator">,</span>
-          <span class="s">&quot;queries&quot;</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span>
-            <span class="p p-Indicator">{</span>
-              <span class="s">&quot;aggregator&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;sum&quot;</span><span class="p p-Indicator">,</span>
-              <span class="s">&quot;metric&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;sys.cpu.0&quot;</span><span class="p p-Indicator">,</span>
-              <span class="s">&quot;rate&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;true&quot;</span><span class="p p-Indicator">,</span>
-              <span class="s">&quot;tags&quot;</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">{</span>
-                <span class="s">&quot;host&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;*&quot;</span><span class="p p-Indicator">,</span>
-                <span class="s">&quot;dc&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;lga&quot;</span>
-              <span class="p p-Indicator">}</span>
-            <span class="p p-Indicator">}</span>
-          <span class="p p-Indicator">]</span>
-        <span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="c1"># Refer to docs http://opentsdb.net/docs/build/html/api_http/query/index.html</span><span class="w"></span>
+<span class="w">        </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"></span>
+<span class="w">          </span><span class="s">&quot;start&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">1356998400</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">          </span><span class="s">&quot;end&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">1356998460</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">          </span><span class="s">&quot;queries&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"></span>
+<span class="w">            </span><span class="p p-Indicator">{</span><span class="w"></span>
+<span class="w">              </span><span class="s">&quot;aggregator&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;sum&quot;</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">              </span><span class="s">&quot;metric&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;sys.cpu.0&quot;</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">              </span><span class="s">&quot;rate&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">              </span><span class="s">&quot;tags&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"></span>
+<span class="w">                </span><span class="s">&quot;host&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">                </span><span class="s">&quot;dc&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;lga&quot;</span><span class="w"></span>
+<span class="w">              </span><span class="p p-Indicator">}</span><span class="w"></span>
+<span class="w">            </span><span class="p p-Indicator">}</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">        </span><span class="p p-Indicator">}</span><span class="w"></span>
 
-<span class="nt">attack</span><span class="p">:</span>
-    <span class="nt">target_type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">machine</span>
-    <span class="nt">agents</span><span class="p">:</span>
-        <span class="p p-Indicator">-</span> <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no_op</span>
+<span class="nt">attack</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">target_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">machine</span><span class="w"></span>
+<span class="w">    </span><span class="nt">agents</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_op</span><span class="w"></span>
 </code></pre></div>
 
               
@@ -1892,10 +1892,10 @@ package documentation.</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.01824240.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.e0abf5b0.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.1514a9a0.min.js"></script>
       
     
   </body>

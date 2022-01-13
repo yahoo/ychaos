@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/core/verification/controller/">
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.6">
     
     
       
@@ -21,10 +21,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.62128196.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.cd566b2a.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.9204c3b2.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.e6a45f82.min.css">
         
           
           
@@ -44,7 +44,7 @@
     
       <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
     
-    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../../../..":"../../../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -1910,6 +1910,205 @@ This case is possible for the plugins that are in Beta/development phase</p>
 by calling the <code>register_hook(event_name, hook_method)</code> method. All the hooks are executed sequentially. The best example
 of this is to register a hook to print information on CLI.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>core/verification/controller.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">VerificationController</span><span class="p">(</span><span class="n">EventHook</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Verification controller is used to run all the verification plugins configured in the testplan</span>
+<span class="sd">    and assert that the system is expected to be in a state expected by the user. Extends the EventHook class,</span>
+<span class="sd">    that defines the following event hooks.</span>
+
+<span class="sd">    ## Valid Hooks</span>
+
+<span class="sd">    === &quot;on_start&quot;</span>
+<span class="sd">        Hook that gets called when the verification execution is about to start.</span>
+<span class="sd">        No arguments are passed to the callable.</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">            def callable_hook(): ...</span>
+<span class="sd">        ```</span>
+
+<span class="sd">    === &quot;on_each_plugin_start&quot;</span>
+<span class="sd">        Hook that gets called when a particular plugin execution is about to start. `index` in the signature refers</span>
+<span class="sd">        to the position in the list</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">            def callable_hook(index: int, config: VerificationConfig): ...</span>
+<span class="sd">        ```</span>
+<span class="sd">        References:</span>
+<span class="sd">            1. [VerificationConfig][ychaos.testplan.verification.VerificationConfig]</span>
+
+<span class="sd">    === &quot;on_each_plugin_end&quot;</span>
+<span class="sd">        Hook that gets called when a particular plugin execution has ended. `index` in the signature refers to the</span>
+<span class="sd">        position in the list</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">            def callable_hook(index: int, config: VerificationConfig, state_data: VerificationStateData): ...</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        References:</span>
+<span class="sd">            1. [VerificationConfig][ychaos.testplan.verification.VerificationConfig]</span>
+<span class="sd">            2. [VerificationStateData][ychaos.core.verification.data.VerificationStateData]</span>
+
+<span class="sd">    === &quot;on_end&quot;</span>
+<span class="sd">        Hook that gets called when the verification execution has ended. Each element in the list</span>
+<span class="sd">        of boolean corresponds to the result of the plugin, where `True` indicates successful verification</span>
+<span class="sd">        and `False` is a failure to verify the state</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">            def callable_hook(verify_list: List[bool]): ...</span>
+<span class="sd">        ```</span>
+
+<span class="sd">    === &quot;on_plugin_not_found&quot;</span>
+<span class="sd">        Hook that gets called when a plugin available in schema is not ready for usage/not implemented.</span>
+<span class="sd">        This case is possible for the plugins that are in Beta/development phase</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">            def callable_hook(index:int, plugin_type: VerificationType): ...</span>
+<span class="sd">        ```</span>
+
+<span class="sd">    ---</span>
+<span class="sd">    Each of the hooks get called on a certain event. The caller can register as many hooks for a particular event,</span>
+<span class="sd">    by calling the `register_hook(event_name, hook_method)` method. All the hooks are executed sequentially. The best example</span>
+<span class="sd">    of this is to register a hook to print information on CLI.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__hook_events__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;on_start&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(),</span>
+        <span class="s2">&quot;on_each_plugin_start&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">VerificationConfig</span><span class="p">),</span>
+        <span class="s2">&quot;on_each_plugin_end&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">VerificationConfig</span><span class="p">,</span> <span class="n">VerificationStateData</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;on_plugin_not_found&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">VerificationType</span><span class="p">),</span>
+        <span class="s2">&quot;on_end&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(</span><span class="n">List</span><span class="p">[</span><span class="nb">bool</span><span class="p">]),</span>
+    <span class="p">}</span>
+
+    <span class="nd">@validate_arguments</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">testplan</span><span class="p">:</span> <span class="n">TestPlan</span><span class="p">,</span>
+        <span class="n">current_state</span><span class="p">:</span> <span class="n">SystemState</span><span class="p">,</span>
+        <span class="n">verification_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">SystemState</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VerificationStateData</span><span class="p">]]],</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a verification controller object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            testplan: A valid testplan object</span>
+<span class="sd">            current_state: The state in which the system is expected to be in</span>
+<span class="sd">            verification_data (List[VerificationData]): The verification data probably from previous run.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">VerificationController</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">AppLogger</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="s2">&quot;controller&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">testplan</span> <span class="o">=</span> <span class="n">testplan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_state</span> <span class="o">=</span> <span class="n">current_state</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">verification_data</span><span class="p">:</span>
+            <span class="n">verification_data</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nb">dict</span><span class="p">(),</span>
+            <span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">verification</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">verification_data</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">verification</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Data and verification config size mismatch&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">verification_data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">verification_data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">verification_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">VerificationData</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute the Verification controller.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if all the verification plugin pass, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Call all the hooks that were registered for `verification_start`</span>
+        <span class="c1"># If there were no hooks registered, this will be no-op</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span><span class="s2">&quot;on_start&quot;</span><span class="p">)</span>
+
+        <span class="n">_verify_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">verification_plugin</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+            <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">verification</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">verification_data</span><span class="p">)</span>
+        <span class="p">):</span>
+
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verification_plugin</span><span class="o">.</span><span class="n">states</span><span class="p">,</span> <span class="n">List</span><span class="p">)</span>  <span class="c1"># For mypy</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_state</span> <span class="ow">in</span> <span class="n">verification_plugin</span><span class="o">.</span><span class="n">states</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="n">msg</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Starting </span><span class="si">{</span><span class="n">verification_plugin</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2"> verification&quot;</span>
+                <span class="p">)</span>
+                <span class="n">plugin_class</span> <span class="o">=</span> <span class="n">VERIFICATION_PLUGIN_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="n">verification_plugin</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="kc">None</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">plugin_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># This can happen when a new plugin is not implemented yet, but is</span>
+                    <span class="c1"># available in the schema</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span>
+                        <span class="s2">&quot;on_plugin_not_found&quot;</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">verification_plugin</span><span class="o">.</span><span class="n">type</span>
+                    <span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="n">plugin</span> <span class="o">=</span> <span class="n">plugin_class</span><span class="p">(</span><span class="n">verification_plugin</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+                <span class="c1"># Delay before verifying</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">verification_plugin</span><span class="o">.</span><span class="n">delay_before</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
+
+                <span class="c1"># Call all the hooks that were registered for `verification_plugin_start`.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span><span class="s2">&quot;on_each_plugin_start&quot;</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">verification_plugin</span><span class="p">)</span>
+
+                <span class="n">state_data</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">run_verification</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="n">msg</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Completed </span><span class="si">{</span><span class="n">verification_plugin</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2"> verification&quot;</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Call all the hooks that were registered for `verification_plugin_end`.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span>
+                    <span class="s2">&quot;on_each_plugin_end&quot;</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">verification_plugin</span><span class="p">,</span> <span class="n">state_data</span>
+                <span class="p">)</span>
+
+                <span class="n">data</span><span class="o">.</span><span class="n">replace_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="p">,</span> <span class="n">state_data</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">verification_plugin</span><span class="o">.</span><span class="n">strict</span><span class="p">:</span>
+                    <span class="n">_verify_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state_data</span><span class="o">.</span><span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">add_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+            <span class="c1"># Delay after verifying</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">verification_plugin</span><span class="o">.</span><span class="n">delay_after</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
+
+        <span class="c1"># Call all the hooks that were registered for `verification_end`.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span><span class="s2">&quot;on_end&quot;</span><span class="p">,</span> <span class="n">_verify_list</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">_verify_list</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_encoded_verification_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">encoded_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">verification_data</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">dump_verification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">output_format</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dump_verification_json</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dump_verification_yaml</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">dump_verification_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_encoded_verification_data</span><span class="p">(),</span> <span class="n">fp</span><span class="o">=</span><span class="n">fp</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">dump_verification_yaml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">yaml</span>
+
+        <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_encoded_verification_data</span><span class="p">(),</span>
+            <span class="n">fp</span><span class="p">,</span>
+            <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">Dumper</span><span class="o">=</span><span class="n">Dumper</span><span class="p">,</span>
+            <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2243,10 +2442,10 @@ for the hooks that are being registered.</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.01824240.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.e0abf5b0.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.1514a9a0.min.js"></script>
       
     
   </body>

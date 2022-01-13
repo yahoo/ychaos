@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/cli/main/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.6">
     
     
       
@@ -21,10 +21,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.62128196.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.cd566b2a.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.9204c3b2.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.e6a45f82.min.css">
         
           
           
@@ -44,7 +44,7 @@
     
       <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../../..":"../../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -1933,6 +1933,146 @@ App        </code>
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>cli/main.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">,</span> <span class="n">cli</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ArgumentParser</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">Settings</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="n">args</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">no_color</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">no_color</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DevSettings</span><span class="p">,</span> <span class="n">ProdSettings</span><span class="p">]</span> <span class="o">=</span> <span class="n">Settings</span><span class="o">.</span><span class="n">get_instance</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cli</span> <span class="o">=</span> <span class="n">cli</span>
+
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">LOG_FILE_PATH</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span>
+
+        <span class="n">AppLogger</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">AppLogger</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">rule</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">APP_DESC</span><span class="p">,</span>
+            <span class="n">style</span><span class="o">=</span><span class="s2">&quot;magenta&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">cls</span> <span class="o">!=</span> <span class="n">YChaosRoot</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_cli_configuration</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">line</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Starting app&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_command_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines the command tree of the invoked command.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of commands starting with `ychaos` and ending at the sub-command invoked</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">PROG</span>
+        <span class="n">branch</span> <span class="o">=</span> <span class="n">_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">COMMAND_IDENTIFIER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">parent</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">tree</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="n">branch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tree</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+            <span class="n">parent</span> <span class="o">=</span> <span class="n">branch</span>
+            <span class="n">branch</span> <span class="o">=</span> <span class="n">_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">COMMAND_IDENTIFIER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">parent</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">tree</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tree</span>
+
+    <span class="k">def</span> <span class="nf">_walk_parser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Walk the Argument parser and collect all the subcommands and its help message.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parser: Argument Parser</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tree dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">parser</span><span class="o">.</span><span class="n">_subparsers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">parser</span><span class="o">.</span><span class="n">_subparsers</span><span class="o">.</span><span class="n">_actions</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">SubCommandParsersAction</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">command</span><span class="p">,</span> <span class="n">subparser</span> <span class="ow">in</span> <span class="n">action</span><span class="o">.</span><span class="n">choices</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="n">tree</span><span class="p">[</span><span class="n">subparser</span><span class="o">.</span><span class="n">prog</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparser</span><span class="o">.</span><span class="n">format_help</span><span class="p">()</span>
+                        <span class="n">tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_walk_parser</span><span class="p">(</span><span class="n">subparser</span><span class="p">,</span> <span class="n">tree</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tree</span>
+
+    <span class="k">def</span> <span class="nf">manual_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines the manual entry of the YChaos CLI and returns a program</span>
+<span class="sd">        aware dictionary of cli -&gt; usage mapping</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary of command to help message mapping</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_tree</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">cli</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">_tree</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">PROG</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cli</span><span class="o">.</span><span class="n">format_help</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_walk_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cli</span><span class="p">,</span> <span class="n">_tree</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_tree</span>
+
+    <span class="k">def</span> <span class="nf">is_debug_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns if the app was initialized with debug mode</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            True if debug mode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">debug</span>
+
+    <span class="k">def</span> <span class="nf">print_cli_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">line</span><span class="p">()</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;YChaos CLI configuration&quot;</span><span class="p">,</span> <span class="n">header_style</span><span class="o">=</span><span class="s2">&quot;bold green&quot;</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Configuration&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;bold sea_green2&quot;</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Value&quot;</span><span class="p">)</span>
+
+        <span class="n">_renderable_config</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">_renderable_config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;app&quot;</span><span class="p">)</span>
+        <span class="n">_renderable_config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;cls&quot;</span><span class="p">)</span>
+
+        <span class="n">_renderable_config</span><span class="p">[</span><span class="s2">&quot;_command_&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot; :arrow_right: &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_command_tree</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_renderable_config</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_cmd&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">_v</span><span class="p">)</span> <span class="k">for</span> <span class="n">_v</span> <span class="ow">in</span> <span class="n">v</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">unknown_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">line</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">print_exception</span><span class="p">(</span><span class="n">extra_lines</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">teardown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exitcode</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">cls</span> <span class="o">!=</span> <span class="n">YChaosRoot</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">line</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exiting with exitcode=</span><span class="si">{</span><span class="n">exitcode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">rule</span><span class="p">(</span>
+                <span class="n">title</span><span class="o">=</span><span class="s2">&quot;:sunny:&quot;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="s2">&quot;magenta&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Save Reports</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">text_report</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">save_text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">text_report</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">html_report</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">save_html</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">html_report</span><span class="p">)</span>
+
+        <span class="n">AppLogger</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2139,6 +2279,139 @@ the CLI which takes in the program arguments. See YChaos CLI documentation for
 more details.</p>
 <p>To see the usage of the YChaos CLI, run <code>ychaos -h</code> on the terminal</p>
 
+        <details class="quote">
+          <summary>Source code in <code>cli/main.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">YChaos</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The YChaos CLI class. The `main` method of this class is the starting point of</span>
+<span class="sd">    the CLI which takes in the program arguments. See YChaos CLI documentation for</span>
+<span class="sd">    more details.</span>
+
+<span class="sd">    To see the usage of the YChaos CLI, run `ychaos -h` on the terminal</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">ApplicationSettings</span><span class="o">.</span><span class="n">get_instance</span><span class="p">()</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">program_arguments</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        All good things begin some place, and that&#39;s here.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            program_arguments: List of Program Arguments</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ychaos_cli</span> <span class="o">=</span> <span class="n">YChaosArgumentParser</span><span class="p">(</span>
+            <span class="n">prog</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">PROG</span><span class="p">,</span>
+            <span class="n">formatter_class</span><span class="o">=</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+            <span class="n">__root__</span><span class="o">=</span><span class="n">YChaosRoot</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># YChaos CLI version</span>
+        <span class="n">ychaos_cli</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;-v&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;--version&quot;</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span>
+            <span class="n">version</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;v</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">get_version</span><span class="p">()</span><span class="si">}</span><span class="s2"> [yahoo/ychaos]&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Verbosity Argument Group</span>
+        <span class="n">verbosity_argument_group</span> <span class="o">=</span> <span class="n">ychaos_cli</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;verbosity&quot;</span><span class="p">)</span>
+        <span class="n">verbosity_argument_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;-V&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Increase verbosity of logs (INFO)&quot;</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">verbosity_argument_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--debug&quot;</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Enable debug mode&quot;</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Configuration for the ychaos Command Line Interface</span>
+        <span class="n">ychaos_cli</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;-c&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;--config&quot;</span><span class="p">,</span>
+            <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="s2">&quot;prod&quot;</span><span class="p">],</span>
+            <span class="n">default</span><span class="o">=</span><span class="s2">&quot;prod&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Set YChaos CLI configuration (prod)&quot;</span><span class="p">,</span>
+            <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;config&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">ychaos_cli</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--no-color&quot;</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;NO_COLOR&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)),</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Disable color on console output ($NO_COLOR)&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Arguments for creating HTML &amp; Text Reports</span>
+        <span class="n">report_argument_group</span> <span class="o">=</span> <span class="n">ychaos_cli</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;reports&quot;</span><span class="p">)</span>
+        <span class="n">report_argument_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--text-report&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Generate a text report from the YChaos execution&quot;</span><span class="p">,</span>
+            <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;path&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">report_argument_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--html-report&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Generate a HTML report from YChaos execution&quot;</span><span class="p">,</span>
+            <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;path&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">report_argument_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--log-file&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;YCHAOS_LOG_FILE&quot;</span><span class="p">),</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;The file to store application logs. ($YCHAOS_LOG_FILE)&quot;</span><span class="p">),</span>
+            <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;path&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">ychaos_cli_subparsers</span> <span class="o">=</span> <span class="n">ychaos_cli</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span>
+            <span class="n">action</span><span class="o">=</span><span class="n">SubCommandParsersAction</span><span class="p">,</span>
+            <span class="n">dest</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">COMMAND_IDENTIFIER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">PROG</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ychaos_cli_subparsers</span><span class="p">,</span> <span class="n">SubCommandParsersAction</span><span class="p">)</span>
+
+        <span class="c1"># Subcommands</span>
+        <span class="n">ychaos_cli_subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">TestPlan</span><span class="p">)</span>
+        <span class="n">ychaos_cli_subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">Manual</span><span class="p">)</span>
+        <span class="n">ychaos_cli_subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">Agent</span><span class="p">)</span>
+        <span class="n">ychaos_cli_subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">Verify</span><span class="p">)</span>
+        <span class="n">ychaos_cli_subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">Execute</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="n">ychaos_cli</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">program_arguments</span><span class="p">)</span>
+
+        <span class="n">args</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">ychaos_cli</span><span class="p">)</span>
+
+        <span class="c1"># Start the Application</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="c1"># Call the right method for the subcommand</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">exitcode</span> <span class="o">=</span> <span class="n">ychaos_cli</span><span class="o">.</span><span class="n">run_command</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">unknown_error</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="n">exitcode</span> <span class="o">=</span> <span class="mi">255</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">unknown_error</span><span class="p">()</span>
+
+        <span class="c1"># Teardown</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">teardown</span><span class="p">(</span><span class="n">exitcode</span><span class="p">)</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">exitcode</span><span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2360,6 +2633,27 @@ YChaosRoot            (<span title="ychaos.cli.YChaosSubCommand">YChaosSubComman
       <p>The YChaos root command. This class is invoked when the ychaos
 cli is invoked without any subcommands</p>
 
+        <details class="quote">
+          <summary>Source code in <code>cli/main.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">YChaosRoot</span><span class="p">(</span><span class="n">YChaosSubCommand</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The YChaos root command. This class is invoked when the ychaos</span>
+<span class="sd">    cli is invoked without any subcommands</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Does Nothing.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            args: Arguments</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            0 (Zero) exitcode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">0</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2544,10 +2838,10 @@ cli is invoked without any subcommands</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.01824240.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.e0abf5b0.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.1514a9a0.min.js"></script>
       
     
   </body>

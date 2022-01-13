@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/agents/coordinator/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.6">
     
     
       
@@ -21,10 +21,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.62128196.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.cd566b2a.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.9204c3b2.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.e6a45f82.min.css">
         
           
           
@@ -44,7 +44,7 @@
     
       <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../../..":"../../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -1978,6 +1978,30 @@ ConfiguredAgent        </code>
 
       <p>Class to hold the configured Agent</p>
 
+        <details class="quote">
+          <summary>Source code in <code>agents/coordinator.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">ConfiguredAgent</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hold the configured Agent</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">start_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">],</span> <span class="n">end_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize ConfiguredAgent</span>
+<span class="sd">        Args:</span>
+<span class="sd">            agent: Agent object</span>
+<span class="sd">            start_time: Agent execution start time</span>
+<span class="sd">            end_time: Agent execution end time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="p">:</span> <span class="n">Agent</span> <span class="o">=</span> <span class="n">agent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">start_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="n">end_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_start_thread</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Thread</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_teardown_thread</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Thread</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2122,6 +2146,364 @@ state.</p>
 </div>
 <hr />
 
+        <details class="quote">
+          <summary>Source code in <code>agents/coordinator.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">Coordinator</span><span class="p">(</span><span class="n">EventHook</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The coordinator is responsible for setting up the chaos agents,</span>
+<span class="sd">    running the agents and monitor the agent currently being run. It also</span>
+<span class="sd">    takes care of completing the attack by bringing back to the system to its original</span>
+<span class="sd">    state.</span>
+
+<span class="sd">    ## Coordinator Event Hooks</span>
+
+<span class="sd">    === &quot;on_attack_start&quot;</span>
+<span class="sd">        called when attack is started on the host</span>
+<span class="sd">        ```python</span>
+<span class="sd">            def callable_hook(): ...</span>
+<span class="sd">        ```</span>
+
+<span class="sd">    === &quot;on_attack_completed&quot;</span>
+<span class="sd">        called when attack is completed</span>
+<span class="sd">        ```python</span>
+<span class="sd">            def callable_hook(): ...</span>
+<span class="sd">        ```</span>
+
+<span class="sd">    === &quot;on_each_agent_start&quot;</span>
+<span class="sd">        called when a Agent start executing</span>
+<span class="sd">        ```python</span>
+<span class="sd">            def callable_hook(agent_name: str): ...</span>
+<span class="sd">        ```</span>
+
+<span class="sd">    === &quot;on_each_agent_teardown&quot;</span>
+<span class="sd">        called when a Agent Teardown is started</span>
+<span class="sd">        ```python</span>
+<span class="sd">            def callable_hook(agent_name: str): ...</span>
+<span class="sd">        ```</span>
+
+<span class="sd">    === &quot;on_each_agent_stop&quot;</span>
+<span class="sd">        called when a Agent completes its execution and teardown step</span>
+<span class="sd">        ```python</span>
+<span class="sd">            def callable_hook(agent_name: str): ...</span>
+<span class="sd">        ```</span>
+<span class="sd">    ---</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__hook_events__</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;on_attack_start&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(),</span>
+        <span class="s2">&quot;on_attack_completed&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(),</span>
+        <span class="s2">&quot;on_each_agent_start&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span>
+        <span class="s2">&quot;on_each_agent_teardown&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span>
+        <span class="s2">&quot;on_each_agent_stop&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="n">DEFAULT_DURATION</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">THREAD_TIMEOUT</span> <span class="o">=</span> <span class="mi">300</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_plan</span><span class="p">:</span> <span class="n">TestPlan</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Coordinator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_plan</span><span class="p">:</span> <span class="n">TestPlan</span> <span class="o">=</span> <span class="n">test_plan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ConfiguredAgent</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attack_end_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attack_start_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exit_code</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">:</span> <span class="n">Logger</span> <span class="o">=</span> <span class="n">AppLogger</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">configure_agent_in_test_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ConfiguredAgent</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Configure all the Agents as specified in the test plan</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            list of configured agents</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_plan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="n">next_start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+            <span class="n">configured_agent</span><span class="p">:</span> <span class="n">Agent</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_plan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">AttackMode</span><span class="o">.</span><span class="n">SEQUENTIAL</span><span class="o">.</span><span class="n">value</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span>
+            <span class="p">):</span>
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="n">next_start_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end_time</span>
+
+            <span class="n">agent_config</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+            <span class="n">configured_agent</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">agent_defn</span><span class="p">(</span><span class="n">agent_config</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+            <span class="n">start_time</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">next_start_time</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span>
+                <span class="n">seconds</span><span class="o">=</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">start_delay</span>
+            <span class="p">)</span>
+            <span class="n">end_time</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span>
+                <span class="n">seconds</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span>
+                    <span class="n">configured_agent</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_DURATION</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">ConfiguredAgent</span><span class="p">(</span>
+                    <span class="n">configured_agent</span><span class="p">,</span> <span class="n">start_time</span><span class="o">=</span><span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="o">=</span><span class="n">end_time</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_plan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="n">AttackMode</span><span class="o">.</span><span class="n">SEQUENTIAL</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span>
+                <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">current_agent</span><span class="p">:</span> <span class="n">current_agent</span><span class="o">.</span><span class="n">end_time</span>  <span class="c1"># type: ignore</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attack_end_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end_time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span>
+                <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">current_agent</span><span class="p">:</span> <span class="n">current_agent</span><span class="o">.</span><span class="n">start_time</span>  <span class="c1"># type: ignore</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attack_start_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start_time</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attack_start_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start_time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attack_end_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end_time</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span>
+
+    <span class="k">def</span> <span class="nf">get_exit_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exit_code</span>
+
+    <span class="k">def</span> <span class="nf">get_next_agent_for_attack</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ConfiguredAgent</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the next Agent for execution as configured in test plan</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            An Agent or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_time</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">configured_agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">start_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">assert</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">current_state</span> <span class="o">==</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">INIT</span>
+                <span class="ow">and</span> <span class="n">current_time</span> <span class="o">&gt;</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">start_time</span>
+            <span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                    <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">exit_code</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">configured_agent</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">get_next_agent_for_teardown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ConfiguredAgent</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the next Agent for teardown as configured in test plan</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            An Agent or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_time</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">configured_agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">start_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">assert</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">current_state</span> <span class="o">==</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">RUNNING</span>
+                <span class="ow">and</span> <span class="n">current_time</span> <span class="o">&gt;</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">end_time</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span>
+            <span class="p">):</span>
+                <span class="k">return</span> <span class="n">configured_agent</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">check_for_failed_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        check if any Agent has error</span>
+<span class="sd">        Args:</span>
+<span class="sd">            agent: check only this Agent has error</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if Agent has error else False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">configured_agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">agent</span> <span class="ow">and</span> <span class="n">agent</span> <span class="o">!=</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">current_state</span> <span class="o">==</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">ERROR</span>
+                <span class="ow">or</span> <span class="ow">not</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+            <span class="p">):</span>
+                <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+                <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">preserved_state</span><span class="o">.</span><span class="n">has_error</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">stop_all_running_agents_in_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        waits for all agents to complete teardown step</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">configured_agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">current_state</span> <span class="o">==</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">SETUP</span>
+                <span class="ow">or</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">current_state</span> <span class="o">==</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">INIT</span>
+            <span class="p">):</span>
+                <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">SKIPPED</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">current_state</span> <span class="o">==</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">ERROR</span><span class="p">:</span>
+                <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">preserved_state</span><span class="o">.</span><span class="n">has_error</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">exit_code</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="p">(</span>
+                <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_start_thread</span>
+                <span class="ow">and</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_start_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_exit_status</span><span class="p">()</span>
+            <span class="p">):</span>
+                <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">preserved_state</span><span class="o">.</span><span class="n">is_aborted</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">ABORTED</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="ow">not</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">current_state</span> <span class="o">==</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">DONE</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">current_state</span> <span class="o">==</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">SKIPPED</span>
+            <span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span><span class="p">:</span>
+                        <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">THREAD_TIMEOUT</span>
+                        <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">teardown_async</span><span class="p">()</span>
+                        <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span>
+                            <span class="s2">&quot;on_each_agent_teardown&quot;</span><span class="p">,</span>
+                            <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">THREAD_TIMEOUT</span>
+                        <span class="p">)</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span>
+                        <span class="ow">and</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
+                    <span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Agent: </span><span class="si">{</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> Teardown step failed to complete in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">THREAD_TIMEOUT</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_for_failed_agents</span><span class="p">(</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">exit_code</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                    <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+                    <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">preserved_state</span><span class="o">.</span><span class="n">has_error</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span>
+                <span class="s2">&quot;on_each_agent_stop&quot;</span><span class="p">,</span>
+                <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">temp_exception_queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>  <span class="c1"># print all exceptions</span>
+                <span class="n">error</span> <span class="o">=</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                <span class="n">temp_exception_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Error occurred for the Agent=</span><span class="si">{</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">exc_info</span><span class="o">=</span><span class="n">error</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="n">temp_exception_queue</span>
+
+    <span class="k">def</span> <span class="nf">get_all_exceptions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all the Exceptions occurred during the attack</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            list of Exceptions</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">all_exceptions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">configured_agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">:</span>
+            <span class="n">temp_exception_queue</span><span class="p">:</span> <span class="n">Queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                <span class="n">temp_exception_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">all_exceptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="n">temp_exception_queue</span>
+        <span class="k">return</span> <span class="n">all_exceptions</span>
+
+    <span class="k">def</span> <span class="nf">generate_attack_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates attack report</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">class</span> <span class="nc">AgentStatus</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+            <span class="n">agent_name</span><span class="p">:</span> <span class="nb">str</span>
+            <span class="n">start_time</span><span class="p">:</span> <span class="nb">str</span>
+            <span class="n">end_time</span><span class="p">:</span> <span class="nb">str</span>
+            <span class="n">status</span><span class="p">:</span> <span class="nb">str</span>
+
+        <span class="k">class</span> <span class="nc">AttackReport</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Attack Report Structure</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+
+            <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+            <span class="n">host</span><span class="p">:</span> <span class="nb">str</span>
+            <span class="n">start_time</span><span class="p">:</span> <span class="nb">str</span>
+            <span class="n">expected_end_time</span><span class="p">:</span> <span class="nb">str</span>
+            <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span>
+            <span class="n">agents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AgentStatus</span><span class="p">]</span>
+
+        <span class="n">report</span><span class="p">:</span> <span class="n">AttackReport</span> <span class="o">=</span> <span class="n">AttackReport</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_plan</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+            <span class="n">host</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">uname</span><span class="p">()[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">start_time</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attack_start_time</span><span class="p">),</span>
+            <span class="n">expected_end_time</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attack_end_time</span><span class="p">),</span>
+            <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_plan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">agents</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">configured_agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">:</span>
+            <span class="n">agent</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="n">agent</span><span class="p">[</span><span class="s2">&quot;agent_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">agent</span><span class="p">[</span><span class="s2">&quot;start_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">start_time</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">):</span>
+                <span class="n">agent</span><span class="p">[</span><span class="s2">&quot;end_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">end_time</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">agent</span><span class="p">[</span><span class="s2">&quot;end_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;NaN&quot;</span>
+            <span class="k">if</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">preserved_state</span><span class="o">.</span><span class="n">has_error</span><span class="p">:</span>
+                <span class="n">agent</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">ERROR</span><span class="o">.</span><span class="n">name</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">exit_code</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">preserved_state</span><span class="o">.</span><span class="n">is_aborted</span><span class="p">:</span>
+                <span class="n">agent</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">ABORTED</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">agent</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">current_state</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">report</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AgentStatus</span><span class="p">(</span><span class="o">**</span><span class="n">agent</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">report</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">start_attack</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs the attack as configured in testplan</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            attack status - 0 if successful else 1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Attack started&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span><span class="s2">&quot;on_attack_start&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack_end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">while</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack_end_time</span><span class="p">:</span>
+            <span class="n">current_agent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_agent_for_attack</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">current_agent</span><span class="p">:</span>
+                <span class="n">current_agent</span><span class="o">.</span><span class="n">agent_start_thread</span> <span class="o">=</span> <span class="n">current_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">start_async</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span>
+                    <span class="s2">&quot;on_each_agent_start&quot;</span><span class="p">,</span>
+                    <span class="n">current_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="n">current_agent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_agent_for_teardown</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">current_agent</span><span class="p">:</span>
+                <span class="n">current_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">current_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">teardown_async</span><span class="p">()</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span>
+                    <span class="s2">&quot;on_each_agent_teardown&quot;</span><span class="p">,</span>
+                    <span class="n">current_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_for_failed_agents</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">exit_code</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">break</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_all_running_agents_in_sync</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exit_code</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Attack failed&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Attack Completed&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span><span class="s2">&quot;on_attack_completed&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exit_code</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2846,10 +3228,10 @@ for the hooks that are being registered.</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.01824240.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.e0abf5b0.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.1514a9a0.min.js"></script>
       
     
   </body>

@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/agents/contrib/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.6">
     
     
       
@@ -21,10 +21,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.62128196.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.cd566b2a.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.9204c3b2.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
         
           
           
@@ -44,7 +44,7 @@
     
       <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../..":"../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -1815,14 +1815,12 @@ with a sample structure given below. </p>
 <span class="normal">45</span>
 <span class="normal">46</span>
 <span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">ychaos.agents.agent</span> <span class="kn">import</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">AgentConfig</span>
+<span class="normal">48</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">ychaos.agents.agent</span> <span class="kn">import</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">AgentConfig</span>
 <span class="kn">from</span> <span class="nn">ychaos.agents.utils.annotations</span> <span class="kn">import</span> <span class="n">log_agent_lifecycle</span>
 <span class="kn">from</span> <span class="nn">queue</span> <span class="kn">import</span> <span class="n">LifoQueue</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 
 
-<span class="k">class</span> <span class="nc">MyAwesomeAgentConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">MyAwesomeAgentConfig</span><span class="p">(</span><span class="n">AgentConfig</span><span class="p">):</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;my_awesome_agent&quot;</span>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;This is an invincible agent&quot;</span>
 
@@ -1863,8 +1861,8 @@ with a sample structure given below. </p>
 
 <span class="c1"># Define these 2 Global constants for the framework to import</span>
 <span class="c1"># these classes.</span>
-<span class="hll"><span class="n">AgentClass</span> <span class="o">=</span> <span class="n">MyAwesomeAgent</span>
-</span><span class="hll"><span class="n">AgentConfigClass</span> <span class="o">=</span> <span class="n">MyAwesomeAgentConfig</span>
+<span class="n">AgentClass</span> <span class="o">=</span> <span class="n">MyAwesomeAgent</span>
+<span class="hll"><span class="n">AgentConfigClass</span> <span class="o">=</span> <span class="n">MyAwesomeAgentConfig</span>
 </span></code></pre></div>
 </td></tr></table>
 <p>Once the python module is created, all that is needed to be done is to
@@ -1872,33 +1870,36 @@ import this file in testplan. Configure the attack configuration in the testplan
 as mentioned below by changing relevant parameters. Refer to the Testplan
 schema for more details.</p>
 <div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">JSON</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-    <span class="nt">&quot;attack&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;target_type&quot;</span><span class="p">:</span> <span class="s2">&quot;self&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;agents&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;contrib&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/tmp/awesome_agent.py&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="nt">&quot;key1&quot;</span><span class="p">:</span> <span class="s2">&quot;value1&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;key2&quot;</span><span class="p">:</span> <span class="s2">&quot;value2&quot;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">]</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;attack&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;target_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;self&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;agents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">            </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;contrib&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/tmp/awesome_agent.py&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;contrib_agent_config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                        </span><span class="nt">&quot;key1&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value1&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                        </span><span class="nt">&quot;key2&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value2&quot;</span><span class="w"></span>
+<span class="w">                    </span><span class="p">}</span><span class="w"></span>
+<span class="w">                </span><span class="p">}</span><span class="w"></span>
+<span class="w">            </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 </div>
 <input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">YAML</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="nn">---</span>
-<span class="nt">attack</span><span class="p">:</span>
-    <span class="nt">target_type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">self</span>     <span class="c1"># Your preferred target type</span>
-    <span class="nt">agents</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span>   <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">contrib</span>
-        <span class="nt">path</span><span class="p">:</span> <span class="s">&quot;/tmp/awesome_agent.py&quot;</span>
-        <span class="nt">config</span><span class="p">:</span>
-            <span class="nt">key1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value1</span>
-            <span class="nt">key2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value2</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"></span>
+<span class="nt">attack</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">target_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">self</span><span class="w">     </span><span class="c1"># Your preferred target type</span><span class="w"></span>
+<span class="w">    </span><span class="nt">agents</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">contrib</span><span class="w"></span>
+<span class="w">        </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/awesome_agent.py&quot;</span><span class="w"></span>
+<span class="w">            </span><span class="nt">contrib_agent_config</span><span class="p">:</span><span class="w"></span>
+<span class="w">                </span><span class="nt">key1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value1</span><span class="w"></span>
+<span class="w">                </span><span class="nt">key2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value2</span><span class="w"></span>
 </code></pre></div>
 </div>
 </div>
@@ -1981,10 +1982,10 @@ schema for more details.</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.01824240.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e0abf5b0.min.js"></script>
+      <script src="../../assets/javascripts/bundle.1514a9a0.min.js"></script>
       
     
   </body>

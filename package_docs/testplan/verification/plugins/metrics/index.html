@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/testplan/verification/plugins/metrics/">
       
       <link rel="icon" href="../../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.6">
     
     
       
@@ -21,10 +21,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.62128196.min.css">
+      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.cd566b2a.min.css">
       
         
-        <link rel="stylesheet" href="../../../../../assets/stylesheets/palette.9204c3b2.min.css">
+        <link rel="stylesheet" href="../../../../../assets/stylesheets/palette.e6a45f82.min.css">
         
           
           
@@ -44,7 +44,7 @@
     
       <link rel="stylesheet" href="../../../../../assets/_mkdocstrings.css">
     
-    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../../../../..":"../../../../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -2107,6 +2107,26 @@ ComparisonCondition            (<span title="ychaos.testplan.SchemaModel">Schema
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/plugins/metrics.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">ComparisonCondition</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+
+    <span class="n">comparator</span><span class="p">:</span> <span class="n">MetricsComparator</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Comparison condition to compare between the metrics data and fetched value&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Numerical value/range to be used for comparison&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Resolve Aliases</span>
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;comparator&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">resolve_comparator</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="n">values</span><span class="p">[</span><span class="s2">&quot;_comparator&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>  <span class="c1"># Store the actual value in a private attribute</span>
+        <span class="k">return</span> <span class="n">v</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2197,6 +2217,52 @@ MetricsAggregator            (<span title="ychaos.utils.builtins.AEnum">AEnum</s
       <p>The Metrics aggregator options. Allows the user to transform a
 time series data into comparable data.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/plugins/metrics.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">MetricsAggregator</span><span class="p">(</span><span class="n">AEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The Metrics aggregator options. Allows the user to transform a</span>
+<span class="sd">    time series data into comparable data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">AVG</span> <span class="o">=</span> <span class="s2">&quot;avg&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">aggregate</span><span class="o">=</span><span class="n">TimeSeriesDataAggregator</span><span class="o">.</span><span class="n">avg</span><span class="p">,</span>
+        <span class="n">__desc__</span><span class="o">=</span><span class="s2">&quot;Gets the Average of all valid datapoints&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">LATEST</span> <span class="o">=</span> <span class="s2">&quot;latest&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">aggregate</span><span class="o">=</span><span class="n">TimeSeriesDataAggregator</span><span class="o">.</span><span class="n">latest</span><span class="p">,</span>
+        <span class="n">__desc__</span><span class="o">=</span><span class="s2">&quot;Gets the latest valid datapoint&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">OLDEST</span> <span class="o">=</span> <span class="s2">&quot;oldest&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">aggregate</span><span class="o">=</span><span class="n">TimeSeriesDataAggregator</span><span class="o">.</span><span class="n">oldest</span><span class="p">,</span>
+        <span class="n">__desc__</span><span class="o">=</span><span class="s2">&quot;Gets the oldest valid datapoint&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">RANDOM</span> <span class="o">=</span> <span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">aggregate</span><span class="o">=</span><span class="n">TimeSeriesDataAggregator</span><span class="o">.</span><span class="n">random</span><span class="p">,</span>
+        <span class="n">__desc__</span><span class="o">=</span><span class="s2">&quot;Gets a random valid datapoint&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">MAX</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">aggregate</span><span class="o">=</span><span class="n">TimeSeriesDataAggregator</span><span class="o">.</span><span class="n">max</span><span class="p">,</span>
+        <span class="n">__desc__</span><span class="o">=</span><span class="s2">&quot;Gets the largest valid datapoint&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">MIN</span> <span class="o">=</span> <span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">aggregate</span><span class="o">=</span><span class="n">TimeSeriesDataAggregator</span><span class="o">.</span><span class="n">min</span><span class="p">,</span>
+        <span class="n">__desc__</span><span class="o">=</span><span class="s2">&quot;Gets the smallest valid datapoint&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">SLOPE</span> <span class="o">=</span> <span class="s2">&quot;slope&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">aggregate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">:</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">raise_error</span><span class="p">(</span>
+            <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This aggregator is not implemented&quot;</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">__desc__</span><span class="o">=</span><span class="s2">&quot;Gets the slope of the datapoints&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2244,6 +2310,137 @@ MetricsComparator            (<span title="ychaos.utils.builtins.AEnum">AEnum</s
 
       <p>An enumeration.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/plugins/metrics.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">MetricsComparator</span><span class="p">(</span><span class="n">AEnum</span><span class="p">):</span>
+
+    <span class="n">LT</span> <span class="o">=</span> <span class="s2">&quot;lt&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="n">expected</span><span class="p">,</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">LE</span> <span class="o">=</span> <span class="s2">&quot;le&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&lt;=&quot;</span><span class="p">,),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">data</span> <span class="o">&lt;=</span> <span class="n">expected</span><span class="p">,</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">GT</span> <span class="o">=</span> <span class="s2">&quot;gt&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="n">expected</span><span class="p">,</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">GE</span> <span class="o">=</span> <span class="s2">&quot;ge&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&gt;=&quot;</span><span class="p">,),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">data</span> <span class="o">&gt;=</span> <span class="n">expected</span><span class="p">,</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">EQ</span> <span class="o">=</span> <span class="s2">&quot;eq&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;==&quot;</span><span class="p">,),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">data</span> <span class="o">==</span> <span class="n">expected</span><span class="p">,</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">NEQ</span> <span class="o">=</span> <span class="s2">&quot;neq&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;!=&quot;</span><span class="p">,),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">data</span> <span class="o">!=</span> <span class="n">expected</span><span class="p">,</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">RANGE</span> <span class="o">=</span> <span class="s2">&quot;range&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;()&quot;</span><span class="p">,</span> <span class="s2">&quot;(]&quot;</span><span class="p">,</span> <span class="s2">&quot;[)&quot;</span><span class="p">,</span> <span class="s2">&quot;[]&quot;</span><span class="p">),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">range_type</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected_range</span><span class="p">:</span> <span class="n">MetricsComparator</span><span class="o">.</span><span class="n">range_compare</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+            <span class="n">range_type</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected_range</span>
+        <span class="p">),</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># The below comparators can only be used for state bound criteria</span>
+
+    <span class="n">PCT</span> <span class="o">=</span> <span class="s2">&quot;pct&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%%</span><span class="s2">&quot;</span><span class="p">,),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">new_data</span><span class="p">,</span> <span class="n">old_data</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">MetricsComparator</span><span class="o">.</span><span class="n">pct_compare</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+            <span class="n">new_data</span><span class="p">,</span> <span class="n">old_data</span><span class="p">,</span> <span class="n">expected</span>
+        <span class="p">),</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@validate_arguments</span>
+    <span class="k">def</span> <span class="nf">pct_compare</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">new_data</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">old_data</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the percentage variation from new_val and old_val</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            new_data: New Value from data</span>
+<span class="sd">            old_data: Old value from saved data</span>
+<span class="sd">            expected: Expected percentage change</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if the condition meets</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pct_change</span> <span class="o">=</span> <span class="p">((</span><span class="n">new_data</span> <span class="o">-</span> <span class="n">old_data</span><span class="p">)</span> <span class="o">/</span> <span class="n">old_data</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+                <span class="o">&lt;=</span> <span class="n">pct_change</span>
+                <span class="o">&lt;=</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pct_change</span> <span class="o">==</span> <span class="n">expected</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@validate_arguments</span>
+    <span class="k">def</span> <span class="nf">range_compare</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">range_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">expected_range</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            range_type: The range type that depicts inclusiveness</span>
+<span class="sd">            data: Data to be compared</span>
+<span class="sd">            expected_range: Expected range for the data to be within</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">range_type</span> <span class="o">==</span> <span class="n">MetricsComparator</span><span class="o">.</span><span class="n">RANGE</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="n">range_type</span> <span class="o">=</span> <span class="s2">&quot;()&quot;</span>
+
+        <span class="k">if</span> <span class="n">range_type</span> <span class="o">==</span> <span class="s2">&quot;()&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+                <span class="o">&lt;</span> <span class="n">data</span>
+                <span class="o">&lt;</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">range_type</span> <span class="o">==</span> <span class="s2">&quot;[)&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+                <span class="o">&lt;=</span> <span class="n">data</span>
+                <span class="o">&lt;</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">range_type</span> <span class="o">==</span> <span class="s2">&quot;(]&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+                <span class="o">&lt;</span> <span class="n">data</span>
+                <span class="o">&lt;=</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+                <span class="o">&lt;=</span> <span class="n">data</span>
+                <span class="o">&lt;=</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2295,6 +2492,23 @@ MultipleConditionalsMetricsVerificationCriteria            (<span title="ychaos.
 
       <p>Defines the Metrics Verification criteria</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/plugins/metrics.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">MultipleConditionalsMetricsVerificationCriteria</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the Metrics Verification criteria</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">aggeragator</span><span class="p">:</span> <span class="n">MetricsAggregator</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">MetricsAggregator</span><span class="o">.</span><span class="n">AVG</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Data aggregator&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">conditionals</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ComparisonCondition</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The conditionals out of which any one needs to pass for the criteria to be marked as passed&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2383,6 +2597,26 @@ StateBoundMetricsVerificationCriteria            (<span title="ychaos.testplan.S
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/plugins/metrics.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">StateBoundMetricsVerificationCriteria</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+
+    <span class="n">aggeragator</span><span class="p">:</span> <span class="n">MetricsAggregator</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">MetricsAggregator</span><span class="o">.</span><span class="n">AVG</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Data aggregator&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">criteria</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">SystemState</span><span class="p">,</span> <span class="n">ComparisonCondition</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Metrics verification criteria with state.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_criteria</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">SystemState</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">criteria</span><span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
+
+    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+        <span class="n">use_enum_values</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># To make the model JSON serializable</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2471,6 +2705,122 @@ TimeSeriesDataAggregator        </code>
 
       <p>The class containing the implementations of different Time Series data Aggregator</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/plugins/metrics.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">TimeSeriesDataAggregator</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The class containing the implementations of different Time Series data Aggregator</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_filtered_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filter the time series data by removing NAN data</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Time series data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Filtered data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">_k</span><span class="p">,</span> <span class="n">_v</span><span class="p">)</span> <span class="k">for</span> <span class="n">_k</span><span class="p">,</span> <span class="n">_v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">_v</span><span class="p">)])</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">avg</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the Average value of a time series data filtering out NAN</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Time series data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Average value over the time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_filtered_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">return_if_true</span><span class="p">(</span>
+            <span class="nb">sum</span><span class="p">(</span><span class="n">_filtered_data</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">_filtered_data</span><span class="p">),</span>
+            <span class="n">_filtered_data</span><span class="p">,</span>
+            <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">NAN</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">latest</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the latest value of a time series data filtering out NAN</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Time series data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Latest value over the time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_filtered_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">return_if_true</span><span class="p">(</span>
+            <span class="n">_filtered_data</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">_filtered_data</span><span class="p">)],</span> <span class="n">_filtered_data</span><span class="p">,</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">NAN</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">oldest</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the oldest value of a time series data filtering out NAN</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Time series data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Latest value over the time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_filtered_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">return_if_true</span><span class="p">(</span>
+            <span class="n">_filtered_data</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">_filtered_data</span><span class="p">)],</span> <span class="n">_filtered_data</span><span class="p">,</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">NAN</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the max value of a time series data filtering out NAN</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Time series data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Max value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_filtered_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">return_if_true</span><span class="p">(</span>
+            <span class="nb">max</span><span class="p">(</span><span class="n">_filtered_data</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">_filtered_data</span><span class="p">,</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">NAN</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">min</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the min value of a time series data filtering out NAN</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Time series data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Min value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_filtered_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">return_if_true</span><span class="p">(</span>
+            <span class="nb">min</span><span class="p">(</span><span class="n">_filtered_data</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">_filtered_data</span><span class="p">,</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">NAN</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">random</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the random value of a time series data filtering out NAN</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Time series data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Random value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_filtered_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">return_if_true</span><span class="p">(</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>  <span class="c1"># nosec : Not using for Crypto purpose</span>
+                <span class="nb">list</span><span class="p">(</span><span class="n">_filtered_data</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="p">),</span>
+            <span class="n">_filtered_data</span><span class="p">,</span>
+            <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">NAN</span><span class="p">,</span>
+        <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3110,10 +3460,10 @@ TimeSeriesDataAggregator        </code>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../../assets/javascripts/workers/search.01824240.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../../assets/javascripts/bundle.e0abf5b0.min.js"></script>
+      <script src="../../../../../assets/javascripts/bundle.1514a9a0.min.js"></script>
       
     
   </body>

@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/cli/agent/attack/">
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.6">
     
     
       
@@ -21,10 +21,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.62128196.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.cd566b2a.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.9204c3b2.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.e6a45f82.min.css">
         
           
           
@@ -44,7 +44,7 @@
     
       <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
     
-    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../../../..":"../../../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -1846,6 +1846,154 @@ Attack            (<span title="ychaos.cli.YChaosTestplanInputSubCommand">YChaos
 subcommand requires a valid testplan to perforrm the required attack on
 the target system.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>cli/agent/attack.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">Attack</span><span class="p">(</span><span class="n">YChaosTestplanInputSubCommand</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Agent Attack subcommand is used to perform the attack on the target. This</span>
+<span class="sd">    subcommand requires a valid testplan to perforrm the required attack on</span>
+<span class="sd">    the target system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;attack&quot;</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;YChaos Agent Attack Subcommand&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">build_parser</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArgumentParser</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Attack</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">build_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--attack-report-yaml&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;File Path to store attack report in YAML format&quot;</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;path&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">parser</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Attack</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_plan_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;testplan&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attack_report_yaml_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;attack_report_yaml&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack_report_yaml_path</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack_report_yaml_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">attack_report_yaml_path</span><span class="si">}</span><span class="s2"> is not a valid file path&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attack_report_yaml_path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_plan</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TestPlan</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Coordinator</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">validate_and_load_test_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_plan</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Attack</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_validated_test_plan</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_plan_path</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exitcode</span>
+
+    <span class="k">def</span> <span class="nf">configure_attack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinator</span> <span class="o">=</span> <span class="n">Coordinator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_plan</span><span class="p">)</span>
+
+        <span class="k">class</span> <span class="nc">YChaosAgentAttackCLIHook</span><span class="p">(</span><span class="n">YChaosCLIHook</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">YChaosAgentAttackCLIHook</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+        <span class="k">class</span> <span class="nc">OnAttackStart</span><span class="p">(</span><span class="n">YChaosAgentAttackCLIHook</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Attack Started&quot;</span><span class="p">)</span>
+
+        <span class="k">class</span> <span class="nc">OnAttackCompleted</span><span class="p">(</span><span class="n">YChaosCLIHook</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Attack Ended&quot;</span><span class="p">)</span>
+
+        <span class="k">class</span> <span class="nc">OnAgentStart</span><span class="p">(</span><span class="n">YChaosAgentAttackCLIHook</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent: </span><span class="si">{</span><span class="n">agent_name</span><span class="si">}</span><span class="s2"> - Started&quot;</span><span class="p">)</span>
+
+        <span class="k">class</span> <span class="nc">OnAgentTeardown</span><span class="p">(</span><span class="n">YChaosAgentAttackCLIHook</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent: </span><span class="si">{</span><span class="n">agent_name</span><span class="si">}</span><span class="s2"> - Teardown started&quot;</span><span class="p">)</span>
+
+        <span class="k">class</span> <span class="nc">OnAgentStop</span><span class="p">(</span><span class="n">YChaosAgentAttackCLIHook</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent: </span><span class="si">{</span><span class="n">agent_name</span><span class="si">}</span><span class="s2"> - Stopped&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">register_hook</span><span class="p">(</span><span class="s2">&quot;on_attack_start&quot;</span><span class="p">,</span> <span class="n">OnAttackStart</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">register_hook</span><span class="p">(</span>
+            <span class="s2">&quot;on_attack_completed&quot;</span><span class="p">,</span>
+            <span class="n">OnAttackCompleted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">register_hook</span><span class="p">(</span><span class="s2">&quot;on_each_agent_start&quot;</span><span class="p">,</span> <span class="n">OnAgentStart</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">register_hook</span><span class="p">(</span>
+            <span class="s2">&quot;on_each_agent_teardown&quot;</span><span class="p">,</span>
+            <span class="n">OnAgentTeardown</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">register_hook</span><span class="p">(</span><span class="s2">&quot;on_each_agent_stop&quot;</span><span class="p">,</span> <span class="n">OnAgentStop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">configure_agent_in_test_plan</span><span class="p">()</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span>
+            <span class="n">Column</span><span class="p">(</span><span class="s2">&quot;Agent&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">),</span>
+            <span class="n">Column</span><span class="p">(</span><span class="s2">&quot;Start Delay&quot;</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">),</span>
+            <span class="n">Column</span><span class="p">(</span><span class="s2">&quot;Start Time&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">),</span>
+            <span class="n">Column</span><span class="p">(</span><span class="s2">&quot;End Time&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">),</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Configured Agents&quot;</span><span class="p">,</span>
+            <span class="n">show_header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">header_style</span><span class="o">=</span><span class="s2">&quot;bold magenta&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">configured_agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">:</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span>
+                <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">start_delay</span><span class="p">),</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">start_time</span><span class="p">),</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">end_time</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">)</span>
+                <span class="k">else</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">print_all_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">all_exceptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">get_all_exceptions</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">all_exceptions</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">e</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">print_exception</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">dump_attack_report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack_report_yaml_path</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">yaml</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">attack_report_yaml_path</span><span class="p">,</span>
+                <span class="s2">&quot;w&quot;</span><span class="p">,</span>
+            <span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">generate_attack_report</span><span class="p">(),</span>
+                    <span class="n">fp</span><span class="p">,</span>
+                    <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">Dumper</span><span class="o">=</span><span class="n">Dumper</span><span class="p">,</span>
+                    <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attack report stored at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">attack_report_yaml_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">_exitcode</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">agent</span><span class="o">.</span><span class="n">_exitcode</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">agent</span><span class="o">.</span><span class="n">validate_and_load_test_plan</span><span class="p">():</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">configure_attack</span><span class="p">()</span>
+            <span class="k">assert</span> <span class="n">agent</span><span class="o">.</span><span class="n">coordinator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+            <span class="n">agent</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">start_attack</span><span class="p">()</span>
+
+            <span class="n">agent</span><span class="o">.</span><span class="n">print_all_errors</span><span class="p">()</span>
+
+            <span class="n">agent</span><span class="o">.</span><span class="n">dump_attack_report</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">_exitcode</span> <span class="ow">or</span> <span class="n">agent</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">get_exit_status</span><span class="p">():</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Attack failed&quot;</span><span class="p">)</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">set_exitcode</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">agent</span><span class="o">.</span><span class="n">_exitcode</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2119,10 +2267,10 @@ is called with one argument args of type Namespace which contains the parsed val
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.01824240.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.e0abf5b0.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.1514a9a0.min.js"></script>
       
     
   </body>

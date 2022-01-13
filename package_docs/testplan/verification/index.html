@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/testplan/verification/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.6">
     
     
       
@@ -21,10 +21,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.62128196.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.cd566b2a.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.9204c3b2.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.e6a45f82.min.css">
         
           
           
@@ -44,7 +44,7 @@
     
       <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../../..":"../../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -2422,6 +2422,49 @@ HTTPRequestSchema            (<span title="ychaos.testplan.SchemaModel">SchemaMo
 
       <p>The Base class for Plugin that make a HTTP Network call.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/__init__.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">HTTPRequestSchema</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The Base class for Plugin that make a HTTP Network call.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;HTTP method to be used&quot;</span><span class="p">)</span>
+    <span class="n">headers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">SecretStr</span><span class="p">,</span> <span class="n">Secret</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Headers to be sent with the request&quot;</span>
+    <span class="p">)</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Query params to be sent with the request&quot;</span>
+    <span class="p">)</span>
+    <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Verify the target URL SSL certificates&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Authentication</span>
+    <span class="n">basic_auth</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">SecretStr</span><span class="p">,</span> <span class="n">Secret</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Basic Auth authentication for the HTTP call&quot;</span>
+    <span class="p">)</span>
+    <span class="n">bearer_token</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">SecretStr</span><span class="p">,</span> <span class="n">Secret</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Bearer token authentication for the HTTP call&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Certificate</span>
+    <span class="n">cert</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The certificate to be sent for HTTP call. The tuple should contain Certificate and Key File path&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Timeout in milliseconds at which the HTTP requests will timeout&quot;</span><span class="p">,</span>
+        <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">_validate_method</span> <span class="o">=</span> <span class="n">validator</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)(</span>
+        <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Request</span><span class="o">.</span><span class="n">validate_method</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2647,6 +2690,39 @@ response time of the service being less than <code>latency</code> field.</p>
 <p>The user can also specify a <code>count</code> attribute requesting the tool to make
 <code>count</code> number of requests to the same endpoints.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/__init__.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">HTTPRequestVerification</span><span class="p">(</span><span class="n">HTTPRequestSchema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Makes requests to the specified endpoints and verifies that</span>
+<span class="sd">    the service is returning a valid response along with verifying the</span>
+<span class="sd">    response time of the service being less than `latency` field.</span>
+
+<span class="sd">    The user can also specify a `count` attribute requesting the tool to make</span>
+<span class="sd">    `count` number of requests to the same endpoints.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of HTTP calls to be sent to each of the URL&quot;</span><span class="p">,</span>
+        <span class="n">ge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">latency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Expected Latency in ms. A latency below this value indicates successful verification&quot;</span><span class="p">,</span>
+        <span class="n">ge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">status_codes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">)),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The list of status code which will be the comparison factor for the HTTP responses&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AnyHttpUrl</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of HTTP/s URLs to be requested&quot;</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2782,6 +2858,55 @@ OpenTSDBVerification            (<a title="ychaos.testplan.verification.HTTPRequ
       <p>The OpenTSDB Verification Plugin gets the metrics from an OpenTSDB server and compares it with the
 provided comparison parameters in the testplan. If the condition passes</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/__init__.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">OpenTSDBVerification</span><span class="p">(</span><span class="n">HTTPRequestSchema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The OpenTSDB Verification Plugin gets the metrics from an OpenTSDB server and compares it with the</span>
+<span class="sd">    provided comparison parameters in the testplan. If the condition passes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">url</span><span class="p">:</span> <span class="n">AnyHttpUrl</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The OpenTSDB server URL to get the metrics from&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Override method to change default value</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;HTTP method to be used&quot;</span><span class="p">)</span>
+
+    <span class="n">query</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The OpenTSDB query sent to the server.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">criteria</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MultipleConditionalsMetricsVerificationCriteria</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Metrics verification criteria without state information.&quot;</span>
+            <span class="s2">&quot;All the criteria part of this list must pass for the verification to be successful&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">state_bound_criteria</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">StateBoundMetricsVerificationCriteria</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Metrics verification criteria with state.&quot;</span>
+            <span class="s2">&quot;All the criteria part of this list must pass for the verification to be successful&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;state_bound_criteria&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_criteria_validation</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="c1"># The input must contain at least one of &quot;criteria&quot; or &quot;state_bound_criteria&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;criteria&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">()):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Either criteria or state_bound_criteria must be present for this configuration.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span>
+
+    <span class="n">_validate_method</span> <span class="o">=</span> <span class="n">validator</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)(</span>
+        <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Request</span><span class="o">.</span><span class="n">validate_method</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2923,6 +3048,35 @@ the script by separating each element of the argument by space.</p>
 is only responsible of running the script and collecting the exitcode of the script
 with which the state of the system is verified/monitored.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/__init__.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">PythonModuleVerification</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The Python Module verification. Runs an custom python script given</span>
+<span class="sd">    the path of the script. The executable of the script is set to `sys.executable` by</span>
+<span class="sd">    default which can be overridden by a custom executable. The script can also be passed</span>
+<span class="sd">    a list of arguments that are provided in the arguments argument which are passed to</span>
+<span class="sd">    the script by separating each element of the argument by space.</span>
+
+<span class="sd">    The user of this plugin takes the entire responsibility of the script executed. YChaos</span>
+<span class="sd">    is only responsible of running the script and collecting the exitcode of the script</span>
+<span class="sd">    with which the state of the system is verified/monitored.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The absolute path of the python script&quot;</span><span class="p">)</span>
+    <span class="n">executable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The python shell to be used for executing the script&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">arguments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of arguments to be sent to the script. The arguments in the list will be sent to the script space separated&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">safe_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">]</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3040,6 +3194,38 @@ successful completion of that SDv4 job, the verification is marked as successful
 <p>If the SDv4 job fails/is aborted, the verification is marked as failure.</p>
 <p><a href="https://screwdriver.cd/">Know more about Screwdriver CI/CD</a></p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/__init__.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">SDv4Verification</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The SDV4VerificationPlugin offers the user of YChaos to configure</span>
+<span class="sd">    a 3rd party Screwdriver Job that is triggered remotely by YChaos and upon the</span>
+<span class="sd">    successful completion of that SDv4 job, the verification is marked as successful.</span>
+
+<span class="sd">    If the SDv4 job fails/is aborted, the verification is marked as failure.</span>
+
+<span class="sd">    [Know more about Screwdriver CI/CD](https://screwdriver.cd/)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pipeline_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;SDv4 pipeline ID&quot;</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">123456</span><span class="p">,</span> <span class="mi">1041241</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">job_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Job name in the pipeline&quot;</span><span class="p">,</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;test_validation&quot;</span><span class="p">,</span> <span class="s2">&quot;state_verification&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="n">sd_api_url</span><span class="p">:</span> <span class="n">AnyHttpUrl</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;SDv4 API URL&quot;</span><span class="p">)</span>
+    <span class="n">sd_api_token</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SecretStr</span><span class="p">,</span> <span class="n">Secret</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The Screwdriver pipeline/user access token to be able to start the jon in the pipeline&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">job_timeout</span><span class="p">:</span> <span class="n">PositiveInt</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Job Timeout in seconds&quot;</span><span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3200,6 +3386,77 @@ VerificationConfig            (<span title="ychaos.testplan.SchemaModel">SchemaM
       <p>The verification configuration that is executed during some state of the system
 to verify the system is in a favorable conditions or not.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/__init__.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">VerificationConfig</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The verification configuration that is executed during some state of the system</span>
+<span class="sd">    to verify the system is in a favorable conditions or not.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">delay_before</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;delay (in ms) to be introduced before running this plugin&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">delay_after</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;delay (in ms) to be introduced after running this plugin&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">states</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SystemState</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">SystemState</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A system state or a list of system states in which this verification plugin should be executed.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nb">type</span><span class="p">:</span> <span class="n">VerificationType</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The verification type to be used.&quot;</span><span class="p">)</span>
+
+    <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Setting this value to false implies the overall verification&quot;</span>
+            <span class="s2">&quot; does not fail because of the failure of this test.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The verification type configuration&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_verification_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;states&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_parse_states_to_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the state object to List of states to keep</span>
+<span class="sd">        the access consistent</span>
+<span class="sd">        Args:</span>
+<span class="sd">            v: SystemState object/ List of SystemState</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of SystemState</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">wrap_if_non_iterable</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_parse_plugin_configuration</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validates the plugin configuration to match with the</span>
+<span class="sd">        mapper class of the plugin.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            v: Plugin configuration</span>
+<span class="sd">            values: verification configuration</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Parsed mapper object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;type&quot;</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">VerificationType</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="o">**</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">v</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3378,6 +3635,28 @@ VerificationType            (<span title="ychaos.utils.builtins.AEnum">AEnum</sp
 
       <p>Defines the Type of plugin to be used for verification.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/__init__.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">VerificationType</span><span class="p">(</span><span class="n">AEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the Type of plugin to be used for verification.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># The metadata object will contain the following attributes</span>
+    <span class="c1"># 1. schema : The Schema class of the VerificationType</span>
+
+    <span class="n">PYTHON_MODULE</span> <span class="o">=</span> <span class="s2">&quot;python_module&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">PythonModuleVerification</span><span class="p">)</span>
+    <span class="n">HTTP_REQUEST</span> <span class="o">=</span> <span class="s2">&quot;http_request&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">HTTPRequestVerification</span><span class="p">)</span>
+    <span class="n">SDV4_VERIFICATION</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;sdv4&quot;</span><span class="p">,</span>
+        <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">SDv4Verification</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">OPENTSDB_VERIFICATION</span> <span class="o">=</span> <span class="s2">&quot;tsdb&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">OpenTSDBVerification</span><span class="p">)</span>
+
+    <span class="c1"># For Testing purpose, cannot be used by users.</span>
+    <span class="n">NOOP</span> <span class="o">=</span> <span class="s2">&quot;noop&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">NoOpConfig</span><span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3482,6 +3761,26 @@ ComparisonCondition            (<span title="ychaos.testplan.SchemaModel">Schema
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/plugins/metrics.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">ComparisonCondition</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+
+    <span class="n">comparator</span><span class="p">:</span> <span class="n">MetricsComparator</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Comparison condition to compare between the metrics data and fetched value&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Numerical value/range to be used for comparison&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Resolve Aliases</span>
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;comparator&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">resolve_comparator</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="n">values</span><span class="p">[</span><span class="s2">&quot;_comparator&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>  <span class="c1"># Store the actual value in a private attribute</span>
+        <span class="k">return</span> <span class="n">v</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3572,6 +3871,52 @@ MetricsAggregator            (<span title="ychaos.utils.builtins.AEnum">AEnum</s
       <p>The Metrics aggregator options. Allows the user to transform a
 time series data into comparable data.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/plugins/metrics.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">MetricsAggregator</span><span class="p">(</span><span class="n">AEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The Metrics aggregator options. Allows the user to transform a</span>
+<span class="sd">    time series data into comparable data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">AVG</span> <span class="o">=</span> <span class="s2">&quot;avg&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">aggregate</span><span class="o">=</span><span class="n">TimeSeriesDataAggregator</span><span class="o">.</span><span class="n">avg</span><span class="p">,</span>
+        <span class="n">__desc__</span><span class="o">=</span><span class="s2">&quot;Gets the Average of all valid datapoints&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">LATEST</span> <span class="o">=</span> <span class="s2">&quot;latest&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">aggregate</span><span class="o">=</span><span class="n">TimeSeriesDataAggregator</span><span class="o">.</span><span class="n">latest</span><span class="p">,</span>
+        <span class="n">__desc__</span><span class="o">=</span><span class="s2">&quot;Gets the latest valid datapoint&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">OLDEST</span> <span class="o">=</span> <span class="s2">&quot;oldest&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">aggregate</span><span class="o">=</span><span class="n">TimeSeriesDataAggregator</span><span class="o">.</span><span class="n">oldest</span><span class="p">,</span>
+        <span class="n">__desc__</span><span class="o">=</span><span class="s2">&quot;Gets the oldest valid datapoint&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">RANDOM</span> <span class="o">=</span> <span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">aggregate</span><span class="o">=</span><span class="n">TimeSeriesDataAggregator</span><span class="o">.</span><span class="n">random</span><span class="p">,</span>
+        <span class="n">__desc__</span><span class="o">=</span><span class="s2">&quot;Gets a random valid datapoint&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">MAX</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">aggregate</span><span class="o">=</span><span class="n">TimeSeriesDataAggregator</span><span class="o">.</span><span class="n">max</span><span class="p">,</span>
+        <span class="n">__desc__</span><span class="o">=</span><span class="s2">&quot;Gets the largest valid datapoint&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">MIN</span> <span class="o">=</span> <span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">aggregate</span><span class="o">=</span><span class="n">TimeSeriesDataAggregator</span><span class="o">.</span><span class="n">min</span><span class="p">,</span>
+        <span class="n">__desc__</span><span class="o">=</span><span class="s2">&quot;Gets the smallest valid datapoint&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">SLOPE</span> <span class="o">=</span> <span class="s2">&quot;slope&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">aggregate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">:</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">raise_error</span><span class="p">(</span>
+            <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This aggregator is not implemented&quot;</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">__desc__</span><span class="o">=</span><span class="s2">&quot;Gets the slope of the datapoints&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3619,6 +3964,137 @@ MetricsComparator            (<span title="ychaos.utils.builtins.AEnum">AEnum</s
 
       <p>An enumeration.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/plugins/metrics.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">MetricsComparator</span><span class="p">(</span><span class="n">AEnum</span><span class="p">):</span>
+
+    <span class="n">LT</span> <span class="o">=</span> <span class="s2">&quot;lt&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="n">expected</span><span class="p">,</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">LE</span> <span class="o">=</span> <span class="s2">&quot;le&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&lt;=&quot;</span><span class="p">,),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">data</span> <span class="o">&lt;=</span> <span class="n">expected</span><span class="p">,</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">GT</span> <span class="o">=</span> <span class="s2">&quot;gt&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="n">expected</span><span class="p">,</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">GE</span> <span class="o">=</span> <span class="s2">&quot;ge&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&gt;=&quot;</span><span class="p">,),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">data</span> <span class="o">&gt;=</span> <span class="n">expected</span><span class="p">,</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">EQ</span> <span class="o">=</span> <span class="s2">&quot;eq&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;==&quot;</span><span class="p">,),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">data</span> <span class="o">==</span> <span class="n">expected</span><span class="p">,</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">NEQ</span> <span class="o">=</span> <span class="s2">&quot;neq&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;!=&quot;</span><span class="p">,),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">data</span> <span class="o">!=</span> <span class="n">expected</span><span class="p">,</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">RANGE</span> <span class="o">=</span> <span class="s2">&quot;range&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;()&quot;</span><span class="p">,</span> <span class="s2">&quot;(]&quot;</span><span class="p">,</span> <span class="s2">&quot;[)&quot;</span><span class="p">,</span> <span class="s2">&quot;[]&quot;</span><span class="p">),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">range_type</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected_range</span><span class="p">:</span> <span class="n">MetricsComparator</span><span class="o">.</span><span class="n">range_compare</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+            <span class="n">range_type</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">expected_range</span>
+        <span class="p">),</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># The below comparators can only be used for state bound criteria</span>
+
+    <span class="n">PCT</span> <span class="o">=</span> <span class="s2">&quot;pct&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+        <span class="n">__aliases__</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%%</span><span class="s2">&quot;</span><span class="p">,),</span>
+        <span class="n">compare</span><span class="o">=</span><span class="k">lambda</span> <span class="n">new_data</span><span class="p">,</span> <span class="n">old_data</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">MetricsComparator</span><span class="o">.</span><span class="n">pct_compare</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+            <span class="n">new_data</span><span class="p">,</span> <span class="n">old_data</span><span class="p">,</span> <span class="n">expected</span>
+        <span class="p">),</span>
+        <span class="n">relational</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@validate_arguments</span>
+    <span class="k">def</span> <span class="nf">pct_compare</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">new_data</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">old_data</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the percentage variation from new_val and old_val</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            new_data: New Value from data</span>
+<span class="sd">            old_data: Old value from saved data</span>
+<span class="sd">            expected: Expected percentage change</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if the condition meets</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pct_change</span> <span class="o">=</span> <span class="p">((</span><span class="n">new_data</span> <span class="o">-</span> <span class="n">old_data</span><span class="p">)</span> <span class="o">/</span> <span class="n">old_data</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+                <span class="o">&lt;=</span> <span class="n">pct_change</span>
+                <span class="o">&lt;=</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pct_change</span> <span class="o">==</span> <span class="n">expected</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@validate_arguments</span>
+    <span class="k">def</span> <span class="nf">range_compare</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">range_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">expected_range</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            range_type: The range type that depicts inclusiveness</span>
+<span class="sd">            data: Data to be compared</span>
+<span class="sd">            expected_range: Expected range for the data to be within</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">range_type</span> <span class="o">==</span> <span class="n">MetricsComparator</span><span class="o">.</span><span class="n">RANGE</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="n">range_type</span> <span class="o">=</span> <span class="s2">&quot;()&quot;</span>
+
+        <span class="k">if</span> <span class="n">range_type</span> <span class="o">==</span> <span class="s2">&quot;()&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+                <span class="o">&lt;</span> <span class="n">data</span>
+                <span class="o">&lt;</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">range_type</span> <span class="o">==</span> <span class="s2">&quot;[)&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+                <span class="o">&lt;=</span> <span class="n">data</span>
+                <span class="o">&lt;</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">range_type</span> <span class="o">==</span> <span class="s2">&quot;(]&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+                <span class="o">&lt;</span> <span class="n">data</span>
+                <span class="o">&lt;=</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+                <span class="o">&lt;=</span> <span class="n">data</span>
+                <span class="o">&lt;=</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expected_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3670,6 +4146,23 @@ MultipleConditionalsMetricsVerificationCriteria            (<span title="ychaos.
 
       <p>Defines the Metrics Verification criteria</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/plugins/metrics.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">MultipleConditionalsMetricsVerificationCriteria</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the Metrics Verification criteria</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">aggeragator</span><span class="p">:</span> <span class="n">MetricsAggregator</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">MetricsAggregator</span><span class="o">.</span><span class="n">AVG</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Data aggregator&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">conditionals</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ComparisonCondition</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The conditionals out of which any one needs to pass for the criteria to be marked as passed&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3758,6 +4251,26 @@ StateBoundMetricsVerificationCriteria            (<span title="ychaos.testplan.S
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/plugins/metrics.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">StateBoundMetricsVerificationCriteria</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+
+    <span class="n">aggeragator</span><span class="p">:</span> <span class="n">MetricsAggregator</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">MetricsAggregator</span><span class="o">.</span><span class="n">AVG</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Data aggregator&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">criteria</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">SystemState</span><span class="p">,</span> <span class="n">ComparisonCondition</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Metrics verification criteria with state.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_criteria</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">SystemState</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">criteria</span><span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
+
+    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+        <span class="n">use_enum_values</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># To make the model JSON serializable</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3846,6 +4359,122 @@ TimeSeriesDataAggregator        </code>
 
       <p>The class containing the implementations of different Time Series data Aggregator</p>
 
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/plugins/metrics.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">TimeSeriesDataAggregator</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The class containing the implementations of different Time Series data Aggregator</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_filtered_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filter the time series data by removing NAN data</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Time series data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Filtered data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">_k</span><span class="p">,</span> <span class="n">_v</span><span class="p">)</span> <span class="k">for</span> <span class="n">_k</span><span class="p">,</span> <span class="n">_v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">_v</span><span class="p">)])</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">avg</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the Average value of a time series data filtering out NAN</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Time series data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Average value over the time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_filtered_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">return_if_true</span><span class="p">(</span>
+            <span class="nb">sum</span><span class="p">(</span><span class="n">_filtered_data</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">_filtered_data</span><span class="p">),</span>
+            <span class="n">_filtered_data</span><span class="p">,</span>
+            <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">NAN</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">latest</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the latest value of a time series data filtering out NAN</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Time series data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Latest value over the time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_filtered_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">return_if_true</span><span class="p">(</span>
+            <span class="n">_filtered_data</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">_filtered_data</span><span class="p">)],</span> <span class="n">_filtered_data</span><span class="p">,</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">NAN</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">oldest</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the oldest value of a time series data filtering out NAN</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Time series data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Latest value over the time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_filtered_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">return_if_true</span><span class="p">(</span>
+            <span class="n">_filtered_data</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">_filtered_data</span><span class="p">)],</span> <span class="n">_filtered_data</span><span class="p">,</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">NAN</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the max value of a time series data filtering out NAN</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Time series data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Max value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_filtered_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">return_if_true</span><span class="p">(</span>
+            <span class="nb">max</span><span class="p">(</span><span class="n">_filtered_data</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">_filtered_data</span><span class="p">,</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">NAN</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">min</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the min value of a time series data filtering out NAN</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Time series data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Min value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_filtered_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">return_if_true</span><span class="p">(</span>
+            <span class="nb">min</span><span class="p">(</span><span class="n">_filtered_data</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">_filtered_data</span><span class="p">,</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">NAN</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">random</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the random value of a time series data filtering out NAN</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Time series data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Random value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_filtered_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">return_if_true</span><span class="p">(</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>  <span class="c1"># nosec : Not using for Crypto purpose</span>
+                <span class="nb">list</span><span class="p">(</span><span class="n">_filtered_data</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="p">),</span>
+            <span class="n">_filtered_data</span><span class="p">,</span>
+            <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Float</span><span class="o">.</span><span class="n">NAN</span><span class="p">,</span>
+        <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -4503,10 +5132,10 @@ TimeSeriesDataAggregator        </code>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.01824240.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.e0abf5b0.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.1514a9a0.min.js"></script>
       
     
   </body>

@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/agents/agent/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.6">
     
     
       
@@ -21,10 +21,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.62128196.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.cd566b2a.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.9204c3b2.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.e6a45f82.min.css">
         
           
           
@@ -44,7 +44,7 @@
     
       <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../../..":"../../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -2205,6 +2205,210 @@ for consuming CPU resources during the time interval its run.</p>
 the state in which the agent is currently in. The agent is advanced to the next state before
 executing any of the lifecycle methods.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>agents/agent.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">Agent</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An agent is an attack module that is configured to cause some kind of chaos on</span>
+<span class="sd">    the target. A very simple of agent is the CPU Burn agent that is responsible</span>
+<span class="sd">    for consuming CPU resources during the time interval its run.</span>
+
+<span class="sd">    Each agent takes in one configuration object that is a subclass of AgentConfig.</span>
+
+<span class="sd">    The agents have a lifecycle defined in `AgentState` each of them indicating</span>
+<span class="sd">    the state in which the agent is currently in. The agent is advanced to the next state before</span>
+<span class="sd">    executing any of the lifecycle methods.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize an agent with a configuration</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            InsufficientPermissionError: When the agent is configured to be sudo, but the agent is not run as root.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config: Agent configuration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__run_exc_wrapper</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stopper</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span>
+            <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__teardown_exc_wrapper</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_teardown&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_async_run</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># can be used as a flag to stop the attack and return from `run` method</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_status</span> <span class="o">=</span> <span class="n">LifoQueue</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_history</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">preserved_state</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">has_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_aborted</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">INIT</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LifoQueue</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Defines the implementation to monitor some stats for this agent and return a queue of</span>
+<span class="sd">        the status</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A Queue of the status for this agent.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Defines the setup method. Used to set up the resources</span>
+<span class="sd">        required for the agent. This is usually called before start</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">SETUP</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Define what the agent does for the attack. Calling this method will block the calling thread.</span>
+<span class="sd">        Caller has to take responsibility of updating the state of the agent once it is done.</span>
+<span class="sd">        Use `start` or `start_async` for a better usage.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AgentError: if `config.error_on_state_mismatch` is True and current state is not SETUP</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_state</span> <span class="o">!=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">SETUP</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">raise_on_state_mismatch</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">ABORTED</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">AgentError</span><span class="p">(</span><span class="s2">&quot;Agent state is not in SETUP state. Bailing out&quot;</span><span class="p">)</span>
+
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Agent is currently not in the SETUP state. Proceeding anyway&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_runnable</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">AgentError</span><span class="p">(</span><span class="s2">&quot;Agent not in executable state. Bailing out&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">coro</span><span class="o">=</span><span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">pass_coroutine</span><span class="p">,</span>
+        <span class="n">args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(),</span>
+        <span class="n">interval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A blocking start call. This method waits for the agent process to complete/exit.</span>
+<span class="sd">        Calls a `coro` coroutine every `interval` seconds</span>
+<span class="sd">        Also sets the agent state on COMPLETED/ERROR.</span>
+<span class="sd">        Use `start_async()` method for the runner thread to run in background</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            coro: A function to call every `interval` seconds when the _runner is alive</span>
+<span class="sd">            args: Arguments</span>
+<span class="sd">            interval: Interval between 2 coroutine calls</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
+            <span class="n">coro</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">COMPLETED</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">start_async</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Thread</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unblocking call to start the run method. It is the responsibility of the</span>
+<span class="sd">        caller to update the agent with its state, handle exceptions, etc.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span>
+
+    <span class="k">def</span> <span class="nf">teardown_async</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Thread</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Non blocking call to start the teardown method. The caller takes full responsibility of handing</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            teardown_async Thread instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stopper</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stopper</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">teardown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This is called once the execute method is done to ensure a rollback is done</span>
+<span class="sd">        to the state the agent entered.It wait for start_async thread to stop if its alive.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">TEARDOWN</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_async_run</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">is_runnable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fail Fast approach to find if the agent will be able to proceed to the next step.</span>
+<span class="sd">        It is advised to run this method before running, start, run or start_async to</span>
+<span class="sd">        avoid any mishaps in testing.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if able to proceed, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_state</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">is_sudo</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">geteuid</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">advance_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">AgentState</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_history</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">state</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentState</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the current state of the agent.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            current state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_history</span><span class="p">:</span>
+            <span class="c1"># Never possible</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state_history</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">UNDEFINED</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__run_exc_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__teardown_exc_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">teardown</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">DONE</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2849,6 +3053,52 @@ AgentConfig            (<span title="pydantic.main.BaseModel">BaseModel</span>)
 for any agent. Custom configuration attributes can be added to individual agent by inheriting
 this model.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>agents/agent.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">AgentConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The configuration of the agent that is to be run. This is the base configuration</span>
+<span class="sd">    for any agent. Custom configuration attributes can be added to individual agent by inheriting</span>
+<span class="sd">    this model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A one word identifier for the Agent.&quot;</span><span class="p">)</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;An awesome YChaos agent.&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Multiline description of the agent in consideration&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">priority</span><span class="p">:</span> <span class="n">AgentPriority</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">AgentPriority</span><span class="o">.</span><span class="n">UNDEFINED_PRIORITY</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A priority assigned to the agent.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Runner configurations (Advanced configuration parameters)</span>
+    <span class="n">is_sudo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Setting this to true, requires the agent to run as root.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Be very careful when setting this key to False.</span>
+    <span class="c1"># If you are aware of what you are doing, then go ahead.</span>
+    <span class="n">raise_on_state_mismatch</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Raise error on state mismatch&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">start_delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Give a delay of few seconds before running this agent&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The Fallback factory method to use where the Agent</span>
+<span class="sd">        instance depends on the configuration</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An agent subclass of Agent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3075,6 +3325,18 @@ AgentMonitoringDataPoint            (<span title="pydantic.main.BaseModel">BaseM
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>agents/agent.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">AgentMonitoringDataPoint</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Data from the agent at `timestamp` instant&quot;</span>
+    <span class="p">)</span>
+    <span class="n">state</span><span class="p">:</span> <span class="n">AgentState</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The state of the agent at `timestamp` instant&quot;</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3164,6 +3426,17 @@ AgentPriority            (<span title="enum.IntEnum">IntEnum</span>)
 
       <p>An enumeration.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>agents/agent.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">AgentPriority</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">VERY_HIGH_PRIORITY</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">HIGH_PRIORITY</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">MODERATE_PRIORITY</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">LOW_PRIORITY</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">VERY_LOW_PRIORITY</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">UNDEFINED_PRIORITY</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3210,6 +3483,21 @@ AgentState            (<span title="enum.IntEnum">IntEnum</span>)
 
       <p>An enumeration.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>agents/agent.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">AgentState</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">SKIPPED</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span>
+    <span class="n">ABORTED</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
+    <span class="n">ERROR</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">UNDEFINED</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">INIT</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">SETUP</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">RUNNING</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">COMPLETED</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">TEARDOWN</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">DONE</span> <span class="o">=</span> <span class="mi">6</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3265,6 +3553,21 @@ TimedAgentConfig            (<a title="ychaos.agents.agent.AgentConfig" href="#y
 is used for agents that are supposed to run for a particular amount of time before going
 to teardown state.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>agents/agent.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">TimedAgentConfig</span><span class="p">(</span><span class="n">AgentConfig</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The configuration of the agent which is constrained by a duration. This configuration</span>
+<span class="sd">    is used for agents that are supposed to run for a particular amount of time before going</span>
+<span class="sd">    to teardown state.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The duration for which this agent should run&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -3400,10 +3703,10 @@ to teardown state.</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.01824240.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.e0abf5b0.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.1514a9a0.min.js"></script>
       
     
   </body>

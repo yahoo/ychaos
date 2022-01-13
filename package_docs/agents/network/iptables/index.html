@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/agents/network/iptables/">
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.6">
     
     
       
@@ -21,10 +21,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.62128196.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.cd566b2a.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.9204c3b2.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.e6a45f82.min.css">
         
           
           
@@ -44,7 +44,7 @@
     
       <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
     
-    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../../../..":"../../../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -2033,6 +2033,84 @@ DNSBlock            (<a title="ychaos.agents.agent.Agent" href="../../agent/#ych
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>agents/network/iptables.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">DNSBlock</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+
+    <span class="n">DNS_PORT</span> <span class="o">=</span> <span class="mi">53</span>
+
+    <span class="nd">@validate_arguments</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">DNSBlockConfig</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DNSBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LifoQueue</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status</span>
+
+    <span class="nd">@log_agent_lifecycle</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DNSBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">raise_io_error_on_iptables_failure</span><span class="p">(</span><span class="n">proc</span><span class="p">:</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CompletedProcess</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="nd">@log_agent_lifecycle</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DNSBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+        <span class="n">_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sudo iptables -I OUTPUT -p udp --dport </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DNS_PORT</span><span class="si">}</span><span class="s2"> -j DROP -w </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iptables_wait</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># nosec</span>
+            <span class="n">_cmd</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raise_io_error_on_iptables_failure</span><span class="p">(</span>
+            <span class="n">proc</span><span class="p">,</span> <span class="s2">&quot;Error While Adding IPTables Rule: DROP udp port: 53 to OUTPUT chain&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sudo iptables -I OUTPUT -p tcp --dport </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DNS_PORT</span><span class="si">}</span><span class="s2"> -j DROP -w </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iptables_wait</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># nosec</span>
+            <span class="n">_cmd</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raise_io_error_on_iptables_failure</span><span class="p">(</span>
+            <span class="n">proc</span><span class="p">,</span> <span class="s2">&quot;Error While Adding IpTable Rule: DROP tcp port: 53 to OUTPUT Chain&quot;</span>
+        <span class="p">)</span>
+
+    <span class="nd">@log_agent_lifecycle</span>
+    <span class="k">def</span> <span class="nf">teardown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_current_state_temporary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_state</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DNSBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">teardown</span><span class="p">()</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">_current_state_temporary</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">AgentState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span>
+            <span class="n">AgentState</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span>
+            <span class="n">AgentState</span><span class="o">.</span><span class="n">ABORTED</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="n">_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sudo iptables -D OUTPUT -p udp --dport </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DNS_PORT</span><span class="si">}</span><span class="s2"> -j DROP -w </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iptables_wait</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># nosec</span>
+                <span class="n">_cmd</span><span class="p">,</span>
+                <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">error</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">error</span>
+
+            <span class="n">_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sudo iptables -D OUTPUT -p tcp --dport </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DNS_PORT</span><span class="si">}</span><span class="s2"> -j DROP -w </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iptables_wait</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># nosec</span>
+                <span class="n">_cmd</span><span class="p">,</span>
+                <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">error</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">error</span>
+
+        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">AgentError</span><span class="p">(</span><span class="s2">&quot;Error Occurred while removing iptables rule&quot;</span><span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2123,6 +2201,25 @@ DNSBlockConfig            (<a title="ychaos.agents.agent.TimedAgentConfig" href=
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>agents/network/iptables.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">DNSBlockConfig</span><span class="p">(</span><span class="n">TimedAgentConfig</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;block_dns&quot;</span>
+    <span class="n">desc</span> <span class="o">=</span> <span class="s2">&quot;This agent modifies the iptables rules to block traffic to DNS ports&quot;</span>
+
+    <span class="n">is_sudo</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">iptables_wait</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;The duration(in secs) for the agent waits to achieve the wait for the iptables command to achieve exclusive lock. &quot;</span>
+            <span class="s2">&quot;This corresponds to -w option in iptables command&quot;</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">lt</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+        <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2187,6 +2284,202 @@ IPTablesBlock            (<a title="ychaos.agents.agent.Agent" href="../../agent
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>agents/network/iptables.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">IPTablesBlock</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+    <span class="nd">@validate_arguments</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">IPTablesBlockConfig</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IPTablesBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LifoQueue</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IPTablesBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">monitor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+            <span class="n">AgentMonitoringDataPoint</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
+                <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status</span>
+
+    <span class="nd">@log_agent_lifecycle</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IPTablesBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">raise_io_error_on_iptables_failure</span><span class="p">(</span><span class="n">proc</span><span class="p">:</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CompletedProcess</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="nd">@log_agent_lifecycle</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IPTablesBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">incoming_ports</span><span class="p">:</span>
+            <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># nosec using shlex</span>
+                <span class="n">iptables_command_builder</span><span class="p">(</span>
+                    <span class="n">IptablesRuleOperation</span><span class="o">.</span><span class="n">INSERT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">IptablesChain</span><span class="o">.</span><span class="n">INPUT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">port</span><span class="p">,</span>
+                    <span class="kc">None</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iptables_wait</span><span class="p">,</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span>
+                <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">raise_io_error_on_iptables_failure</span><span class="p">(</span>
+                <span class="n">proc</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error While Adding IpTable Rule: DROP </span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2"> to INPUT Chain&quot;</span>
+            <span class="p">)</span>
+        <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">destination_ports</span><span class="p">:</span>
+            <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># nosec using shlex</span>
+                <span class="n">iptables_command_builder</span><span class="p">(</span>
+                    <span class="n">IptablesRuleOperation</span><span class="o">.</span><span class="n">INSERT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">IptablesChain</span><span class="o">.</span><span class="n">OUTPUT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">port</span><span class="p">,</span>
+                    <span class="kc">None</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iptables_wait</span><span class="p">,</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span>
+                <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">raise_io_error_on_iptables_failure</span><span class="p">(</span>
+                <span class="n">proc</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error While Adding IpTable Rule: DROP </span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2"> to OUTPUT Chain&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">endpoint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">incoming_endpoints</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">AnyHttpUrl</span><span class="p">):</span>
+                <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># nosec using shlex</span>
+                    <span class="n">iptables_command_builder</span><span class="p">(</span>
+                        <span class="n">IptablesRuleOperation</span><span class="o">.</span><span class="n">INSERT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="n">IptablesChain</span><span class="o">.</span><span class="n">INPUT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="n">endpoint</span><span class="o">.</span><span class="n">port</span><span class="p">,</span>
+                        <span class="nb">str</span><span class="p">(</span><span class="n">endpoint</span><span class="o">.</span><span class="n">host</span><span class="p">),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iptables_wait</span><span class="p">,</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span>
+                    <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                    <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">raise_io_error_on_iptables_failure</span><span class="p">(</span>
+                    <span class="n">proc</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;Error While Adding IpTable Rule: DROP </span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2"> to INPUT Chain&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="p">(</span><span class="n">IPv4Network</span><span class="p">,</span> <span class="n">IPv4Address</span><span class="p">)):</span>
+                <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># nosec using shlex</span>
+                    <span class="n">iptables_command_builder</span><span class="p">(</span>
+                        <span class="n">IptablesRuleOperation</span><span class="o">.</span><span class="n">INSERT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="n">IptablesChain</span><span class="o">.</span><span class="n">INPUT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="kc">None</span><span class="p">,</span>
+                        <span class="nb">str</span><span class="p">(</span><span class="n">endpoint</span><span class="p">),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iptables_wait</span><span class="p">,</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span>
+                    <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                    <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">raise_io_error_on_iptables_failure</span><span class="p">(</span>
+                    <span class="n">proc</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;Error While Adding IpTable Rule: DROP </span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2"> to INPUT Chain&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">endpoint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">outgoing_endpoints</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">AnyHttpUrl</span><span class="p">):</span>
+                <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># nosec using shlex</span>
+                    <span class="n">iptables_command_builder</span><span class="p">(</span>
+                        <span class="n">IptablesRuleOperation</span><span class="o">.</span><span class="n">INSERT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="n">IptablesChain</span><span class="o">.</span><span class="n">OUTPUT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="n">endpoint</span><span class="o">.</span><span class="n">port</span><span class="p">,</span>
+                        <span class="nb">str</span><span class="p">(</span><span class="n">endpoint</span><span class="o">.</span><span class="n">host</span><span class="p">),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iptables_wait</span><span class="p">,</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span>
+                    <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                    <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">raise_io_error_on_iptables_failure</span><span class="p">(</span>
+                    <span class="n">proc</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;Error While Adding IpTable Rule: DROP </span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2"> to INPUT Chain&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="p">(</span><span class="n">IPv4Network</span><span class="p">,</span> <span class="n">IPv4Address</span><span class="p">)):</span>
+                <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># nosec using shlex</span>
+                    <span class="n">iptables_command_builder</span><span class="p">(</span>
+                        <span class="n">IptablesRuleOperation</span><span class="o">.</span><span class="n">INSERT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="n">IptablesChain</span><span class="o">.</span><span class="n">OUTPUT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="kc">None</span><span class="p">,</span>
+                        <span class="nb">str</span><span class="p">(</span><span class="n">endpoint</span><span class="p">),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iptables_wait</span><span class="p">,</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span>
+                    <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                    <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">raise_io_error_on_iptables_failure</span><span class="p">(</span>
+                    <span class="n">proc</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;Error While Adding IpTable Rule: DROP </span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2"> to INPUT Chain&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+
+    <span class="nd">@log_agent_lifecycle</span>
+    <span class="k">def</span> <span class="nf">teardown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IPTablesBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">teardown</span><span class="p">()</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">incoming_ports</span><span class="p">:</span>
+            <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># nosec using shlex</span>
+                <span class="n">iptables_command_builder</span><span class="p">(</span>
+                    <span class="n">IptablesRuleOperation</span><span class="o">.</span><span class="n">DELETE</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">IptablesChain</span><span class="o">.</span><span class="n">INPUT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">port</span><span class="p">,</span>
+                    <span class="kc">None</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iptables_wait</span><span class="p">,</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span>
+                <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">error</span>
+
+        <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">destination_ports</span><span class="p">:</span>
+            <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># nosec using shlex</span>
+                <span class="n">iptables_command_builder</span><span class="p">(</span>
+                    <span class="n">IptablesRuleOperation</span><span class="o">.</span><span class="n">DELETE</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">IptablesChain</span><span class="o">.</span><span class="n">OUTPUT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">port</span><span class="p">,</span>
+                    <span class="kc">None</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iptables_wait</span><span class="p">,</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span>
+                <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">error</span>
+
+        <span class="k">for</span> <span class="n">endpoint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">incoming_endpoints</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">AnyHttpUrl</span><span class="p">):</span>
+                <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># nosec using shlex</span>
+                    <span class="n">iptables_command_builder</span><span class="p">(</span>
+                        <span class="n">IptablesRuleOperation</span><span class="o">.</span><span class="n">DELETE</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="n">IptablesChain</span><span class="o">.</span><span class="n">INPUT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="n">endpoint</span><span class="o">.</span><span class="n">port</span><span class="p">,</span>
+                        <span class="nb">str</span><span class="p">(</span><span class="n">endpoint</span><span class="o">.</span><span class="n">host</span><span class="p">),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iptables_wait</span><span class="p">,</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span>
+                    <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                    <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">error</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">error</span>
+
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="p">(</span><span class="n">IPv4Network</span><span class="p">,</span> <span class="n">IPv4Address</span><span class="p">)):</span>
+                <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># nosec using shlex</span>
+                    <span class="n">iptables_command_builder</span><span class="p">(</span>
+                        <span class="n">IptablesRuleOperation</span><span class="o">.</span><span class="n">DELETE</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="n">IptablesChain</span><span class="o">.</span><span class="n">OUTPUT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="kc">None</span><span class="p">,</span>
+                        <span class="nb">str</span><span class="p">(</span><span class="n">endpoint</span><span class="p">),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iptables_wait</span><span class="p">,</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span>
+                    <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                    <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">error</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">error</span>
+
+        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">AgentError</span><span class="p">(</span><span class="s2">&quot;Error Occurred while removing IpTable rule&quot;</span><span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2283,6 +2576,49 @@ IPTablesBlockConfig            (<a title="ychaos.agents.agent.TimedAgentConfig" 
     <div class="doc doc-contents ">
 
 
+        <details class="quote">
+          <summary>Source code in <code>agents/network/iptables.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">IPTablesBlockConfig</span><span class="p">(</span><span class="n">TimedAgentConfig</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;block_ports&quot;</span>
+    <span class="n">desc</span> <span class="o">=</span> <span class="s2">&quot;This agent modifies the iptables rules to block traffic to specified ports or endpoint&quot;</span>
+    <span class="n">is_sudo</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">incoming_ports</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of incoming ports to block&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="mi">3000</span><span class="p">,</span> <span class="mi">4443</span><span class="p">]],</span>
+    <span class="p">)</span>
+    <span class="n">iptables_wait</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Wait for the lock in seconds. To prevent multiple instances of the program from running concurrently, &quot;</span>
+            <span class="s2">&quot;an attempt will be made to obtain an exclusive lock at launch&quot;</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">500</span><span class="p">,</span> <span class="mi">450</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+        <span class="n">lt</span><span class="o">=</span><span class="mi">1800</span><span class="p">,</span>
+        <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">destination_ports</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of destination ports to block&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="mi">3000</span><span class="p">,</span> <span class="mi">4443</span><span class="p">]],</span>
+    <span class="p">)</span>
+
+    <span class="n">incoming_endpoints</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">IPvAnyNetwork</span><span class="p">,</span> <span class="n">AnyHttpUrl</span><span class="p">,</span> <span class="n">IPvAnyAddress</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of incoming endpoint to block&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;203.0.113.0&quot;</span><span class="p">,</span> <span class="s2">&quot;https://yahoo.com:443&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="n">outgoing_endpoints</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+        <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">IPvAnyNetwork</span><span class="p">,</span> <span class="n">AnyHttpUrl</span><span class="p">,</span> <span class="n">IPvAnyAddress</span><span class="p">]]</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of outgoing endpoint to block&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;203.0.113.0&quot;</span><span class="p">,</span> <span class="s2">&quot;https://yahoo.com:443&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2436,6 +2772,13 @@ IptablesChain            (<span title="enum.Enum">Enum</span>)
 
       <p>An enumeration.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>agents/network/iptables.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">IptablesChain</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">OUTPUT</span> <span class="o">=</span> <span class="s2">&quot;OUTPUT&quot;</span>
+    <span class="n">INPUT</span> <span class="o">=</span> <span class="s2">&quot;INPUT&quot;</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2478,6 +2821,13 @@ IptablesRuleOperation            (<span title="enum.Enum">Enum</span>)
 
       <p>An enumeration.</p>
 
+        <details class="quote">
+          <summary>Source code in <code>agents/network/iptables.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">IptablesRuleOperation</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">INSERT</span> <span class="o">=</span> <span class="s2">&quot;-I&quot;</span>
+    <span class="n">DELETE</span> <span class="o">=</span> <span class="s2">&quot;-D&quot;</span>
+</code></pre></div>
+        </details>
 
 
 
@@ -2592,10 +2942,10 @@ IptablesRuleOperation            (<span title="enum.Enum">Enum</span>)
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.01824240.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.e0abf5b0.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.1514a9a0.min.js"></script>
       
     
   </body>

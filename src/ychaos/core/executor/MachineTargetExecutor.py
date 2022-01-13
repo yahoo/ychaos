@@ -296,7 +296,7 @@ class MachineTargetExecutor(BaseExecutor):
             ],
         )
 
-    def get_file_transfer_tasks(self) -> list[dict[str, str]]:
+    def get_file_transfer_tasks(self):
         task_list = list()
         modified_testplan = self.testplan.copy()
         testplanTask = dict(

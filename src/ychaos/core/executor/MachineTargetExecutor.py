@@ -3,8 +3,9 @@
 import json
 import random
 from types import SimpleNamespace
-
+from pathlib import Path
 from ...app_logger import AppLogger
+from ...agents.index import AgentType
 from ...testplan.attack import MachineTargetDefinition
 from ...testplan.schema import TestPlan
 from ...utils.dependency import DependencyUtils
@@ -152,7 +153,6 @@ class MachineTargetExecutor(BaseExecutor):
         hosts = ",".join(self.testplan.attack.get_target_config().get_effective_hosts())
         if len(self.testplan.attack.get_target_config().get_effective_hosts()) == 1:
             hosts += ","
-
         self.ansible_context.inventory = InventoryManager(
             loader=self.ansible_context.loader, sources=hosts
         )
@@ -241,17 +241,7 @@ class MachineTargetExecutor(BaseExecutor):
                         mode="0755",
                     ),
                 ),
-                dict(
-                    name="Copy testplan from local to remote",
-                    register="result_testplan_file",
-                    action=dict(
-                        module="copy",
-                        content=json.dumps(
-                            self.testplan.to_serialized_dict(), indent=4
-                        ),
-                        dest="{{result_create_workspace.path}}/testplan.json",
-                    ),
-                ),
+                *self.get_file_transfer_tasks(),
                 dict(
                     name="Run YChaos Agent",
                     ignore_errors="yes",
@@ -305,6 +295,41 @@ class MachineTargetExecutor(BaseExecutor):
                 ),
             ],
         )
+
+    def get_file_transfer_tasks(self):
+        task_list = list()
+        testplan = self.testplan.copy()
+        for i, agent in enumerate(self.testplan.attack.agents):
+            if agent.type == AgentType.CONTRIB:
+                filename = Path(testplan.attack.agents[i].config["path"])
+                task = dict(
+                    name=f"Copy {filename.name} to remote",
+                    register="copy_contrib_agent_" + filename.stem,
+                    action=dict(
+                        module="copy",
+                        src=str(filename.absolute()),
+                        dest="{{result_create_workspace.path}}/" + filename.name,
+                    ),
+                )
+                task_list.append(task)
+                testplan.attack.agents[i].config["path"] = "./ychaos_ws/{}".format(
+                    filename.name
+                )
+
+        # testplan will not have any changes from original if there are no contrib agents present
+        testplan_task = [
+            dict(
+                name="Copy testplan from local to remote",
+                register="result_testplan_file",
+                action=dict(
+                    module="copy",
+                    content=json.dumps(testplan.to_serialized_dict(), indent=4),
+                    dest="{{result_create_workspace.path}}/testplan.json",
+                ),
+            )
+        ]
+
+        return testplan_task + task_list
 
     def execute(self) -> None:
         self.prepare()

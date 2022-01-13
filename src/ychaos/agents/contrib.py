@@ -2,7 +2,7 @@
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 import importlib.util
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from pydantic import Field, PrivateAttr
 
@@ -21,7 +21,7 @@ class ContribAgentConfig(AgentConfig):
         description="The class name of the contributed Agent config",
     )
 
-    config: Dict[Any, Any] = Field(
+    contrib_agent_config: Optional[Dict[Any, Any]] = Field(
         default=dict(),
         description="The configuration that will be passed to the community agent",
     )
@@ -35,7 +35,9 @@ class ContribAgentConfig(AgentConfig):
         self._import_module()
 
         # Validate that `config` adheres to the schema of the contrib agent
-        self.config = self.get_agent_config_class()(**self.config)
+        self.contrib_agent_config = self.get_agent_config_class()(
+            **self.contrib_agent_config
+        )
 
     def _import_module(self):
         specification = importlib.util.spec_from_file_location(
@@ -58,4 +60,4 @@ class ContribAgentConfig(AgentConfig):
         return agent_config_klass
 
     def get_agent(self):
-        return self.get_agent_class()(self.config)
+        return self.get_agent_class()(self.contrib_agent_config)

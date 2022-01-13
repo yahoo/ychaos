@@ -2,10 +2,15 @@
 
 ## Version 0.x.x
 
+### Version 0.5.0
+1. Add `MachineTargetExecutor` support for contrib agents by [Alfin S Thomas](https://github.com/AlfinST)
+
 ### Version 0.4.0
 
 1. Add `SelfTargetExecutor`, that runs the agents on the same machine from where 
 YChaos is triggered by [Alfin S Thomas](https://github.com/AlfinST)
+2. Publish docker image with ychaos pre-installed by [Vijay Babu](https://github.com/vijaybabu4589) 
+3. Add support to SSH common args in TestPlan, make SSH config optional by [Shashank Sharma](https://github.com/shashankrnr32)
 
 ### Version 0.3.0
 

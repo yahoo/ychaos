@@ -1,0 +1,14 @@
+attack:
+    target_type: machine
+    target_config:
+        blast_radius: 100
+        hostnames:
+            - mockhost.resilience.yahoo.cloud
+        ssh_config: {}
+    agents:
+        -   type: contrib
+            config:
+                path: path/to/awesome_agent.py
+                contrib_agent_config:
+                    key1 : value1
+                    key2 : value2

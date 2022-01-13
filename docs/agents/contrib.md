@@ -80,8 +80,10 @@ schema for more details.
                     "type": "contrib",
                     "config": {
                         "path": "/tmp/awesome_agent.py",
-                        "key1": "value1",
-                        "key2": "value2"
+                        "custom_config": {
+                            "key1": "value1",
+                            "key2": "value2"
+                        }
                     }
                 }
             ]
@@ -99,6 +101,7 @@ schema for more details.
         -   type: contrib
             config:
                 path: "/tmp/awesome_agent.py"
-                key1: value1
-                key2: value2
+                custom_config:
+                    key1: value1
+                    key2: value2
     ```

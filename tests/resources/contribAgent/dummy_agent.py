@@ -10,28 +10,20 @@ class MyDummyAgentConfig(AgentConfig):
 
 
 class MyDummyAgent(Agent):
-    def __init__(self, config):
-        assert isinstance(config, AgentConfig)
-        super(MyDummyAgent, self).__init__(config)
+    def __init__(self) -> None:
+        pass
 
-    def monitor(self) -> LifoQueue:
-        super(MyDummyAgent, self).monitor()
-        return self._status
+    def monitor(self) -> None:
+        pass
 
-    @log_agent_lifecycle
     def setup(self) -> None:
-        super(MyDummyAgent, self).setup()
+        pass
 
-    @log_agent_lifecycle
     def run(self) -> None:
-        super(MyDummyAgent, self).run()
-        with open("/tmp/OK", "w") as f:
-            f.write("This is a Dummy Agent")
+        pass
 
-    @log_agent_lifecycle
     def teardown(self) -> None:
-        super(MyDummyAgent, self).teardown()
-        os.remove("/tmp/OK")
+        pass
 
 
 AgentClass = MyDummyAgent

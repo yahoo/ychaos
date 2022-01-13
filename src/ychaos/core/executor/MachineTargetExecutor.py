@@ -299,7 +299,7 @@ class MachineTargetExecutor(BaseExecutor):
     def get_file_transfer_tasks(self):
         task_list = list()
         modified_testplan = self.testplan.copy()
-        testplanTask = dict(
+        testplan_task = [dict(
             name="Copy testplan from local to remote",
             register="result_testplan_file",
             action=dict(
@@ -307,14 +307,14 @@ class MachineTargetExecutor(BaseExecutor):
                 content=json.dumps(self.testplan.to_serialized_dict(), indent=4),
                 dest="{{result_create_workspace.path}}/testplan.json",
             ),
-        )
+        )]
         contrib_agent_present = False
         for i, agent in enumerate(self.testplan.attack.agents):
             if agent.type == AgentType.CONTRIB:
                 contrib_agent_present = True
                 filename = Path(modified_testplan.attack.agents[i].config["path"])
                 task = dict(
-                    name="Copy " + filename.name + " to remote",
+                    name=f"Copy {filename.name} to remote",
                     register="copy_contrib_agent_" + filename.stem,
                     action=dict(
                         module="copy",
@@ -328,12 +328,12 @@ class MachineTargetExecutor(BaseExecutor):
                 ] = "./ychaos_ws/{}".format(filename.name)
 
         if contrib_agent_present:
-            testplanTask["name"] = "Copy new testplan to remote"
-            testplanTask["action"]["content"] = json.dumps(
+            testplan_task[0]["name"] = "Copy new testplan to remote"
+            testplan_task[0]["action"]["content"] = json.dumps(
                 modified_testplan.to_serialized_dict(), indent=4
             )
 
-        task_list.insert(0, testplanTask)
+        task_list = testplan_task + task_list
         return task_list
 
     def execute(self) -> None:

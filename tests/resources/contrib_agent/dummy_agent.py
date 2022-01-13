@@ -1,7 +1,4 @@
 from ychaos.agents.agent import Agent, AgentConfig
-from ychaos.agents.utils.annotations import log_agent_lifecycle
-from queue import LifoQueue
-import os
 
 
 class MyDummyAgentConfig(AgentConfig):
@@ -11,18 +8,23 @@ class MyDummyAgentConfig(AgentConfig):
 
 class MyDummyAgent(Agent):
     def __init__(self) -> None:
+        print("in method: init")
         pass
 
     def monitor(self) -> None:
+        print("in method: monitor")
         pass
 
     def setup(self) -> None:
+        print("in method: setup")
         pass
 
     def run(self) -> None:
+        print("in method: run")
         pass
 
     def teardown(self) -> None:
+        print("in method: teardown")
         pass
 
 

@@ -8,7 +8,7 @@ attack:
     agents:
         -   type: contrib
             config:
-                path: path/to/dummy_agent.py
-                custom_config:
+                path: path/to/awesome_agent.py
+                contrib_agent_config:
                     key1 : value1
                     key2 : value2

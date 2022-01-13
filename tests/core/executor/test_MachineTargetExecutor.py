@@ -290,32 +290,16 @@ class TestMachineTargetExecutor(TestCase):
         executor.execute()
         self.assertTrue(mock_hook_target_unreachable.test_value)
 
-    def test_machine_executor_with_valid_contrib_agent_testplan(self):
-
-        with open(
-            Path(__file__)
-            .joinpath("../../../resources/contrib_agent/contribAgentTestplan.yaml")
-            .resolve()
-        ) as f:
-            tp = yaml.safe_load(f)
-        tp["attack"]["agents"][0]["config"]["path"] = (
-            Path(__file__)
-            .joinpath("../../../resources/contrib_agent/dummy_agent.py")
-            .resolve()
-        )
-        mock_valid_testplan = TestPlan(**tp)
-        executor = MachineTargetExecutor(mock_valid_testplan)
-
     def test_machine_executor_when_agent_type_is_contrib(self):
         with open(
             Path(__file__)
-            .joinpath("../../../resources/contrib_agent/contribAgentTestplan.yaml")
+            .joinpath("../../../resources/contrib_agent/testplan.yaml")
             .resolve()
         ) as f:
             tp = yaml.safe_load(f)
         tp["attack"]["agents"][0]["config"]["path"] = (
             Path(__file__)
-            .joinpath("../../../resources/contrib_agent/dummy_agent.py")
+            .joinpath("../../../resources/contrib_agent/awesome_agent.py")
             .resolve()
         )
         mock_valid_testplan = TestPlan(**tp)
@@ -324,9 +308,7 @@ class TestMachineTargetExecutor(TestCase):
         playbook_tasks = list(
             map(lambda x: x["name"], executor.ansible_context.play_source["tasks"])
         )
-        self.assertNotIn("Copy testplan from local to remote", playbook_tasks)
-        self.assertIn("Copy new testplan to remote", playbook_tasks)
-        self.assertIn("Copy dummy_agent.py to remote", playbook_tasks)
+        self.assertIn("Copy awesome_agent.py to remote", playbook_tasks)
 
     def tearDown(self) -> None:
         unstub()

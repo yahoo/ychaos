@@ -298,23 +298,10 @@ class MachineTargetExecutor(BaseExecutor):
 
     def get_file_transfer_tasks(self):
         task_list = list()
-        modified_testplan = self.testplan.copy()
-        testplan_task = [
-            dict(
-                name="Copy testplan from local to remote",
-                register="result_testplan_file",
-                action=dict(
-                    module="copy",
-                    content=json.dumps(self.testplan.to_serialized_dict(), indent=4),
-                    dest="{{result_create_workspace.path}}/testplan.json",
-                ),
-            )
-        ]
-        contrib_agent_present = False
+        testplan = self.testplan.copy()
         for i, agent in enumerate(self.testplan.attack.agents):
             if agent.type == AgentType.CONTRIB:
-                contrib_agent_present = True
-                filename = Path(modified_testplan.attack.agents[i].config["path"])
+                filename = Path(testplan.attack.agents[i].config["path"])
                 task = dict(
                     name=f"Copy {filename.name} to remote",
                     register="copy_contrib_agent_" + filename.stem,
@@ -325,15 +312,22 @@ class MachineTargetExecutor(BaseExecutor):
                     ),
                 )
                 task_list.append(task)
-                modified_testplan.attack.agents[i].config[
-                    "path"
-                ] = "./ychaos_ws/{}".format(filename.name)
+                testplan.attack.agents[i].config["path"] = "./ychaos_ws/{}".format(
+                    filename.name
+                )
 
-        if contrib_agent_present:
-            testplan_task[0]["name"] = "Copy new testplan to remote"
-            testplan_task[0]["action"]["content"] = json.dumps(
-                modified_testplan.to_serialized_dict(), indent=4
+        # testplan will not have any changes from original if there are no contrib agents present
+        testplan_task = [
+            dict(
+                name="Copy testplan from local to remote",
+                register="result_testplan_file",
+                action=dict(
+                    module="copy",
+                    content=json.dumps(testplan.to_serialized_dict(), indent=4),
+                    dest="{{result_create_workspace.path}}/testplan.json",
+                ),
             )
+        ]
 
         task_list = testplan_task + task_list
         return task_list

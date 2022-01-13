@@ -329,8 +329,7 @@ class MachineTargetExecutor(BaseExecutor):
             )
         ]
 
-        task_list = testplan_task + task_list
-        return task_list
+        return testplan_task + task_list
 
     def execute(self) -> None:
         self.prepare()

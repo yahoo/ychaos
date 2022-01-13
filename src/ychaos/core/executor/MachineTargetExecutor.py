@@ -299,15 +299,17 @@ class MachineTargetExecutor(BaseExecutor):
     def get_file_transfer_tasks(self):
         task_list = list()
         modified_testplan = self.testplan.copy()
-        testplan_task = [dict(
-            name="Copy testplan from local to remote",
-            register="result_testplan_file",
-            action=dict(
-                module="copy",
-                content=json.dumps(self.testplan.to_serialized_dict(), indent=4),
-                dest="{{result_create_workspace.path}}/testplan.json",
-            ),
-        )]
+        testplan_task = [
+            dict(
+                name="Copy testplan from local to remote",
+                register="result_testplan_file",
+                action=dict(
+                    module="copy",
+                    content=json.dumps(self.testplan.to_serialized_dict(), indent=4),
+                    dest="{{result_create_workspace.path}}/testplan.json",
+                ),
+            )
+        ]
         contrib_agent_present = False
         for i, agent in enumerate(self.testplan.attack.agents):
             if agent.type == AgentType.CONTRIB:

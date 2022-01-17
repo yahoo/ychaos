@@ -1,5 +1,6 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
+from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
 from mockito import mock, unstub, when
@@ -15,11 +16,13 @@ from ychaos.testplan.verification import (
 from ychaos.testplan.verification.plugins.metrics import ComparisonCondition
 
 
-class TestHTTPVerificationPlugin(TestCase):
+class TestOpenTSDBVerificationPlugin(TestCase):
     def setUp(self) -> None:
+        file = NamedTemporaryFile()
         self.verification_config = OpenTSDBVerification(
             url="https://tsdb.ychaos.yahoo.com",
             method="POST",
+            cert=(file.name, file.name),
             query=dict(),  # For testing only
             criteria=[
                 MultipleConditionalsMetricsVerificationCriteria(
@@ -68,7 +71,7 @@ class TestHTTPVerificationPlugin(TestCase):
     def test_plugin_init(self):
         verification_plugin = OpenTSDBVerificationPlugin(self.verification_config)
         self.assertDictEqual(verification_plugin._session.headers, dict())
-        self.assertIsNone(verification_plugin._session.cert)
+        self.assertIsNotNone(verification_plugin._session.cert)
         self.assertDictEqual(verification_plugin._session.params, dict())
 
     def test_plugin_run_verification_for_success_response_from_tsdb(self):

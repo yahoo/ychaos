@@ -58,7 +58,7 @@ class RequestVerificationPlugin(BaseVerificationPlugin, ABC):
                 "Bearer " + self.config.bearer_token.get_secret_value()
             )
 
-        session.cert = self.config.cert
+        session.cert = self.config.get_request_cert()
 
         return session
 

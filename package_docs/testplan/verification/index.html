@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/testplan/verification/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.6">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.7">
     
     
       
@@ -1052,6 +1052,13 @@
           <li class="md-nav__item">
   <a href="#ychaos.testplan.verification.HTTPRequestSchema.verify" class="md-nav__link">
     verify
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ychaos.testplan.verification.HTTPRequestSchema.get_request_cert" class="md-nav__link">
+    get_request_cert()
   </a>
   
 </li>
@@ -2116,6 +2123,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ychaos.testplan.verification.HTTPRequestSchema.get_request_cert" class="md-nav__link">
+    get_request_cert()
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2449,7 +2463,7 @@ HTTPRequestSchema            (<span title="ychaos.testplan.SchemaModel">SchemaMo
     <span class="p">)</span>
 
     <span class="c1"># Certificate</span>
-    <span class="n">cert</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">cert</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The certificate to be sent for HTTP call. The tuple should contain Certificate and Key File path&quot;</span><span class="p">,</span>
     <span class="p">)</span>
@@ -2463,6 +2477,17 @@ HTTPRequestSchema            (<span title="ychaos.testplan.SchemaModel">SchemaMo
     <span class="n">_validate_method</span> <span class="o">=</span> <span class="n">validator</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)(</span>
         <span class="n">BuiltinUtils</span><span class="o">.</span><span class="n">Request</span><span class="o">.</span><span class="n">validate_method</span>
     <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_request_cert</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the resolved Certificate Paths by expanding the user path (~).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cert</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cert</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">(),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cert</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">(),</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
 </code></pre></div>
         </details>
 
@@ -2653,6 +2678,40 @@ HTTPRequestSchema            (<span title="ychaos.testplan.SchemaModel">SchemaMo
 
 
 
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 class="doc doc-heading" id="ychaos.testplan.verification.HTTPRequestSchema.get_request_cert">
+<code class="codehilite language-python"><span class="n">get_request_cert</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a class="headerlink" href="#ychaos.testplan.verification.HTTPRequestSchema.get_request_cert" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns the resolved Certificate Paths by expanding the user path (~).</p>
+
+        <details class="quote">
+          <summary>Source code in <code>testplan/verification/__init__.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">get_request_cert</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the resolved Certificate Paths by expanding the user path (~).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cert</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cert</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cert</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">(),</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
 
 
 
@@ -5135,7 +5194,7 @@ TimeSeriesDataAggregator        </code>
     <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.1514a9a0.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.01de222e.min.js"></script>
       
     
   </body>

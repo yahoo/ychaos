@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/agents/network/iptables/">
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.6">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.7">
     
     
       
@@ -2204,7 +2204,7 @@ DNSBlockConfig            (<a title="ychaos.agents.agent.TimedAgentConfig" href=
         <details class="quote">
           <summary>Source code in <code>agents/network/iptables.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">DNSBlockConfig</span><span class="p">(</span><span class="n">TimedAgentConfig</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;block_dns&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;dns_block&quot;</span>
     <span class="n">desc</span> <span class="o">=</span> <span class="s2">&quot;This agent modifies the iptables rules to block traffic to DNS ports&quot;</span>
 
     <span class="n">is_sudo</span> <span class="o">=</span> <span class="kc">True</span>
@@ -2579,7 +2579,7 @@ IPTablesBlockConfig            (<a title="ychaos.agents.agent.TimedAgentConfig" 
         <details class="quote">
           <summary>Source code in <code>agents/network/iptables.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">IPTablesBlockConfig</span><span class="p">(</span><span class="n">TimedAgentConfig</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;block_ports&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;iptables_block&quot;</span>
     <span class="n">desc</span> <span class="o">=</span> <span class="s2">&quot;This agent modifies the iptables rules to block traffic to specified ports or endpoint&quot;</span>
     <span class="n">is_sudo</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">incoming_ports</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
@@ -2945,7 +2945,7 @@ IptablesRuleOperation            (<span title="enum.Enum">Enum</span>)
     <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.1514a9a0.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.01de222e.min.js"></script>
       
     
   </body>

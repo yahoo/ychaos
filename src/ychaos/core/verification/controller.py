@@ -16,6 +16,7 @@ from .plugins.BaseVerificationPlugin import BaseVerificationPlugin
 from .plugins.HTTPRequestVerificationPlugin import (
     HTTPRequestVerificationPlugin,
 )
+from .plugins.OpenTSDBVerificationPlugin import OpenTSDBVerificationPlugin
 from .plugins.PythonModuleVerificationPlugin import (
     PythonModuleVerificationPlugin,
 )
@@ -27,6 +28,7 @@ VERIFICATION_PLUGIN_MAP: Dict[str, Type[BaseVerificationPlugin]] = {
     "python_module": PythonModuleVerificationPlugin,
     "http_request": HTTPRequestVerificationPlugin,
     "sdv4": SDv4VerificationPlugin,
+    "tsdb": OpenTSDBVerificationPlugin,
 }
 
 

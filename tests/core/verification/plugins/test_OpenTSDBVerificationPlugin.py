@@ -81,6 +81,7 @@ class TestHTTPVerificationPlugin(TestCase):
             "POST",
             url="https://tsdb.ychaos.yahoo.com",
             timeout=self.verification_config.timeout / 1000,
+            json=dict(),
         ).thenReturn(mock_response)
 
         state_data = verification_plugin.run_verification()
@@ -99,6 +100,7 @@ class TestHTTPVerificationPlugin(TestCase):
             "POST",
             url="https://tsdb.ychaos.yahoo.com",
             timeout=self.verification_config.timeout / 1000,
+            json=dict(),
         ).thenReturn(mock_response)
 
         state_data = verification_plugin.run_verification()
@@ -115,6 +117,7 @@ class TestHTTPVerificationPlugin(TestCase):
             "POST",
             url="https://tsdb.ychaos.yahoo.com",
             timeout=self.verification_config.timeout / 1000,
+            json=dict(),
         ).thenReturn(mock_response)
 
         state_data = verification_plugin.run_verification()
@@ -134,6 +137,7 @@ class TestHTTPVerificationPlugin(TestCase):
             "POST",
             url="https://tsdb.ychaos.yahoo.com",
             timeout=self.verification_config.timeout / 1000,
+            json=dict(),
         ).thenReturn(mock_response)
 
         state_data = verification_plugin.run_verification()

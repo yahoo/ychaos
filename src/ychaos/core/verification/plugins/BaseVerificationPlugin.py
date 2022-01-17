@@ -38,7 +38,7 @@ class RequestVerificationPlugin(BaseVerificationPlugin, ABC):
         session.headers = self.config.headers
 
         if not self.config.verify:
-            # Disable Insecure Request Warning if verify=False (User knows what he is doing)
+            # Disable Insecure Request Warning if verify=False (Users know what they are doing)
             from requests.packages.urllib3.exceptions import (
                 InsecureRequestWarning,
             )

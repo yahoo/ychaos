@@ -55,7 +55,7 @@ def iptables_command_builder(
 
 
 class IPTablesBlockConfig(TimedAgentConfig):
-    name = "block_ports"
+    name = "iptables_block"
     desc = "This agent modifies the iptables rules to block traffic to specified ports or endpoint"
     is_sudo = True
     incoming_ports: Optional[List[int]] = Field(
@@ -290,7 +290,7 @@ class IPTablesBlock(Agent):
 
 
 class DNSBlockConfig(TimedAgentConfig):
-    name = "block_dns"
+    name = "dns_block"
     desc = "This agent modifies the iptables rules to block traffic to DNS ports"
 
     is_sudo = True

@@ -1,7 +1,6 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 
-# TODO: PingDisable Agent
 import warnings
 from queue import LifoQueue
 
@@ -16,7 +15,7 @@ from ..utils.sysctl import SysCtl
 
 
 class PingDisableConfig(TimedAgentConfig):
-    name = "ping_disable"
+    name = "disable_ping"
     description = "This agent disables the system to respond to ping/icmp packets"
 
     priority = AgentPriority.MODERATE_PRIORITY

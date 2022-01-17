@@ -70,7 +70,7 @@ class HTTPRequestSchema(SchemaModel):
     )
 
     # Certificate
-    cert: Tuple[Path, Path] = Field(
+    cert: Optional[Tuple[Path, Path]] = Field(
         default=None,
         description="The certificate to be sent for HTTP call. The tuple should contain Certificate and Key File path",
     )
@@ -84,6 +84,17 @@ class HTTPRequestSchema(SchemaModel):
     _validate_method = validator("method", pre=True, allow_reuse=True)(
         BuiltinUtils.Request.validate_method
     )
+
+    def get_request_cert(self) -> Optional[Tuple[Path, Path]]:
+        """
+        Returns the resolved Certificate Paths by expanding the user path (~).
+        """
+        if self.cert:
+            return (
+                self.cert[0].expanduser().resolve(),
+                self.cert[1].expanduser().resolve(),
+            )
+        return None
 
 
 class HTTPRequestVerification(HTTPRequestSchema):

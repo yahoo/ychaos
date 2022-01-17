@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, validate_arguments
 
 from ....testplan.verification import OpenTSDBVerification
+from ....utils.types import Json
 from ..data import VerificationData, VerificationStateData
 from .BaseVerificationPlugin import RequestVerificationPlugin
 
@@ -15,6 +16,7 @@ class OpenTSDBVerificationPlugin(RequestVerificationPlugin):
         url: str  # Making this string since this is built with only trusted data
         status_code: Optional[int]
         data: Dict[datetime, float]
+        response: Optional[Json]
 
     __verification_type__ = "tsdb"
 
@@ -34,6 +36,7 @@ class OpenTSDBVerificationPlugin(RequestVerificationPlugin):
             self.config.method,
             url=str(self.config.url),
             timeout=self.config.timeout / 1000,
+            json=self.config.query,
         )
 
         if tsdb_response.status_code != 200:
@@ -44,6 +47,7 @@ class OpenTSDBVerificationPlugin(RequestVerificationPlugin):
                     url=self.config.url,
                     status_code=tsdb_response.status_code,
                     data=dict(),
+                    response=tsdb_response.json(),
                 ).dict(),
             )
 

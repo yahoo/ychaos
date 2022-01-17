@@ -2,10 +2,11 @@
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 import json
 import random
-from types import SimpleNamespace
 from pathlib import Path
-from ...app_logger import AppLogger
+from types import SimpleNamespace
+
 from ...agents.index import AgentType
+from ...app_logger import AppLogger
 from ...testplan.attack import MachineTargetDefinition
 from ...testplan.schema import TestPlan
 from ...utils.dependency import DependencyUtils

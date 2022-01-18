@@ -6,9 +6,16 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, validate_arguments
 
 from ....testplan.verification import OpenTSDBVerification
+from ....testplan.verification.plugins.metrics import MetricsComparator
 from ....utils.types import Json
 from ..data import VerificationData, VerificationStateData
 from .BaseVerificationPlugin import RequestVerificationPlugin
+
+
+def resolve_comparator(condition) -> str:
+    if condition._comparator == "range":
+        return "[]"
+    return condition._comparator
 
 
 class OpenTSDBVerificationPlugin(RequestVerificationPlugin):
@@ -72,9 +79,10 @@ class OpenTSDBVerificationPlugin(RequestVerificationPlugin):
                 )
 
                 for _condition in _criteria.conditionals:
-                    if _condition.comparator.metadata.compare(  # type: ignore
-                        _aggregated_data, _condition.value
-                    ):
+                    args = [_aggregated_data, _condition.value]
+                    if _condition.comparator == MetricsComparator.RANGE:
+                        args = [resolve_comparator(_condition), *args]
+                    if _condition.comparator.metadata.compare(*args):  # type: ignore
                         break
                 else:
                     return 1

@@ -4,6 +4,7 @@ from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
 from mockito import mock, unstub, when
+from parameterized import parameterized
 from requests import Response
 
 from ychaos.core.verification.plugins.OpenTSDBVerificationPlugin import (
@@ -178,13 +179,16 @@ class TestOpenTSDBVerificationPlugin(TestCase):
         state_data = verification_plugin.run_verification()
         self.assertEqual(state_data.rc, 0)
 
-    def test_resolve_comparator(self):
-        condition = ComparisonCondition(comparator="==", value=25625991360)
-        self.assertEqual(resolve_comparator(condition), "==")
-        condition = ComparisonCondition(comparator="range", value=(0, 10))
-        self.assertEqual(resolve_comparator(condition), "[]")
-        condition = ComparisonCondition(comparator="[)", value=(0, 10))
-        self.assertEqual(resolve_comparator(condition), "[)")
+    @parameterized.expand(
+        [
+            (ComparisonCondition(comparator="[]", value=(0, 10)), "[]"),
+            (ComparisonCondition(comparator="range", value=(0, 10)), "[]"),
+            (ComparisonCondition(comparator="[)", value=(0, 10)), "[)"),
+            (ComparisonCondition(comparator="()", value=(0, 10)), "()"),
+        ]
+    )
+    def test_resolve_comparator(self, condition, expected):
+        self.assertEqual(resolve_comparator(condition), expected)
 
     def tearDown(self) -> None:
         unstub()

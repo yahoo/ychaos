@@ -4,7 +4,6 @@ from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
 from mockito import mock, unstub, when
-from parameterized import parameterized
 from requests import Response
 
 from ychaos.core.verification.plugins.OpenTSDBVerificationPlugin import (

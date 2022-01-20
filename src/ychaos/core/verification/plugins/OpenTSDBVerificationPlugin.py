@@ -78,8 +78,9 @@ class OpenTSDBVerificationPlugin(RequestVerificationPlugin):
                 )
 
                 for _condition in _criteria.conditionals:
-                    args = _get_comparator_args(_condition, _aggregated_data)
-                    if _condition.comparator.metadata.compare(*args):  # type: ignore
+                    if _condition.comparator.metadata.compare(
+                        *_get_comparator_args(_condition, _aggregated_data)
+                    ):
                         break
                 else:
                     return 1

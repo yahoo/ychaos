@@ -12,12 +12,6 @@ from ..data import VerificationData, VerificationStateData
 from .BaseVerificationPlugin import RequestVerificationPlugin
 
 
-def resolve_comparator(condition) -> str:
-    if condition._comparator == "range":
-        return "[]"
-    return condition._comparator
-
-
 class OpenTSDBVerificationPlugin(RequestVerificationPlugin):
     class OpenTSDBVerificationData(BaseModel):
         url: str  # Making this string since this is built with only trusted data
@@ -79,9 +73,9 @@ class OpenTSDBVerificationPlugin(RequestVerificationPlugin):
                 )
 
                 for _condition in _criteria.conditionals:
-                    args = [_aggregated_data, _condition.value]
+                    args = (_aggregated_data, _condition.value)
                     if _condition.comparator == MetricsComparator.RANGE:
-                        args = [resolve_comparator(_condition), *args]
+                        args = (_condition._comparator, *args)
                     if _condition.comparator.metadata.compare(*args):  # type: ignore
                         break
                 else:

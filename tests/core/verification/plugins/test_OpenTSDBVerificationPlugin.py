@@ -8,8 +8,7 @@ from parameterized import parameterized
 from requests import Response
 
 from ychaos.core.verification.plugins.OpenTSDBVerificationPlugin import (
-    OpenTSDBVerificationPlugin,
-    resolve_comparator,
+    OpenTSDBVerificationPlugin
 )
 from ychaos.testplan.verification import (
     MultipleConditionalsMetricsVerificationCriteria,
@@ -178,17 +177,6 @@ class TestOpenTSDBVerificationPlugin(TestCase):
 
         state_data = verification_plugin.run_verification()
         self.assertEqual(state_data.rc, 0)
-
-    @parameterized.expand(
-        [
-            (ComparisonCondition(comparator="[]", value=(0, 10)), "[]"),
-            (ComparisonCondition(comparator="range", value=(0, 10)), "[]"),
-            (ComparisonCondition(comparator="[)", value=(0, 10)), "[)"),
-            (ComparisonCondition(comparator="()", value=(0, 10)), "()"),
-        ]
-    )
-    def test_resolve_comparator(self, condition, expected):
-        self.assertEqual(resolve_comparator(condition), expected)
 
     def tearDown(self) -> None:
         unstub()

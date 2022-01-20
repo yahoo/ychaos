@@ -64,10 +64,10 @@ class OpenTSDBVerificationPlugin(RequestVerificationPlugin):
         )
 
     def validate_criteria(self, response_data: List[Dict[str, Any]]):
-        def __get_comparator_args(condition, aggregated_data, value) -> tuple:
+        def _get_comparator_args(condition, aggregated_data):
             if condition.comparator == MetricsComparator.RANGE:
-                return _condition._comparator, aggregated_data, value
-            return aggregated_data, value
+                return condition._comparator, aggregated_data, condition.value
+            return aggregated_data, condition.value
 
         for _query_data in response_data:
 
@@ -78,9 +78,7 @@ class OpenTSDBVerificationPlugin(RequestVerificationPlugin):
                 )
 
                 for _condition in _criteria.conditionals:
-                    args = __get_comparator_args(
-                        _condition, _aggregated_data, _condition.value
-                    )
+                    args = _get_comparator_args(_condition, _aggregated_data)
                     if _condition.comparator.metadata.compare(*args):  # type: ignore
                         break
                 else:

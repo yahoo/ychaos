@@ -8,7 +8,7 @@ from parameterized import parameterized
 from requests import Response
 
 from ychaos.core.verification.plugins.OpenTSDBVerificationPlugin import (
-    OpenTSDBVerificationPlugin
+    OpenTSDBVerificationPlugin,
 )
 from ychaos.testplan.verification import (
     MultipleConditionalsMetricsVerificationCriteria,

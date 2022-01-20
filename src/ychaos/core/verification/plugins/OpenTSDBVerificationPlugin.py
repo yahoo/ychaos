@@ -75,7 +75,7 @@ class OpenTSDBVerificationPlugin(RequestVerificationPlugin):
                 for _condition in _criteria.conditionals:
                     args = (_aggregated_data, _condition.value)
                     if _condition.comparator == MetricsComparator.RANGE:
-                        args = (_condition._comparator, *args)
+                        args = (_condition._comparator, *args)  # type: ignore
                     if _condition.comparator.metadata.compare(*args):  # type: ignore
                         break
                 else:

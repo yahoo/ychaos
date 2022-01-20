@@ -80,7 +80,7 @@ YChaos tool can be used with python3.6+ and must have pip3 pre-installed
 
 ## Docker hub
 
-Python version specific YChaos images are published with each release of YChaos, at present Python `3.6`-`3.9` 
+Python version specific YChaos images are published with each release of YChaos, at present Python `3.7`-`3.9` 
 based images are available on [Docker hub](https://hub.docker.com/r/ychaos/ychaos).
 
 === "Docker"

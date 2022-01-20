@@ -11,7 +11,16 @@ Great! You can start with YChaos [here](index.md).
 It is always recommended to install the latest version(PATCH) of YChaos for
 the chaos testing. Although we test the package thoroughly for each PATCH
 update, there might be unknown regressions/bugs introduced in the new PATCH versions.
-To avoid this, you can install the latest MINOR version.
+To avoid this, you can install the latest MINOR version. 
+
+### Does YChaos run with Python3.6
+
+As of YChaos version 0.5.x, (Released in January 2022), Python 3.6 support
+is removed for YChaos. The framework might still be fully functional on Python 3.6,
+we do not guarantee its functionality in Python3.6 in the future releases.
+
+!!! Note
+    YChaos is currently tested & released for Python3.7 to Python3.10
 
 ### I am running YChaos and ...
 

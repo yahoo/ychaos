@@ -187,7 +187,6 @@ jobs:
             - code_format_validation
 
             # Unittest Jobs
-            - test_validation_py36
             - test_validation_py37
             - test_validation_py38
             - test_validation_py39

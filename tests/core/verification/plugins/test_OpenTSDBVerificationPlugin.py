@@ -146,5 +146,36 @@ class TestOpenTSDBVerificationPlugin(TestCase):
         state_data = verification_plugin.run_verification()
         self.assertEqual(state_data.rc, 0)
 
+    def test_range_criteria_config(self):
+        file = NamedTemporaryFile()
+        self.verification_config = OpenTSDBVerification(
+            url="https://tsdb.ychaos.yahoo.com",
+            cert=(file.name, file.name),
+            method="POST",
+            query=dict(),
+            criteria=[
+                MultipleConditionalsMetricsVerificationCriteria(
+                    conditionals=[
+                        ComparisonCondition(
+                            comparator="range", value=(25000000000, 26000000000)
+                        )
+                    ]
+                )
+            ],
+        )
+        verification_plugin = OpenTSDBVerificationPlugin(self.verification_config)
+        mock_response = mock(
+            dict(status_code=200, json=lambda: self.mock_tsdb_response, spec=Response)
+        )
+        when(verification_plugin._session).request(
+            "POST",
+            url="https://tsdb.ychaos.yahoo.com",
+            timeout=self.verification_config.timeout / 1000,
+            json=dict(),
+        ).thenReturn(mock_response)
+
+        state_data = verification_plugin.run_verification()
+        self.assertEqual(state_data.rc, 0)
+
     def tearDown(self) -> None:
         unstub()

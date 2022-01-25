@@ -361,9 +361,10 @@ class MachineTargetExecutor(BaseExecutor):
         # Create Report Directory
         import os
 
-        os.makedirs(
-            self.testplan.attack.get_target_config().report_dir.resolve(), exist_ok=True
+        target_config: MachineTargetDefinition = (
+            self.testplan.attack.get_target_config()
         )
+        os.makedirs(target_config.report_dir.resolve(), exist_ok=True)
 
         try:
             self.execute_hooks("on_start")

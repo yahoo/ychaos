@@ -117,8 +117,8 @@ class Coordinator(EventHook):
                 assert self.configured_agents[-1].end_time is not None
                 next_start_time = self.configured_agents[-1].end_time
 
-            agent_config = agent.type.metadata.schema(**agent.config)  # type: ignore
-            configured_agent = agent.type.metadata.agent_defn(agent_config)  # type: ignore
+            agent_config = agent.type.metadata.schema(**agent.config)
+            configured_agent = agent.type.metadata.agent_defn(agent_config)
             start_time: datetime = next_start_time + timedelta(
                 seconds=configured_agent.config.start_delay
             )

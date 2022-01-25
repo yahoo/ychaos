@@ -269,7 +269,7 @@ class AttackConfig(SchemaModel):
     )
 
     def get_target_config(self) -> T_TargetDefinition:
-        return self.target_type.metadata.schema(**self.target_config)  # type: ignore
+        return self.target_type.metadata.schema(**self.target_config)
 
     @validator("target_config", pre=True)
     def _parse_target_configuration(cls, v, values):

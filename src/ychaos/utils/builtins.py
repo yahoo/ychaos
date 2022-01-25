@@ -106,7 +106,7 @@ class AEnum(Enum, metaclass=EnumMeta):
     def __new__(cls: Type[T], value, metadata: Optional[SimpleNamespace] = None):
         obj = object.__new__(cls)
         obj._value_ = value
-        obj.metadata = metadata  # type: ignore
+        obj._metadata_ = metadata
 
         # Add Aliases to Serializer Dictionary
         for alias in getattr(metadata, "__aliases__", tuple()):
@@ -119,6 +119,10 @@ class AEnum(Enum, metaclass=EnumMeta):
     def value(self) -> str:
         # mypy causes issues without this
         return self._value_
+
+    @DynamicClassAttribute
+    def metadata(self):
+        return self._metadata_
 
 
 class FQDN(str):

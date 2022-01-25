@@ -38,7 +38,6 @@ class Shell(Agent):
             AgentMonitoringDataPoint(data=dict(), state=self.current_state)
         )
         return self._status
-        return self._status
 
     @log_agent_lifecycle
     def setup(self) -> None:

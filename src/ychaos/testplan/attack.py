@@ -265,8 +265,8 @@ class AttackConfig(SchemaModel):
         min_items=1,
     )
 
-    def get_target_config(self):
-        return self.target_type.metadata.schema(**self.target_config)
+    def get_target_config(self) -> TargetDefinition:
+        return self.target_type.metadata.schema(**self.target_config)  # type: ignore
 
     @validator("target_config", pre=True)
     def _parse_target_configuration(cls, v, values):

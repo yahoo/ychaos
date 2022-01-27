@@ -6,7 +6,7 @@ import re
 from enum import Enum
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, TypeVar, Union
 
 from pydantic import Field, FilePath, SecretStr, validator
 
@@ -21,6 +21,9 @@ class TargetDefinition(SchemaModel):
         default=Path("./"),
         description="The report directory to store execution files. Defaults to current directory",
     )
+
+
+T_TargetDefinition = TypeVar("T_TargetDefinition", bound=TargetDefinition)
 
 
 class SSHConfig(SchemaModel):
@@ -265,7 +268,7 @@ class AttackConfig(SchemaModel):
         min_items=1,
     )
 
-    def get_target_config(self):
+    def get_target_config(self) -> T_TargetDefinition:
         return self.target_type.metadata.schema(**self.target_config)
 
     @validator("target_config", pre=True)

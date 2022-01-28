@@ -4,7 +4,6 @@ import json
 from types import SimpleNamespace
 
 from ...app_logger import AppLogger
-from ...testplan.attack import SelfTargetDefinition
 from ...testplan.schema import TestPlan
 from ...utils.dependency import DependencyUtils
 from ...utils.hooks import EventHook
@@ -242,8 +241,9 @@ class SelfTargetExecutor(BaseExecutor):
 
         import os
 
-        target_config: SelfTargetDefinition = self.testplan.attack.get_target_config()
-        os.makedirs(target_config.report_dir.resolve(), exist_ok=True)
+        os.makedirs(
+            self.testplan.attack.get_target_config().report_dir.resolve(), exist_ok=True
+        )
 
         try:
             self.execute_hooks("on_start")

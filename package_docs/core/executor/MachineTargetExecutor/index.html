@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/core/executor/MachineTargetExecutor/">
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.7">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.8">
     
     
       
@@ -21,7 +21,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.cd566b2a.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.6e60f8b8.min.css">
       
         
         <link rel="stylesheet" href="../../../../assets/stylesheets/palette.e6a45f82.min.css">
@@ -1833,6 +1833,7 @@
 
 
 
+
   <div class="doc doc-object doc-class">
 
 
@@ -2000,9 +2001,13 @@ too low or there are no hosts in the attack list.</p>
             <span class="p">}</span>
         <span class="p">)</span>
 
+        <span class="n">target_config</span><span class="p">:</span> <span class="n">MachineTargetDefinition</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">get_target_config</span><span class="p">()</span>
+        <span class="p">)</span>
+
         <span class="c1"># Hosts to be in comma separated string</span>
-        <span class="n">hosts</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">get_target_config</span><span class="p">()</span><span class="o">.</span><span class="n">get_effective_hosts</span><span class="p">())</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">get_target_config</span><span class="p">()</span><span class="o">.</span><span class="n">get_effective_hosts</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">hosts</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_config</span><span class="o">.</span><span class="n">get_effective_hosts</span><span class="p">())</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_config</span><span class="o">.</span><span class="n">get_effective_hosts</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">hosts</span> <span class="o">+=</span> <span class="s2">&quot;,&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">inventory</span> <span class="o">=</span> <span class="n">InventoryManager</span><span class="p">(</span>
             <span class="n">loader</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">loader</span><span class="p">,</span> <span class="n">sources</span><span class="o">=</span><span class="n">hosts</span>
@@ -2011,18 +2016,25 @@ too low or there are no hosts in the attack list.</p>
             <span class="n">loader</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">loader</span><span class="p">,</span> <span class="n">inventory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">inventory</span>
         <span class="p">)</span>
 
+        <span class="n">set_ansible_context</span><span class="p">(</span>
+            <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">private_key_file</span><span class="o">=</span><span class="n">target_config</span><span class="o">.</span><span class="n">ssh_config</span><span class="o">.</span><span class="n">private_key</span><span class="p">)</span>
+        <span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">tqm</span> <span class="o">=</span> <span class="n">TaskQueueManager</span><span class="p">(</span>
             <span class="n">inventory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">inventory</span><span class="p">,</span>
             <span class="n">variable_manager</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">variable_manager</span><span class="p">,</span>
             <span class="n">loader</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">loader</span><span class="p">,</span>
-            <span class="n">passwords</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">vault_pass</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
+            <span class="n">passwords</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">vault_pass</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">conn_pass</span><span class="o">=</span><span class="n">target_config</span><span class="o">.</span><span class="n">ssh_config</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
+            <span class="p">),</span>
             <span class="n">stdout_callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">results_callback</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">play_source</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;YChaos Ansible Play&quot;</span><span class="p">,</span>
             <span class="n">hosts</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_hosts</span><span class="p">),</span>
-            <span class="n">remote_user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">get_target_config</span><span class="p">()</span><span class="o">.</span><span class="n">ssh_config</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+            <span class="n">remote_user</span><span class="o">=</span><span class="n">target_config</span><span class="o">.</span><span class="n">ssh_config</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
             <span class="n">connection</span><span class="o">=</span><span class="s2">&quot;ssh&quot;</span><span class="p">,</span>
             <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;free&quot;</span><span class="p">,</span>
             <span class="n">gather_facts</span><span class="o">=</span><span class="s2">&quot;no&quot;</span><span class="p">,</span>
@@ -2122,9 +2134,7 @@ too low or there are no hosts in the attack list.</p>
                     <span class="n">action</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
                         <span class="n">module</span><span class="o">=</span><span class="s2">&quot;fetch&quot;</span><span class="p">,</span>
                         <span class="n">src</span><span class="o">=</span><span class="s2">&quot;{{result_create_workspace.path}}/ychaos.zip&quot;</span><span class="p">,</span>
-                        <span class="n">dest</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">get_target_config</span><span class="p">()</span><span class="o">.</span><span class="n">report_dir</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-                        <span class="p">)</span>
+                        <span class="n">dest</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">target_config</span><span class="o">.</span><span class="n">report_dir</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
                         <span class="o">+</span> <span class="s2">&quot;/ychaos_{{inventory_hostname}}.zip&quot;</span><span class="p">,</span>
                     <span class="p">),</span>
                 <span class="p">),</span>
@@ -2198,9 +2208,10 @@ too low or there are no hosts in the attack list.</p>
         <span class="c1"># Create Report Directory</span>
         <span class="kn">import</span> <span class="nn">os</span>
 
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">get_target_config</span><span class="p">()</span><span class="o">.</span><span class="n">report_dir</span><span class="o">.</span><span class="n">resolve</span><span class="p">(),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">target_config</span><span class="p">:</span> <span class="n">MachineTargetDefinition</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">get_target_config</span><span class="p">()</span>
         <span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">target_config</span><span class="o">.</span><span class="n">report_dir</span><span class="o">.</span><span class="n">resolve</span><span class="p">(),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span><span class="s2">&quot;on_start&quot;</span><span class="p">)</span>
@@ -2302,9 +2313,10 @@ target environment.</p>
     <span class="c1"># Create Report Directory</span>
     <span class="kn">import</span> <span class="nn">os</span>
 
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">get_target_config</span><span class="p">()</span><span class="o">.</span><span class="n">report_dir</span><span class="o">.</span><span class="n">resolve</span><span class="p">(),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">target_config</span><span class="p">:</span> <span class="n">MachineTargetDefinition</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">get_target_config</span><span class="p">()</span>
     <span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">target_config</span><span class="o">.</span><span class="n">report_dir</span><span class="o">.</span><span class="n">resolve</span><span class="p">(),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span><span class="s2">&quot;on_start&quot;</span><span class="p">)</span>
@@ -2427,7 +2439,7 @@ target environment.</p>
     <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.01de222e.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.960e086b.min.js"></script>
       
     
   </body>

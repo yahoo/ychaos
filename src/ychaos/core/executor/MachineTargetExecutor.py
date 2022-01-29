@@ -13,10 +13,6 @@ from ...utils.dependency import DependencyUtils
 from ...utils.hooks import EventHook
 from .BaseExecutor import BaseExecutor
 
-(set_ansible_context,) = DependencyUtils.import_from(
-    "ansible.context", ("_init_global_context",), raise_error=False, warn=False
-)
-
 (YChaosAnsibleResultCallback,) = DependencyUtils.import_from(
     "ychaos.core.executor.common",
     ("YChaosAnsibleResultCallback",),
@@ -169,17 +165,13 @@ class MachineTargetExecutor(BaseExecutor):
             loader=self.ansible_context.loader, inventory=self.ansible_context.inventory
         )
 
-        set_ansible_context(
-            SimpleNamespace(private_key_file=target_config.ssh_config.private_key)
-        )
-
         self.ansible_context.tqm = TaskQueueManager(
             inventory=self.ansible_context.inventory,
             variable_manager=self.ansible_context.variable_manager,
             loader=self.ansible_context.loader,
             passwords=dict(
                 vault_pass=None,
-                conn_pass=target_config.ssh_config.password,
+                conn_pass=target_config.ssh_config.password or "",
             ),
             stdout_callback=self.ansible_context.results_callback,
         )

@@ -22,6 +22,9 @@ class SecretType(AEnum):
     ENV = "env", SimpleNamespace(parser=lambda v: os.getenv(v))
     # Defines the secret to be fetched from environment variable
 
+    RAW = "raw", SimpleNamespace(parser=lambda v: v)
+    # Defines a raw secret in the testplan
+
 
 class Secret(SchemaModel):
     """

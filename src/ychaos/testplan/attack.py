@@ -13,7 +13,7 @@ from pydantic import Field, FilePath, SecretStr, validator
 from ..agents.index import AgentType
 from ..utils.builtins import FQDN, AEnum
 from . import SchemaModel
-from .common import Secret
+from .common import Secret, SecretType
 
 
 class TargetDefinition(SchemaModel):
@@ -36,7 +36,7 @@ class SSHConfig(SchemaModel):
         description="The private key file that will be used to login to the hosts.",
     )
     password: Union[SecretStr, Secret] = Field(
-        default=None,
+        default=Secret(type=SecretType.RAW, id=None),
         description="The password that will be used to login to the hosts.",
     )
     ssh_common_args: str = Field(
@@ -47,6 +47,11 @@ class SSHConfig(SchemaModel):
     @validator("ssh_common_args", always=True)
     def set_ssh_common_args_env(cls, v):
         os.environ["ANSIBLE_SSH_COMMON_ARGS"] = v
+        return v
+
+    @validator("private_key")
+    def set_private_key(cls, v):
+        os.environ["ANSIBLE_PRIVATE_KEY_FILE"] = str(v)
         return v
 
 

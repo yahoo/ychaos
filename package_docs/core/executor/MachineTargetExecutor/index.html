@@ -1833,7 +1833,6 @@
 
 
 
-
   <div class="doc doc-object doc-class">
 
 
@@ -2016,17 +2015,13 @@ too low or there are no hosts in the attack list.</p>
             <span class="n">loader</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">loader</span><span class="p">,</span> <span class="n">inventory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">inventory</span>
         <span class="p">)</span>
 
-        <span class="n">set_ansible_context</span><span class="p">(</span>
-            <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">private_key_file</span><span class="o">=</span><span class="n">target_config</span><span class="o">.</span><span class="n">ssh_config</span><span class="o">.</span><span class="n">private_key</span><span class="p">)</span>
-        <span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">tqm</span> <span class="o">=</span> <span class="n">TaskQueueManager</span><span class="p">(</span>
             <span class="n">inventory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">inventory</span><span class="p">,</span>
             <span class="n">variable_manager</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">variable_manager</span><span class="p">,</span>
             <span class="n">loader</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">loader</span><span class="p">,</span>
             <span class="n">passwords</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
                 <span class="n">vault_pass</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">conn_pass</span><span class="o">=</span><span class="n">target_config</span><span class="o">.</span><span class="n">ssh_config</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
+                <span class="n">conn_pass</span><span class="o">=</span><span class="n">target_config</span><span class="o">.</span><span class="n">ssh_config</span><span class="o">.</span><span class="n">password</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="n">stdout_callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">results_callback</span><span class="p">,</span>
         <span class="p">)</span>

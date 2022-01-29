@@ -2930,7 +2930,7 @@ SSHConfig            (<span title="ychaos.testplan.SchemaModel">SchemaModel</spa
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The private key file that will be used to login to the hosts.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">password</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SecretStr</span><span class="p">,</span> <span class="n">Secret</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">Secret</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">SecretType</span><span class="o">.</span><span class="n">RAW</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The password that will be used to login to the hosts.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">ssh_common_args</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
@@ -2941,6 +2941,11 @@ SSHConfig            (<span title="ychaos.testplan.SchemaModel">SchemaModel</spa
     <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;ssh_common_args&quot;</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">set_ssh_common_args_env</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ANSIBLE_SSH_COMMON_ARGS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">return</span> <span class="n">v</span>
+
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;private_key&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">set_private_key</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ANSIBLE_PRIVATE_KEY_FILE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">v</span>
 </code></pre></div>
         </details>
@@ -3039,6 +3044,7 @@ SSHConfig            (<span title="ychaos.testplan.SchemaModel">SchemaModel</spa
     </div>
 
   </div>
+
 
 
 

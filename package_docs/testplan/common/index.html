@@ -2069,12 +2069,16 @@ SecretType            (<span title="ychaos.utils.builtins.AEnum">AEnum</span>)
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">ENV</span> <span class="o">=</span> <span class="s2">&quot;env&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">parser</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+    <span class="c1"># Defines the secret to be fetched from environment variable</span>
+
+    <span class="n">RAW</span> <span class="o">=</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">parser</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="p">)</span>
 </code></pre></div>
         </details>
 
 
 
   <div class="doc doc-children">
+
 
 
 

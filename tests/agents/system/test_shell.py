@@ -19,9 +19,7 @@ class TestShell(TestCase):
         self.shell_config = ShellConfig(command="mkdir shellDir")
 
     def test_shell_agent(self):
-
         shell_agent = Shell(self.shell_config)
-
         shell_agent.setup()
         self.assertEqual(AgentState.SETUP, shell_agent.current_state)
 

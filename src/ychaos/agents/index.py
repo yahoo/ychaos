@@ -21,6 +21,7 @@ from .special.NoOpAgent import (
 from .system.cpu import CPUBurn, CPUBurnConfig
 from .system.disk import DiskFill, DiskFillConfig
 from .system.icmp import PingDisable, PingDisableConfig
+from .system.shell import Shell, ShellConfig
 from .validation.certificate import (
     CertificateFileValidation,
     CertificateFileValidationConfig,
@@ -69,3 +70,5 @@ class AgentType(AEnum):
     )
 
     DISK_FILL = "disk_fill", SimpleNamespace(schema=DiskFillConfig, agent_defn=DiskFill)
+
+    SHELL = "shell", SimpleNamespace(schema=ShellConfig, agent_defn=Shell)

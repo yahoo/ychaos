@@ -323,7 +323,7 @@ class MultipleConditionalsMetricsVerificationCriteria(SchemaModel):
     Defines the Metrics Verification criteria
     """
 
-    aggeragator: MetricsAggregator = Field(
+    aggregator: MetricsAggregator = Field(
         default=MetricsAggregator.AVG, description="Data aggregator"
     )
 
@@ -335,7 +335,7 @@ class MultipleConditionalsMetricsVerificationCriteria(SchemaModel):
 
 class StateBoundMetricsVerificationCriteria(SchemaModel):
 
-    aggeragator: MetricsAggregator = Field(
+    aggregator: MetricsAggregator = Field(
         default=MetricsAggregator.AVG, description="Data aggregator"
     )
 

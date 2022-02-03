@@ -6,7 +6,7 @@ from typing import Any, Callable, Dict, List, Optional, Union
 from uuid import UUID, uuid4
 
 import yaml
-from pydantic import Field
+from pydantic import Extra, Field
 
 from ..utils.yaml import Dumper
 from . import SchemaModel, SystemState
@@ -81,6 +81,9 @@ class TestPlan(TestPlanSchema):
             "6402e065-9c90-4719-b98c-ad03152e1238",
         ],
     )
+
+    class Config:
+        extra = Extra.allow  # Allow Anchors
 
     @classmethod
     def load_file(cls, path: Union[str, Path]) -> "TestPlan":

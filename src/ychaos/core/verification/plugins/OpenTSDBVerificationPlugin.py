@@ -73,7 +73,7 @@ class OpenTSDBVerificationPlugin(RequestVerificationPlugin):
 
             for _criteria in self.config.criteria:
 
-                _aggregated_data = _criteria.aggeragator.metadata.aggregate(  # type: ignore
+                _aggregated_data = _criteria.aggregator.metadata.aggregate(  # type: ignore
                     _query_data["dps"]
                 )
 

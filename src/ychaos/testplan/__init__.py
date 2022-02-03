@@ -4,7 +4,7 @@
 from enum import Enum
 from typing import Any, Dict
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Extra
 
 
 class SystemState(Enum):
@@ -19,3 +19,5 @@ class SchemaModel(BaseModel):
         def schema_extra(schema: Dict[str, Any], model) -> None:
             for prop in schema.get("properties", {}).values():
                 prop.pop("title", None)
+
+        extra = Extra.forbid

@@ -1,4 +1,7 @@
 description: A valid mock testplan file in YAML format
+annotations:
+  anchor: &anchor
+    unknown_field: unknown_value
 verification:
   - states:
       - CHAOS

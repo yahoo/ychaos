@@ -171,7 +171,7 @@ class MachineTargetExecutor(BaseExecutor):
             loader=self.ansible_context.loader,
             passwords=dict(
                 vault_pass=None,
-                conn_pass=target_config.ssh_config.password or "",
+                conn_pass=target_config.ssh_config.password.get_secret_value() or "",
             ),
             stdout_callback=self.ansible_context.results_callback,
         )

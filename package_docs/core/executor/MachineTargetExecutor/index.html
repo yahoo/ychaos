@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/core/executor/MachineTargetExecutor/">
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.8">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.9">
     
     
       
@@ -21,7 +21,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.6e60f8b8.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.2b4465f4.min.css">
       
         
         <link rel="stylesheet" href="../../../../assets/stylesheets/palette.e6a45f82.min.css">
@@ -2021,7 +2021,7 @@ too low or there are no hosts in the attack list.</p>
             <span class="n">loader</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">loader</span><span class="p">,</span>
             <span class="n">passwords</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
                 <span class="n">vault_pass</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">conn_pass</span><span class="o">=</span><span class="n">target_config</span><span class="o">.</span><span class="n">ssh_config</span><span class="o">.</span><span class="n">password</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">conn_pass</span><span class="o">=</span><span class="n">target_config</span><span class="o">.</span><span class="n">ssh_config</span><span class="o">.</span><span class="n">password</span><span class="o">.</span><span class="n">get_secret_value</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="n">stdout_callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">results_callback</span><span class="p">,</span>
         <span class="p">)</span>

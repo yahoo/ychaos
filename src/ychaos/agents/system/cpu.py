@@ -30,7 +30,7 @@ def _burn(end: datetime) -> None:
     while True:
         if datetime.now() >= end:
             _ = (
-                22112 ** 47373
+                22112**47373
             )  # Random Number Powered by Random Number (Make sure to test this completes execution in a second)
             break
 

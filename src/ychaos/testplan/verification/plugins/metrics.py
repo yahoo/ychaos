@@ -7,7 +7,7 @@ from datetime import datetime
 from types import SimpleNamespace
 from typing import Dict, List, Tuple, Union, Optional
 
-from pydantic import Field, validate_arguments, validator
+from pydantic import Field, validate_arguments, validator, PrivateAttr
 
 from ....utils.builtins import AEnum, BuiltinUtils
 from ... import SchemaModel, SystemState
@@ -309,14 +309,14 @@ class ComparisonCondition(SchemaModel):
     value: Union[float, Tuple] = Field(
         ..., description="Numerical value/range to be used for comparison"
     )
-    comparator_raw: Optional[str] = Field(
+    _comparator_raw: Optional[str] = Field(
         default=None,
     )
 
     # Resolve Aliases
     @validator("comparator", pre=True)
     def resolve_comparator(cls, v, values):
-        values["comparator_raw"] = v  # Store the actual value in a private attribute
+        values["_comparator_raw"] = v  # Store the actual value in a private attribute
         return v
 
 

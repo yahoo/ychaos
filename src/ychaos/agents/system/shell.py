@@ -53,6 +53,11 @@ class ShellConfig(TimedAgentConfig):
         description="Set the user before running shell command", default=None
     )
 
+    use_shell: bool = Field(
+        description="Sets whether to set shell to true or false",
+        default=False,
+    )
+
 
 class Shell(Agent):
     stdout = ""
@@ -80,7 +85,7 @@ class Shell(Agent):
         remote_command = split(self.config.command)
         process = subprocess.Popen(  # type: ignore
             remote_command,
-            shell=False,  # nosec
+            shell=self.config.use_shell,  # nosec
             stdin=subprocess.PIPE,
             cwd=self.config.cwd,
             env=self.config.env,

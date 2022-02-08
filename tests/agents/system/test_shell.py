@@ -1,9 +1,6 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
-import collections
-import shutil
 import subprocess
-from pathlib import Path
 from unittest import TestCase
 
 from mockito import unstub, when
@@ -14,9 +11,9 @@ from ychaos.agents.system.shell import Shell, ShellConfig
 
 class TestShell(TestCase):
     def setUp(self) -> None:
-        self.usage = collections.namedtuple("usage", "total used free")
-        self.stats = self.usage(2048, 1024, 1024)
-        self.shell_config = ShellConfig(command="mkdir shellDir")
+        self.shell_config = ShellConfig(
+            command="echo 'testing shell agent'", use_shell=False
+        )
 
     def test_shell_agent(self):
         shell_agent = Shell(self.shell_config)
@@ -26,10 +23,18 @@ class TestShell(TestCase):
         shell_agent.run()
         self.assertEqual(AgentState.RUNNING, shell_agent.current_state)
 
-        shell_file = Path().resolve() / "shellDir"
-        self.assertTrue(shell_file.exists())
+        when(subprocess).Popen("echo 'testing shell agent'", shell=True).thenReturn(
+            None
+        )
 
-        when(subprocess).Popen("mkdir shellDir;", shell=True).thenReturn(None)
+        when(subprocess).Popen(
+            "echo 'testing shell agent'",
+            shell=False,
+            stdin=subprocess.PIPE,
+            cwd=None,
+            env=None,
+            user=None,
+        ).thenReturn(None)
 
         monitor_status_queue = shell_agent.monitor()
         status = monitor_status_queue.get()
@@ -41,7 +46,4 @@ class TestShell(TestCase):
         self.assertEqual(AgentState.TEARDOWN, shell_agent.current_state)
 
     def tearDown(self) -> None:
-        shell_fir_path = Path().resolve() / "shellDir"
-        if shell_fir_path.exists():
-            shutil.rmtree(shell_fir_path)
         unstub()

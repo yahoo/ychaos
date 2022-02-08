@@ -93,6 +93,13 @@ class Shell(Agent):
         )  # nosec
         self.stdout, self.stderr = process.communicate(timeout=self.config.timeout)
 
+        self._status.put(
+            AgentMonitoringDataPoint(
+                data=dict(stdout=self.stdout, stderr=self.stderr),
+                state=self.current_state,
+            )
+        )
+
     @log_agent_lifecycle
     def teardown(self) -> None:
         super(Shell, self).teardown()

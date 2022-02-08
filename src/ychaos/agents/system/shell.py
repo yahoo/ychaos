@@ -91,7 +91,9 @@ class Shell(Agent):
             env=self.config.env,
             user=self.config.user,
         )  # nosec
-        self.stdout, self.stderr = process.communicate(timeout=self.config.timeout)
+
+        timeout = min(self.config.timeout, self.config.duration)
+        self.stdout, self.stderr = process.communicate(timeout=timeout)
 
         self._status.put(
             AgentMonitoringDataPoint(

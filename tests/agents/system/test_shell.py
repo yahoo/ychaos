@@ -12,7 +12,7 @@ from ychaos.agents.system.shell import Shell, ShellConfig
 class TestShell(TestCase):
     def setUp(self) -> None:
         self.shell_config = ShellConfig(
-            command="echo 'testing shell agent'", use_shell=False
+            command="echo 'testing shell agent'", use_shell=False, timeout=15
         )
 
     def test_shell_agent(self):
@@ -23,7 +23,7 @@ class TestShell(TestCase):
         shell_agent.run()
         self.assertEqual(AgentState.RUNNING, shell_agent.current_state)
 
-        when(subprocess).Popen("echo 'testing shell agent'", shell=True).thenReturn(
+        when(subprocess).Popen("echo 'testing shell agent'", shell=False).thenReturn(
             None
         )
 

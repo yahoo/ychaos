@@ -49,10 +49,6 @@ class ShellConfig(TimedAgentConfig):
         default=None,
     )
 
-    user: str = Field(
-        description="Set the user before running shell command", default=None
-    )
-
     use_shell: bool = Field(
         description="Sets whether to set shell to true or false",
         default=False,
@@ -89,7 +85,6 @@ class Shell(Agent):
             stdin=subprocess.PIPE,
             cwd=self.config.cwd,
             env=self.config.env,
-            user=self.config.user,
         )  # nosec
 
         timeout = min(self.config.timeout, self.config.duration)

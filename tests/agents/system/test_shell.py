@@ -33,7 +33,6 @@ class TestShell(TestCase):
             stdin=subprocess.PIPE,
             cwd=None,
             env=None,
-            user=None,
         ).thenReturn(None)
 
         monitor_status_queue = shell_agent.monitor()

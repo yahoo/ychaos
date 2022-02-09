@@ -5,6 +5,7 @@
 ### Next Version (0.6.0)
 
 1. Fix Regression with OpenTSDB Verification Plugin by [Shashank Sharma](https://github.com/shashankrnr32)
+2. Add Shell Agent by [Lakshmi Kannan](https://github.com/lakshmi-k05)
 
 ### Version 0.5.0
 1. Add `MachineTargetExecutor` support for contrib agents by [Alfin S Thomas](https://github.com/AlfinST)

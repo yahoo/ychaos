@@ -5,6 +5,7 @@ import subprocess  # nosec
 from pathlib import Path
 from queue import LifoQueue
 from shlex import split
+from typing import Optional
 
 from pydantic import Field
 
@@ -43,7 +44,7 @@ class ShellConfig(TimedAgentConfig):
 
     env: dict = Field(description="Used to set the environment variables", default=None)
 
-    cwd: Path = Field(
+    cwd: Optional[Path] = Field(
         description="Set working directory before running shell command",
         examples=["/etc/tmp"],
         default=None,
@@ -56,8 +57,8 @@ class ShellConfig(TimedAgentConfig):
 
 
 class Shell(Agent):
-    stdout = None
-    stderr = None
+    stdout: Optional[bytes]
+    stderr: Optional[bytes]
 
     def monitor(self) -> LifoQueue:
         super(Shell, self).monitor()

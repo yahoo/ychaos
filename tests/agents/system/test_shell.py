@@ -12,7 +12,7 @@ from ychaos.agents.system.shell import Shell, ShellConfig
 class TestShell(TestCase):
     def setUp(self) -> None:
         self.shell_config = ShellConfig(
-            command="echo 'testing shell agent'", use_shell=False, timeout=15
+            command="echo 'testing shell agent'", use_shell=False
         )
 
     def test_shell_agent(self):

@@ -32,12 +32,6 @@ class ShellConfig(TimedAgentConfig):
         description="The shell command to be executed", examples=["mkdir tempDir", "ls"]
     )
 
-    timeout: int = Field(
-        description="Time in s after which shell command execution will be terminated. This is required to avoid "
-        "indefinite wait",
-        default=10,
-    )
-
     ignore_error: bool = Field(
         description="Ignore non-zero return code from shell command", default=False
     )
@@ -88,8 +82,7 @@ class Shell(Agent):
             env=self.config.env,
         )  # nosec
 
-        timeout = min(self.config.timeout, self.config.duration)
-        self.stdout, self.stderr = process.communicate(timeout=timeout)
+        self.stdout, self.stderr = process.communicate(timeout=self.config.duration)
 
         self._status.put(
             AgentMonitoringDataPoint(

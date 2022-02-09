@@ -15,6 +15,7 @@ from ..agent import (
     AgentPriority,
     TimedAgentConfig,
 )
+from ..exceptions import AgentError
 from ..utils.annotations import log_agent_lifecycle
 
 
@@ -53,13 +54,14 @@ class ShellConfig(TimedAgentConfig):
 class Shell(Agent):
     stdout: Optional[bytes]
     stderr: Optional[bytes]
+    rc: Optional[int]
 
     def monitor(self) -> LifoQueue:
         super(Shell, self).monitor()
 
         self._status.put(
             AgentMonitoringDataPoint(
-                data=dict(stdout=self.stdout, stderr=self.stderr),
+                data=dict(stdout=self.stdout, stderr=self.stderr, rc=self.rc),
                 state=self.current_state,
             )
         )
@@ -83,13 +85,19 @@ class Shell(Agent):
         )  # nosec
 
         self.stdout, self.stderr = process.communicate(timeout=self.config.duration)
+        self.rc = process.returncode
 
         self._status.put(
             AgentMonitoringDataPoint(
-                data=dict(stdout=self.stdout, stderr=self.stderr),
+                data=dict(
+                    stdout=self.stdout, stderr=self.stderr, rc=process.returncode
+                ),
                 state=self.current_state,
             )
         )
+
+        if process.returncode != 0 and not self.config.ignore_error:
+            raise AgentError("Error Occurred while running shell command")
 
     @log_agent_lifecycle
     def teardown(self) -> None:

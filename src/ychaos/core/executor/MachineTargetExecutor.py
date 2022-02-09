@@ -150,9 +150,13 @@ class MachineTargetExecutor(BaseExecutor):
             }
         )
 
+        target_config: MachineTargetDefinition = (
+            self.testplan.attack.get_target_config()
+        )
+
         # Hosts to be in comma separated string
-        hosts = ",".join(self.testplan.attack.get_target_config().get_effective_hosts())
-        if len(self.testplan.attack.get_target_config().get_effective_hosts()) == 1:
+        hosts = ",".join(target_config.get_effective_hosts())
+        if len(target_config.get_effective_hosts()) == 1:
             hosts += ","
         self.ansible_context.inventory = InventoryManager(
             loader=self.ansible_context.loader, sources=hosts
@@ -165,14 +169,17 @@ class MachineTargetExecutor(BaseExecutor):
             inventory=self.ansible_context.inventory,
             variable_manager=self.ansible_context.variable_manager,
             loader=self.ansible_context.loader,
-            passwords=dict(vault_pass=None),
+            passwords=dict(
+                vault_pass=None,
+                conn_pass=target_config.ssh_config.password.get_secret_value() or "",
+            ),
             stdout_callback=self.ansible_context.results_callback,
         )
 
         self.ansible_context.play_source = dict(
             name="YChaos Ansible Play",
             hosts=",".join(self.target_hosts),
-            remote_user=self.testplan.attack.get_target_config().ssh_config.user,
+            remote_user=target_config.ssh_config.user,
             connection="ssh",
             strategy="free",
             gather_facts="no",
@@ -272,9 +279,7 @@ class MachineTargetExecutor(BaseExecutor):
                     action=dict(
                         module="fetch",
                         src="{{result_create_workspace.path}}/ychaos.zip",
-                        dest=str(
-                            self.testplan.attack.get_target_config().report_dir.resolve()
-                        )
+                        dest=str(target_config.report_dir.resolve())
                         + "/ychaos_{{inventory_hostname}}.zip",
                     ),
                 ),
@@ -348,9 +353,10 @@ class MachineTargetExecutor(BaseExecutor):
         # Create Report Directory
         import os
 
-        os.makedirs(
-            self.testplan.attack.get_target_config().report_dir.resolve(), exist_ok=True
+        target_config: MachineTargetDefinition = (
+            self.testplan.attack.get_target_config()
         )
+        os.makedirs(target_config.report_dir.resolve(), exist_ok=True)
 
         try:
             self.execute_hooks("on_start")

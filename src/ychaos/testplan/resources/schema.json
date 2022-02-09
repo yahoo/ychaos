@@ -28,6 +28,7 @@
     "required": [
         "attack"
     ],
+    "additionalProperties": false,
     "$schema": "https://json-schema.org/draft-07/schema",
     "$id": "https://resilience.yahoo.com/schema.json",
     "definitions": {
@@ -102,7 +103,8 @@
                 "states",
                 "type",
                 "config"
-            ]
+            ],
+            "additionalProperties": false
         },
         "TargetType": {
             "title": "TargetType",
@@ -163,7 +165,8 @@
             },
             "required": [
                 "type"
-            ]
+            ],
+            "additionalProperties": false
         },
         "AttackConfig": {
             "title": "AttackConfig",
@@ -207,7 +210,8 @@
             },
             "required": [
                 "target_type"
-            ]
+            ],
+            "additionalProperties": false
         }
     }
 }

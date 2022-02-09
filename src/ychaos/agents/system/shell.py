@@ -56,8 +56,8 @@ class ShellConfig(TimedAgentConfig):
 
 
 class Shell(Agent):
-    stdout = ""
-    stderr = ""
+    stdout = None
+    stderr = None
 
     def monitor(self) -> LifoQueue:
         super(Shell, self).monitor()

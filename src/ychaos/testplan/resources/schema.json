@@ -136,7 +136,8 @@
                 "cert_file_validation",
                 "contrib",
                 "disable_ping",
-                "disk_fill"
+                "disk_fill",
+                "shell"
             ]
         },
         "AgentExecutionConfig": {

@@ -2,3 +2,4 @@ nav:
     - cpu: cpu.md
     - icmp: icmp.md
     - disk: disk.md
+    - shell: shell.md

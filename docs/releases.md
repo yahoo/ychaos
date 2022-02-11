@@ -5,6 +5,12 @@
 ### Next Version (0.6.0)
 
 1. Fix Regression with OpenTSDB Verification Plugin by [Shashank Sharma](https://github.com/shashankrnr32)
+2. Add Shell Agent by [Lakshmi Kannan](https://github.com/lakshmi-k05)
+3. Change Private Key error using env variable by [Shashank Sharma](https://github.com/shashankrnr32)
+4. Fix Connection Password for Executor by [Shashank Sharma](https://github.com/shashankrnr32)
+5. Forbid unknown fields in nested models by [Shashank Sharma](https://github.com/shashankrnr32)
+6. Remove Python3.6 support for YChaos [Shashank Sharma](https://github.com/shashankrnr32)
+7. Fixed range criteria verification by [Alfin S Thomas](https://github.com/AlfinST)
 
 ### Version 0.5.0
 1. Add `MachineTargetExecutor` support for contrib agents by [Alfin S Thomas](https://github.com/AlfinST)

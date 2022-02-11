@@ -5,7 +5,7 @@ import math
 import random
 from datetime import datetime
 from types import SimpleNamespace
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Union, Optional
 
 from pydantic import Field, validate_arguments, validator
 
@@ -301,7 +301,6 @@ class MetricsComparator(AEnum):
 
 
 class ComparisonCondition(SchemaModel):
-
     comparator: MetricsComparator = Field(
         ...,
         description="Comparison condition to compare between the metrics data and fetched value",
@@ -310,11 +309,14 @@ class ComparisonCondition(SchemaModel):
     value: Union[float, Tuple] = Field(
         ..., description="Numerical value/range to be used for comparison"
     )
+    _comparator_raw: Optional[str] = Field(
+        default=None,
+    )
 
     # Resolve Aliases
     @validator("comparator", pre=True)
     def resolve_comparator(cls, v, values):
-        values["_comparator"] = v  # Store the actual value in a private attribute
+        values["_comparator_raw"] = v  # Store the actual value in a private attribute
         return v
 
 

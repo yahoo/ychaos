@@ -105,7 +105,7 @@ class TestStateBoundMetricsVerificationCriteria(TestCase):
             SystemState.STEADY
         )
         self.assertEqual(MetricsComparator.LE, comparator.comparator)
-        self.assertEqual("<=", comparator._comparator)
+        self.assertEqual("<=", comparator._comparator_raw)
         self.assertEqual(300, comparator.value)
 
     def test_metrics_when_no_criteria_is_defined(self):

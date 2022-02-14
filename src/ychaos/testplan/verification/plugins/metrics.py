@@ -309,14 +309,14 @@ class ComparisonCondition(SchemaModel):
     value: Union[float, Tuple] = Field(
         ..., description="Numerical value/range to be used for comparison"
     )
-    _comparator_raw: Optional[str] = Field(
+    comparator_raw: Optional[str] = Field(
         default=None,
     )
 
     # Resolve Aliases
     @validator("comparator", pre=True)
     def resolve_comparator(cls, v, values):
-        values["_comparator_raw"] = v  # Store the actual value in a private attribute
+        values["comparator_raw"] = v
         return v
 
 

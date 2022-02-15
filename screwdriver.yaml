@@ -52,6 +52,8 @@ jobs:
     code_validation:
         image: quay.io/pypa/manylinux2014_x86_64
         requires: [~pr, ~commit]
+        environment:
+            SECURITY_BANDIT_CONFIG_ARGS: "-s B101"
         steps:
             - begin: echo "Starting Code Validation"
             - init_os: |

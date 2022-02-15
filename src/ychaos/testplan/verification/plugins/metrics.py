@@ -301,6 +301,7 @@ class MetricsComparator(AEnum):
 
 
 class ComparisonCondition(SchemaModel):
+
     comparator_raw: Optional[str] = Field(
         default=None,
     )

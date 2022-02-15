@@ -301,6 +301,10 @@ class MetricsComparator(AEnum):
 
 
 class ComparisonCondition(SchemaModel):
+    comparator_raw: Optional[str] = Field(
+        default=None,
+    )
+
     comparator: MetricsComparator = Field(
         ...,
         description="Comparison condition to compare between the metrics data and fetched value",
@@ -308,9 +312,6 @@ class ComparisonCondition(SchemaModel):
 
     value: Union[float, Tuple] = Field(
         ..., description="Numerical value/range to be used for comparison"
-    )
-    comparator_raw: Optional[str] = Field(
-        default=None,
     )
 
     # Resolve Aliases

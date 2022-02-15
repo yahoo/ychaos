@@ -58,7 +58,9 @@ jobs:
                 sd-cmd exec python-2104/python_bootstrap@stable
                 . $SD_ARTIFACTS_DIR/env/python_bootstrap.env || /bin/true
             - install_dependencies: $BASE_PYTHON -m screwdrivercd.installdeps
-            - set_package_env: $BASE_PYTHON screwdriver/set_package_env.py
+            - set_package_env: |
+                $BASE_PYTHON screwdriver/set_package_env.py
+                . $SD_ARTIFACTS_DIR/env/package.env
             - update_version: $BASE_PYTHON -m screwdrivercd.version
             - install_pep8_deps: $BASE_PYTHON -m pip install -U .[pep8]
 

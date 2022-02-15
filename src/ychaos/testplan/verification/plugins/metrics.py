@@ -5,7 +5,7 @@ import math
 import random
 from datetime import datetime
 from types import SimpleNamespace
-from typing import Dict, List, Tuple, Union, Optional
+from typing import Dict, List, Optional, Tuple, Union
 
 from pydantic import Field, validate_arguments, validator
 

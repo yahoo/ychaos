@@ -69,9 +69,6 @@ jobs:
             - validate_pep8: flake8 src/ychaos
             - validate_codespell: codespell --skip "*.css" src tests develop docs
 
-            # Lint Validation
-            - validate_lint: pypirun pylint pylint ${PACKAGE_DIR}
-
             # Security Validation
             - validate_security: |
                 pypirun bandit bandit-config-generator -o .bandit.ini ${SECURITY_BANDIT_CONFIG_ARGS}

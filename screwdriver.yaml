@@ -34,11 +34,6 @@ shared:
             docker push $DOCKER_REPO:py$PY_VERSION-$DOCKER_TAG
 
 jobs:
-    # Validation jobs
-    dependency_validation:
-        template: python/validate_dependencies
-        requires: [~pr, ~commit]
-
     doc_validation:
         template: python/documentation
         environment:
@@ -47,40 +42,46 @@ jobs:
         steps:
             - prepublish_documentation: python3 screwdriver/autogen_docs.py
 
-    lint_validation:
-        template: python/validate_lint
-        requires: [~pr, ~commit]
-
     package_validation:
         template: python/package_python
         environment:
             PACKAGE_PYTHON_PUBLISH: False
         requires: [~pr]
 
-    security_validation:
+    # Style validation using `flake8`
+    code_validation:
+        image: quay.io/pypa/manylinux2014_x86_64
+        requires: [~pr, ~commit]
         environment:
             SECURITY_BANDIT_CONFIG_ARGS: "-s B101"
-        template: python/validate_security
-        requires: [~pr, ~commit]
         steps:
-            - postvalidate_code: ./screwdriver/semgrep.sh
+            - begin: echo "Starting Code Validation"
+            - init_os: |
+                sd-cmd exec python-2104/python_bootstrap@stable
+                . $SD_ARTIFACTS_DIR/env/python_bootstrap.env || /bin/true
+            - install_dependencies: $BASE_PYTHON -m screwdrivercd.installdeps
+            - set_package_env: |
+                $BASE_PYTHON screwdriver/set_package_env.py
+                . $SD_ARTIFACTS_DIR/env/package.env
+            - update_version: $BASE_PYTHON -m screwdrivercd.version
+            - install_pep8_deps: $BASE_PYTHON -m pip install -U .[pep8]
 
-    # Style validation using `flake8`
-    style_validation:
-        template: python/validate_codestyle
-        requires: [~pr, ~commit]
-        steps:
-            - postinstall_dependencies: pip install -U .[pep8]
-            - validate_code: flake8 src/ychaos
-            - postvalidate_code: codespell --skip "*.css" src tests develop docs
+            # Run Code Style Validations
+            - validate_codestyle: black --check src/ tests/ develop/ setup.py
+            - validate_pep8: flake8 src/ychaos
+            - validate_codespell: codespell --skip "*.css" src tests develop docs
 
-    # Code Format Validation using `black`
-    code_format_validation:
-        template: python/validate_codestyle
-        requires: [~pr, ~commit]
-        steps:
-            - postinstall_dependencies: pip install -U .[pep8]
-            - validate_code: black --check src/ tests/ develop/ setup.py
+            # Security Validation
+            - validate_security: |
+                pypirun bandit bandit-config-generator -o .bandit.ini ${SECURITY_BANDIT_CONFIG_ARGS}
+                pypirun bandit bandit -c .bandit.ini -f txt -r ${PACKAGE_DIR}
+            - validate_semgrep: ./screwdriver/semgrep.sh
+
+            # Dependency Validation
+            - validate_dependency: pypirun --upgrade_pip --always_install screwdrivercd,. screwdrivercd_validate_deps
+
+            - end: echo "Ending Code Validation"
+            - teardown-store_artifacts: $BASE_PYTHON screwdriver/teardown_store_artifacts.py
 
     test_validation_py37:
         template: python/validate_unittest
@@ -130,12 +131,8 @@ jobs:
     version_test_pypi:
         template: python-2104/version
         requires:
-            - dependency_validation
-            - lint_validation
-            - style_validation
             - type_validation
-            - security_validation
-            - code_format_validation
+            - code_validation
 
             # Unittest Jobs
             - test_validation_py37
@@ -159,12 +156,8 @@ jobs:
     release:
         template: sd/noop
         blockedBy:
-            - ~dependency_validation
-            - ~lint_validation
-            - ~style_validation
             - ~type_validation
-            - ~security_validation
-            - ~code_format_validation
+            - ~code_validation
 
             # Unittest Jobs
             - ~test_validation_py37
@@ -179,12 +172,8 @@ jobs:
             - release
 
             # Validation Jobs
-            - dependency_validation
-            - lint_validation
-            - style_validation
             - type_validation
-            - security_validation
-            - code_format_validation
+            - code_validation
 
             # Unittest Jobs
             - test_validation_py37

@@ -3837,6 +3837,11 @@ ComparisonCondition            (<span title="ychaos.testplan.SchemaModel">Schema
         <details class="quote">
           <summary>Source code in <code>testplan/verification/plugins/metrics.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">ComparisonCondition</span><span class="p">(</span><span class="n">SchemaModel</span><span class="p">):</span>
+
+    <span class="n">comparator_raw</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
     <span class="n">comparator</span><span class="p">:</span> <span class="n">MetricsComparator</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Comparison condition to compare between the metrics data and fetched value&quot;</span><span class="p">,</span>
@@ -3845,14 +3850,11 @@ ComparisonCondition            (<span title="ychaos.testplan.SchemaModel">Schema
     <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Numerical value/range to be used for comparison&quot;</span>
     <span class="p">)</span>
-    <span class="n">_comparator_raw</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span>
 
     <span class="c1"># Resolve Aliases</span>
     <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;comparator&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">resolve_comparator</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="n">values</span><span class="p">[</span><span class="s2">&quot;_comparator_raw&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>  <span class="c1"># Store the actual value in a private attribute</span>
+        <span class="n">values</span><span class="p">[</span><span class="s2">&quot;comparator_raw&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
         <span class="k">return</span> <span class="n">v</span>
 </code></pre></div>
         </details>
@@ -3886,6 +3888,7 @@ ComparisonCondition            (<span title="ychaos.testplan.SchemaModel">Schema
     </div>
 
   </div>
+
 
 
 

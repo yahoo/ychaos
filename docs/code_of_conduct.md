@@ -9,6 +9,7 @@ This code does not replace the terms of service or acceptable use policies of th
 
 ## Details
 This Code of Conduct makes our expectations of participants in this community explicit.
+
 * We forbid harassment and abusive speech within this community.
 * We request participants to report misconduct to the project’s Response Team.
 * We urge participants to refrain from using discussion forums to play out a fight.
@@ -26,6 +27,7 @@ We expect participants in this community to conduct themselves professionally. S
 
 ### Unacceptable Behaviors
 Participants remain in good standing when they do not engage in misconduct or harassment (some examples follow). We do not list all forms of harassment, nor imply some forms of harassment are not worthy of action. Any participant who *feels* harassed or *observes* harassment, should report the incident to the Response Team. 
+
 * **Don't be a bigot.** Calling out project members by their identity or background in a negative or insulting manner. This includes, but is not limited to, slurs or insinuations related to protected or suspect classes e.g. race, color, citizenship, national origin, political belief, religion, sexual orientation, gender identity and expression, age, size, culture, ethnicity, genetic features, language, profession, national minority status, mental or physical ability.
 * **Don't insult.** Insulting remarks about a person’s lifestyle practices.
 * **Don't dox.** Revealing private information about other participants without explicit permission.
@@ -36,6 +38,7 @@ Participants remain in good standing when they do not engage in misconduct or ha
 
 ### Reporting Issues
 If you experience or witness misconduct, or have any other concerns about the conduct of members of this project, please report it by contacting our Response Team at opensource-conduct@yahooinc.com who will handle your report with discretion. Your report should include:
+
 * Your preferred contact information. We cannot process anonymous reports.
 * Names (real or usernames) of those involved in the incident.
 * Your account of what occurred, and if the incident is ongoing. Please provide links to or transcripts of the publicly available records (e.g. a mailing list archive or a public IRC logger), so that we can review it.

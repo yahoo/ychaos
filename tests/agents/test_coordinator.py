@@ -8,7 +8,7 @@ from unittest import TestCase
 
 from mockito import ANY, unstub, when
 
-from ychaos.agents.agent import AgentState
+from ychaos.agents.agent import AgentMonitoringDataPoint, AgentState
 from ychaos.agents.coordinator import Coordinator
 from ychaos.testplan.attack import AttackMode
 from ychaos.testplan.schema import TestPlan
@@ -81,7 +81,7 @@ class TestCoordinator(TestCase):
         configured_agents = coordinator.configure_agent_in_test_plan()
         for configured_agent in configured_agents:
             while datetime.now(timezone.utc) <= coordinator.attack_end_time:
-                agent = coordinator.get_next_agent_for_attack()
+                agent = coordinator.get_next_agent_for_runnable()
                 if agent:
                     self.assertEqual(id(configured_agent), id(agent))
                     break
@@ -102,7 +102,7 @@ class TestCoordinator(TestCase):
         for index, configured_agent in enumerate(configured_agents):
             while datetime.now(timezone.utc) <= coordinator.attack_end_time:
                 if index == 0 or index == 1:
-                    if coordinator.get_next_agent_for_attack():
+                    if coordinator.get_next_agent_for_runnable():
                         self.fail(msg="Test Failed")
                         break
                 else:
@@ -121,7 +121,7 @@ class TestCoordinator(TestCase):
         when(configured_agents[0].agent).setup().thenRaise(IOError())
         self.assertFalse(coordinator.check_for_failed_agents())
         while datetime.now(timezone.utc) <= configured_agents[0].end_time:
-            coordinator.get_next_agent_for_attack()
+            coordinator.get_next_agent_for_runnable()
 
         self.assertTrue(coordinator.check_for_failed_agents())
         self.assertTrue(coordinator.check_for_failed_agents(configured_agents[0].agent))
@@ -152,8 +152,17 @@ class TestCoordinator(TestCase):
         coordinator = Coordinator(test_plan)
         configured_agents = coordinator.configure_agent_in_test_plan()
         configured_agents[0].agent.advance_state(AgentState.SETUP)
+
         configured_agents[1].agent.advance_state(AgentState.ERROR)
         configured_agents[1].agent.exception.put(IOError("testing"))
+        configured_agents[1].agent.status.put(
+            AgentMonitoringDataPoint(
+                data=dict(
+                    testdata=1.4,
+                ),
+                state=AgentState.RUNNING,
+            )
+        )
         configured_agents[2].agent.setup()
         configured_agents[2].agent_start_thread = configured_agents[
             2
@@ -165,7 +174,10 @@ class TestCoordinator(TestCase):
         ].agent.teardown_async()
         configured_agents[3].agent_teardown_thread.join()
         configured_agents[3].agent.advance_state(AgentState.RUNNING)
+
         coordinator.stop_all_running_agents_in_sync()
+
+        self.assertEqual(coordinator.exit_code, 1)
 
     def test_generate_attack_report(self):
         test_plan = self.test_plan.copy()

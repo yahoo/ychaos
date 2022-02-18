@@ -156,6 +156,13 @@ class Agent(ABC):
         """
         pass
 
+    @property
+    def status(self) -> LifoQueue:
+        """
+        Returns the queue storing the agent status data and monitored data points
+        """
+        return self._status
+
     @abstractmethod
     def setup(self) -> None:
         """

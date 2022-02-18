@@ -58,13 +58,6 @@ class Shell(Agent):
 
     def monitor(self) -> LifoQueue:
         super(Shell, self).monitor()
-
-        self._status.put(
-            AgentMonitoringDataPoint(
-                data=dict(stdout=self.stdout, stderr=self.stderr, rc=self.rc),
-                state=self.current_state,
-            )
-        )
         return self._status
 
     @log_agent_lifecycle
@@ -84,14 +77,11 @@ class Shell(Agent):
             env=self.config.env,
         )  # nosec
 
-        self.stdout, self.stderr = process.communicate(timeout=self.config.duration)
-        self.rc = process.returncode
+        stdout, stderr = process.communicate(timeout=self.config.duration)
 
         self._status.put(
             AgentMonitoringDataPoint(
-                data=dict(
-                    stdout=self.stdout, stderr=self.stderr, rc=process.returncode
-                ),
+                data=dict(stdout=stdout, stderr=stderr, rc=process.returncode),
                 state=self.current_state,
             )
         )

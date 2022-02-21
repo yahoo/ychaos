@@ -235,7 +235,9 @@ class TestCoordinator(TestCase):
         test_plan.attack.agents = test_plan.attack.agents[-1:]
         coordinator = Coordinator(test_plan)
         coordinator.configure_agent_in_test_plan()
-        when(coordinator).get_next_agent_for_teardown().thenReturn(coordinator.configured_agents[0]).thenReturn(None)
+        when(coordinator).get_next_agent_for_teardown().thenReturn(
+            coordinator.configured_agents[0]
+        ).thenReturn(None)
         coordinator.start_attack()
         self.assertFalse(coordinator.get_exit_status())
         report = coordinator.generate_attack_report()

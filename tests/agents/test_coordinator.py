@@ -229,6 +229,19 @@ class TestCoordinator(TestCase):
         for agent in report["agents"]:
             self.assertEqual(agent["status"], AgentState.DONE.name)
 
+    def test_start_attack_successfully_teardown(self):
+        test_plan = self.test_plan.copy()
+        test_plan.attack.mode = AttackMode.CONCURRENT
+        test_plan.attack.agents = test_plan.attack.agents[-1:]
+        coordinator = Coordinator(test_plan)
+        coordinator.configure_agent_in_test_plan()
+        when(coordinator).get_next_agent_for_teardown().thenReturn(coordinator.configured_agents[0]).thenReturn(None)
+        coordinator.start_attack()
+        self.assertFalse(coordinator.get_exit_status())
+        report = coordinator.generate_attack_report()
+        for agent in report["agents"]:
+            self.assertEqual(agent["status"], AgentState.DONE.name)
+
     def test_start_attack_failed_test(self):
         test_plan = self.test_plan.copy()
         test_plan.attack.mode = AttackMode.CONCURRENT

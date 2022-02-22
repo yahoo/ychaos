@@ -67,6 +67,12 @@ class Coordinator(EventHook):
             def callable_hook(agent_name: str): ...
         ```
 
+    === "on_each_agent_running"
+        called when a Agent is running every second
+        ```python
+            def callable_hook(agent_name: str): ...
+        ```
+
     === "on_each_agent_teardown"
         called when a Agent Teardown is started
         ```python
@@ -85,6 +91,7 @@ class Coordinator(EventHook):
         "on_attack_start": EventHook.CallableType(),
         "on_attack_completed": EventHook.CallableType(),
         "on_each_agent_start": EventHook.CallableType(str),
+        "on_each_agent_running": EventHook.CallableType(str),
         "on_each_agent_teardown": EventHook.CallableType(str),
         "on_each_agent_stop": EventHook.CallableType(str),
     }
@@ -150,7 +157,7 @@ class Coordinator(EventHook):
     def get_exit_status(self) -> int:
         return self.exit_code
 
-    def get_next_agent_for_attack(self) -> Optional[ConfiguredAgent]:
+    def get_next_agent_for_runnable(self) -> Optional[ConfiguredAgent]:
         """
         Get the next Agent for execution as configured in test plan
         Returns:
@@ -188,6 +195,25 @@ class Coordinator(EventHook):
             if (
                 configured_agent.agent.current_state == AgentState.RUNNING
                 and current_time > configured_agent.end_time
+                and not configured_agent.agent_teardown_thread
+            ):
+                return configured_agent
+        return None
+
+    def get_current_running_agent(self) -> Optional[ConfiguredAgent]:
+        """
+        Get the current running agent which has not been teared down yet.
+        Returns:
+            An Agent or None
+        """
+        current_time: datetime = datetime.now(timezone.utc)
+        for configured_agent in self.configured_agents:
+            assert configured_agent.start_time is not None
+            assert configured_agent.end_time is not None
+            if (
+                configured_agent.agent.current_state == AgentState.RUNNING
+                and current_time < configured_agent.end_time
+                and configured_agent.agent_start_thread
                 and not configured_agent.agent_teardown_thread
             ):
                 return configured_agent
@@ -245,6 +271,8 @@ class Coordinator(EventHook):
                             timeout=self.THREAD_TIMEOUT
                         )
                     else:
+                        # Run Monitor once During Teardown
+                        configured_agent.agent.monitor()
                         configured_agent.agent_teardown_thread = (
                             configured_agent.agent.teardown_async()
                         )
@@ -269,6 +297,12 @@ class Coordinator(EventHook):
                     configured_agent.agent.exception.put(e)
                     configured_agent.agent.advance_state(AgentState.ERROR)
                     configured_agent.agent.preserved_state.has_error = True
+
+            while not configured_agent.agent.status.empty():
+                self.log.info(
+                    f"Agent Monitoring: name={configured_agent.agent.config.name} {configured_agent.agent.status.get()}"
+                )
+
             self.execute_hooks(
                 "on_each_agent_stop",
                 configured_agent.agent.config.name,
@@ -362,22 +396,43 @@ class Coordinator(EventHook):
         assert self.attack_end_time is not None
         assert self.configured_agents is not None
         while datetime.now(timezone.utc) <= self.attack_end_time:
-            current_agent = self.get_next_agent_for_attack()
-            if current_agent:
-                current_agent.agent_start_thread = current_agent.agent.start_async()
+            # next_agent_runnable is not None only when there is a new agent ready for running
+            next_agent_runnable: Optional[
+                ConfiguredAgent
+            ] = self.get_next_agent_for_runnable()
+            if next_agent_runnable:
+                # Run Monitor once during agent start
+                next_agent_runnable.agent.monitor()
+                next_agent_runnable.agent_start_thread = (
+                    next_agent_runnable.agent.start_async()
+                )
                 self.execute_hooks(
                     "on_each_agent_start",
-                    current_agent.agent.config.name,
+                    next_agent_runnable.agent.config.name,
                 )
 
-            current_agent = self.get_next_agent_for_teardown()
-            if current_agent:
-                current_agent.agent_teardown_thread = (
-                    current_agent.agent.teardown_async()
+            # This branch can possibly run multiple times for the same agent (1s interval)
+            current_agent_running = self.get_current_running_agent()
+            if current_agent_running:
+                # Monitor the current agent running
+                current_agent_running.agent.monitor()
+                self.execute_hooks(
+                    "on_each_agent_running", current_agent_running.agent.config.name
+                )
+
+            # next_agent_teardown is not None only when there is a agent running ready to teared down
+            next_agent_teardown: Optional[
+                ConfiguredAgent
+            ] = self.get_next_agent_for_teardown()
+            if next_agent_teardown:
+                # Run Monitor once During Teardown
+                next_agent_teardown.agent.monitor()
+                next_agent_teardown.agent_teardown_thread = (
+                    next_agent_teardown.agent.teardown_async()
                 )
                 self.execute_hooks(
                     "on_each_agent_teardown",
-                    current_agent.agent.config.name,
+                    next_agent_teardown.agent.config.name,
                 )
 
             sleep(1)

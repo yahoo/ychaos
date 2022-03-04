@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/agents/coordinator/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.11">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.4">
     
     
       
@@ -21,7 +21,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.50e68009.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.2d9f7617.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.e6a45f82.min.css">
@@ -36,8 +36,9 @@
     
       
         
+        
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
         <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
@@ -1183,8 +1184,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ychaos.agents.coordinator.Coordinator.get_next_agent_for_attack" class="md-nav__link">
-    get_next_agent_for_attack()
+  <a href="#ychaos.agents.coordinator.Coordinator.get_current_running_agent" class="md-nav__link">
+    get_current_running_agent()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ychaos.agents.coordinator.Coordinator.get_next_agent_for_runnable" class="md-nav__link">
+    get_next_agent_for_runnable()
   </a>
   
 </li>
@@ -1909,8 +1917,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ychaos.agents.coordinator.Coordinator.get_next_agent_for_attack" class="md-nav__link">
-    get_next_agent_for_attack()
+  <a href="#ychaos.agents.coordinator.Coordinator.get_current_running_agent" class="md-nav__link">
+    get_current_running_agent()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ychaos.agents.coordinator.Coordinator.get_next_agent_for_runnable" class="md-nav__link">
+    get_next_agent_for_runnable()
   </a>
   
 </li>
@@ -1956,6 +1971,7 @@
 <a href="https://github.com/yahoo/ychaos/edit/master/docs/package_docs/agents/coordinator.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
+
 
 
   <h1>coordinator</h1>
@@ -2132,7 +2148,7 @@ running the agents and monitor the agent currently being run. It also
 takes care of completing the attack by bringing back to the system to its original
 state.</p>
 <h4 id="ychaos.agents.coordinator.Coordinator--coordinator-event-hooks">Coordinator Event Hooks<a class="headerlink" href="#ychaos.agents.coordinator.Coordinator--coordinator-event-hooks" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set" data-tabs="1:5"><input checked="checked" id="ychaos.agents.coordinator.Coordinator--__tabbed_1_1" name="ychaos.agents.coordinator.Coordinator--__tabbed_1" type="radio" /><label for="ychaos.agents.coordinator.Coordinator--__tabbed_1_1">on_attack_start</label><div class="tabbed-content">
+<div class="tabbed-set" data-tabs="1:6"><input checked="checked" id="ychaos.agents.coordinator.Coordinator--__tabbed_1_1" name="ychaos.agents.coordinator.Coordinator--__tabbed_1" type="radio" /><label for="ychaos.agents.coordinator.Coordinator--__tabbed_1_1">on_attack_start</label><div class="tabbed-content">
 <p>called when attack is started on the host
 <div class="highlight"><pre><span></span><code>    <span class="k">def</span> <span class="nf">callable_hook</span><span class="p">():</span> <span class="o">...</span>
 </code></pre></div></p>
@@ -2147,12 +2163,17 @@ state.</p>
 <div class="highlight"><pre><span></span><code>    <span class="k">def</span> <span class="nf">callable_hook</span><span class="p">(</span><span class="n">agent_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span> <span class="o">...</span>
 </code></pre></div></p>
 </div>
-<input id="ychaos.agents.coordinator.Coordinator--__tabbed_1_4" name="ychaos.agents.coordinator.Coordinator--__tabbed_1" type="radio" /><label for="ychaos.agents.coordinator.Coordinator--__tabbed_1_4">on_each_agent_teardown</label><div class="tabbed-content">
+<input id="ychaos.agents.coordinator.Coordinator--__tabbed_1_4" name="ychaos.agents.coordinator.Coordinator--__tabbed_1" type="radio" /><label for="ychaos.agents.coordinator.Coordinator--__tabbed_1_4">on_each_agent_running</label><div class="tabbed-content">
+<p>called when a Agent is running every second
+<div class="highlight"><pre><span></span><code>    <span class="k">def</span> <span class="nf">callable_hook</span><span class="p">(</span><span class="n">agent_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span> <span class="o">...</span>
+</code></pre></div></p>
+</div>
+<input id="ychaos.agents.coordinator.Coordinator--__tabbed_1_5" name="ychaos.agents.coordinator.Coordinator--__tabbed_1" type="radio" /><label for="ychaos.agents.coordinator.Coordinator--__tabbed_1_5">on_each_agent_teardown</label><div class="tabbed-content">
 <p>called when a Agent Teardown is started
 <div class="highlight"><pre><span></span><code>    <span class="k">def</span> <span class="nf">callable_hook</span><span class="p">(</span><span class="n">agent_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span> <span class="o">...</span>
 </code></pre></div></p>
 </div>
-<input id="ychaos.agents.coordinator.Coordinator--__tabbed_1_5" name="ychaos.agents.coordinator.Coordinator--__tabbed_1" type="radio" /><label for="ychaos.agents.coordinator.Coordinator--__tabbed_1_5">on_each_agent_stop</label><div class="tabbed-content">
+<input id="ychaos.agents.coordinator.Coordinator--__tabbed_1_6" name="ychaos.agents.coordinator.Coordinator--__tabbed_1" type="radio" /><label for="ychaos.agents.coordinator.Coordinator--__tabbed_1_6">on_each_agent_stop</label><div class="tabbed-content">
 <p>called when a Agent completes its execution and teardown step
 <div class="highlight"><pre><span></span><code>    <span class="k">def</span> <span class="nf">callable_hook</span><span class="p">(</span><span class="n">agent_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span> <span class="o">...</span>
 </code></pre></div></p>
@@ -2189,6 +2210,12 @@ state.</p>
 <span class="sd">            def callable_hook(agent_name: str): ...</span>
 <span class="sd">        ```</span>
 
+<span class="sd">    === &quot;on_each_agent_running&quot;</span>
+<span class="sd">        called when a Agent is running every second</span>
+<span class="sd">        ```python</span>
+<span class="sd">            def callable_hook(agent_name: str): ...</span>
+<span class="sd">        ```</span>
+
 <span class="sd">    === &quot;on_each_agent_teardown&quot;</span>
 <span class="sd">        called when a Agent Teardown is started</span>
 <span class="sd">        ```python</span>
@@ -2207,6 +2234,7 @@ state.</p>
         <span class="s2">&quot;on_attack_start&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(),</span>
         <span class="s2">&quot;on_attack_completed&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(),</span>
         <span class="s2">&quot;on_each_agent_start&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span>
+        <span class="s2">&quot;on_each_agent_running&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span>
         <span class="s2">&quot;on_each_agent_teardown&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span>
         <span class="s2">&quot;on_each_agent_stop&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span>
     <span class="p">}</span>
@@ -2272,7 +2300,7 @@ state.</p>
     <span class="k">def</span> <span class="nf">get_exit_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exit_code</span>
 
-    <span class="k">def</span> <span class="nf">get_next_agent_for_attack</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ConfiguredAgent</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">get_next_agent_for_runnable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ConfiguredAgent</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the next Agent for execution as configured in test plan</span>
 <span class="sd">        Returns:</span>
@@ -2310,6 +2338,25 @@ state.</p>
             <span class="k">if</span> <span class="p">(</span>
                 <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">current_state</span> <span class="o">==</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">RUNNING</span>
                 <span class="ow">and</span> <span class="n">current_time</span> <span class="o">&gt;</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">end_time</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span>
+            <span class="p">):</span>
+                <span class="k">return</span> <span class="n">configured_agent</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">get_current_running_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ConfiguredAgent</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the current running agent which has not been teared down yet.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            An Agent or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_time</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">configured_agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">start_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">assert</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">current_state</span> <span class="o">==</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">RUNNING</span>
+                <span class="ow">and</span> <span class="n">current_time</span> <span class="o">&lt;</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">end_time</span>
+                <span class="ow">and</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_start_thread</span>
                 <span class="ow">and</span> <span class="ow">not</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span>
             <span class="p">):</span>
                 <span class="k">return</span> <span class="n">configured_agent</span>
@@ -2367,6 +2414,8 @@ state.</p>
                             <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">THREAD_TIMEOUT</span>
                         <span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Run Monitor once During Teardown</span>
+                        <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">monitor</span><span class="p">()</span>
                         <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span> <span class="o">=</span> <span class="p">(</span>
                             <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">teardown_async</span><span class="p">()</span>
                         <span class="p">)</span>
@@ -2391,6 +2440,12 @@ state.</p>
                     <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                     <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
                     <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">preserved_state</span><span class="o">.</span><span class="n">has_error</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Agent Monitoring: name=</span><span class="si">{</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span>
                 <span class="s2">&quot;on_each_agent_stop&quot;</span><span class="p">,</span>
                 <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -2484,22 +2539,43 @@ state.</p>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack_end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">while</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack_end_time</span><span class="p">:</span>
-            <span class="n">current_agent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_agent_for_attack</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">current_agent</span><span class="p">:</span>
-                <span class="n">current_agent</span><span class="o">.</span><span class="n">agent_start_thread</span> <span class="o">=</span> <span class="n">current_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">start_async</span><span class="p">()</span>
+            <span class="c1"># next_agent_runnable is not None only when there is a new agent ready for running</span>
+            <span class="n">next_agent_runnable</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+                <span class="n">ConfiguredAgent</span>
+            <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_agent_for_runnable</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">next_agent_runnable</span><span class="p">:</span>
+                <span class="c1"># Run Monitor once during agent start</span>
+                <span class="n">next_agent_runnable</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">monitor</span><span class="p">()</span>
+                <span class="n">next_agent_runnable</span><span class="o">.</span><span class="n">agent_start_thread</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">next_agent_runnable</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">start_async</span><span class="p">()</span>
+                <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span>
                     <span class="s2">&quot;on_each_agent_start&quot;</span><span class="p">,</span>
-                    <span class="n">current_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">next_agent_runnable</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                 <span class="p">)</span>
 
-            <span class="n">current_agent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_agent_for_teardown</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">current_agent</span><span class="p">:</span>
-                <span class="n">current_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">current_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">teardown_async</span><span class="p">()</span>
+            <span class="c1"># This branch can possibly run multiple times for the same agent (1s interval)</span>
+            <span class="n">current_agent_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_running_agent</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">current_agent_running</span><span class="p">:</span>
+                <span class="c1"># Monitor the current agent running</span>
+                <span class="n">current_agent_running</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">monitor</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span>
+                    <span class="s2">&quot;on_each_agent_running&quot;</span><span class="p">,</span> <span class="n">current_agent_running</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span>
+                <span class="p">)</span>
+
+            <span class="c1"># next_agent_teardown is not None only when there is a agent running ready to teared down</span>
+            <span class="n">next_agent_teardown</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+                <span class="n">ConfiguredAgent</span>
+            <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_agent_for_teardown</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">next_agent_teardown</span><span class="p">:</span>
+                <span class="c1"># Run Monitor once During Teardown</span>
+                <span class="n">next_agent_teardown</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">monitor</span><span class="p">()</span>
+                <span class="n">next_agent_teardown</span><span class="o">.</span><span class="n">agent_teardown_thread</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">next_agent_teardown</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">teardown_async</span><span class="p">()</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span>
                     <span class="s2">&quot;on_each_agent_teardown&quot;</span><span class="p">,</span>
-                    <span class="n">current_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">next_agent_teardown</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -2849,16 +2925,73 @@ for the hooks that are being registered.</p>
 
 
 
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 class="doc doc-heading" id="ychaos.agents.coordinator.Coordinator.get_current_running_agent">
+<code class="codehilite language-python"><span class="n">get_current_running_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a class="headerlink" href="#ychaos.agents.coordinator.Coordinator.get_current_running_agent" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Get the current running agent which has not been teared down yet.</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Optional[ychaos.agents.coordinator.ConfiguredAgent]</code></td>
+      <td><p>An Agent or None</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>agents/coordinator.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">get_current_running_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ConfiguredAgent</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the current running agent which has not been teared down yet.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        An Agent or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">current_time</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">configured_agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">start_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">current_state</span> <span class="o">==</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">RUNNING</span>
+            <span class="ow">and</span> <span class="n">current_time</span> <span class="o">&lt;</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">end_time</span>
+            <span class="ow">and</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_start_thread</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="n">configured_agent</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
 
   <div class="doc doc-object doc-method">
 
 
 
-<h3 class="doc doc-heading" id="ychaos.agents.coordinator.Coordinator.get_next_agent_for_attack">
-<code class="codehilite language-python"><span class="n">get_next_agent_for_attack</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+<h3 class="doc doc-heading" id="ychaos.agents.coordinator.Coordinator.get_next_agent_for_runnable">
+<code class="codehilite language-python"><span class="n">get_next_agent_for_runnable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
 
-<a class="headerlink" href="#ychaos.agents.coordinator.Coordinator.get_next_agent_for_attack" title="Permanent link">&para;</a></h3>
+<a class="headerlink" href="#ychaos.agents.coordinator.Coordinator.get_next_agent_for_runnable" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2881,7 +3014,7 @@ for the hooks that are being registered.</p>
 </table>
         <details class="quote">
           <summary>Source code in <code>agents/coordinator.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">get_next_agent_for_attack</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ConfiguredAgent</span><span class="p">]:</span>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">get_next_agent_for_runnable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ConfiguredAgent</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the next Agent for execution as configured in test plan</span>
 <span class="sd">    Returns:</span>
@@ -3011,22 +3144,43 @@ for the hooks that are being registered.</p>
     <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack_end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_agents</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="k">while</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack_end_time</span><span class="p">:</span>
-        <span class="n">current_agent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_agent_for_attack</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">current_agent</span><span class="p">:</span>
-            <span class="n">current_agent</span><span class="o">.</span><span class="n">agent_start_thread</span> <span class="o">=</span> <span class="n">current_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">start_async</span><span class="p">()</span>
+        <span class="c1"># next_agent_runnable is not None only when there is a new agent ready for running</span>
+        <span class="n">next_agent_runnable</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+            <span class="n">ConfiguredAgent</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_agent_for_runnable</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">next_agent_runnable</span><span class="p">:</span>
+            <span class="c1"># Run Monitor once during agent start</span>
+            <span class="n">next_agent_runnable</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">monitor</span><span class="p">()</span>
+            <span class="n">next_agent_runnable</span><span class="o">.</span><span class="n">agent_start_thread</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">next_agent_runnable</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">start_async</span><span class="p">()</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span>
                 <span class="s2">&quot;on_each_agent_start&quot;</span><span class="p">,</span>
-                <span class="n">current_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">next_agent_runnable</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="n">current_agent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_agent_for_teardown</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">current_agent</span><span class="p">:</span>
-            <span class="n">current_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">current_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">teardown_async</span><span class="p">()</span>
+        <span class="c1"># This branch can possibly run multiple times for the same agent (1s interval)</span>
+        <span class="n">current_agent_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_running_agent</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">current_agent_running</span><span class="p">:</span>
+            <span class="c1"># Monitor the current agent running</span>
+            <span class="n">current_agent_running</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">monitor</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span>
+                <span class="s2">&quot;on_each_agent_running&quot;</span><span class="p">,</span> <span class="n">current_agent_running</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span>
+            <span class="p">)</span>
+
+        <span class="c1"># next_agent_teardown is not None only when there is a agent running ready to teared down</span>
+        <span class="n">next_agent_teardown</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+            <span class="n">ConfiguredAgent</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_agent_for_teardown</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">next_agent_teardown</span><span class="p">:</span>
+            <span class="c1"># Run Monitor once During Teardown</span>
+            <span class="n">next_agent_teardown</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">monitor</span><span class="p">()</span>
+            <span class="n">next_agent_teardown</span><span class="o">.</span><span class="n">agent_teardown_thread</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">next_agent_teardown</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">teardown_async</span><span class="p">()</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span>
                 <span class="s2">&quot;on_each_agent_teardown&quot;</span><span class="p">,</span>
-                <span class="n">current_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">next_agent_teardown</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -3098,6 +3252,8 @@ for the hooks that are being registered.</p>
                         <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">THREAD_TIMEOUT</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Run Monitor once During Teardown</span>
+                    <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">monitor</span><span class="p">()</span>
                     <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent_teardown_thread</span> <span class="o">=</span> <span class="p">(</span>
                         <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">teardown_async</span><span class="p">()</span>
                     <span class="p">)</span>
@@ -3122,6 +3278,12 @@ for the hooks that are being registered.</p>
                 <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                 <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">advance_state</span><span class="p">(</span><span class="n">AgentState</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
                 <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">preserved_state</span><span class="o">.</span><span class="n">has_error</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Agent Monitoring: name=</span><span class="si">{</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span>
             <span class="s2">&quot;on_each_agent_stop&quot;</span><span class="p">,</span>
             <span class="n">configured_agent</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -3242,10 +3404,10 @@ for the hooks that are being registered.</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.092fa1f6.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.bd0b6b67.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.5a9542cf.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.5413a266.min.js"></script>
       
     
   </body>

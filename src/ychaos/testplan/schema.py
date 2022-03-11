@@ -71,7 +71,8 @@ class TestPlan(TestPlanSchema):
     The Test Plan Dataclass.
     """
 
-    __test__ = False
+    __test__: bool = False
+    __src_path__: Path = Path()
 
     id: UUID = Field(
         default_factory=uuid4,
@@ -87,8 +88,8 @@ class TestPlan(TestPlanSchema):
 
     @classmethod
     def load_file(cls, path: Union[str, Path]) -> "TestPlan":
-        path = Path(path)
-        with open(path, "r") as file:
+        cls.__src_path__ = Path(path)
+        with open(cls.__src_path__, "r") as file:
             data = yaml.safe_load(file)
         return cls(**data)
 

@@ -2,6 +2,7 @@
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 import json
 import random
+import shutil
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -122,8 +123,10 @@ class MachineTargetExecutor(BaseExecutor):
         "on_end": EventHook.CallableType(TaskResult),
     }
 
-    def __init__(self, testplan: TestPlan, *args, **kwargs):
-        super(MachineTargetExecutor, self).__init__(testplan)
+    def __init__(
+        self, testplan: TestPlan, is_debug_mode: bool = False, *args, **kwargs
+    ):
+        super(MachineTargetExecutor, self).__init__(testplan, is_debug_mode)
 
         # Selects a `blast_radius`% of hosts at random from the
         # effective hosts and uses it as the target hosts for the attack
@@ -305,6 +308,7 @@ class MachineTargetExecutor(BaseExecutor):
     def get_file_transfer_tasks(self):
         task_list = list()
         testplan = self.testplan.copy()
+
         for i, agent in enumerate(self.testplan.attack.agents):
             if agent.type == AgentType.CONTRIB:
                 filename = Path(testplan.attack.agents[i].config["path"])
@@ -322,8 +326,39 @@ class MachineTargetExecutor(BaseExecutor):
                     filename.name
                 )
 
+        if self.debug_mode:
+            ychaos_src_dir = str(
+                Path(__file__).joinpath("../../../../ychaos").resolve()
+            )
+            ychaos_src_zip_path = f"{self.testplan.__src_path__.parent}/ychaos"
+            shutil.make_archive(ychaos_src_zip_path, "zip", ychaos_src_dir)
+
+            task_list.append(
+                dict(
+                    name="Get site-package parent directory",
+                    action=dict(
+                        module="command",
+                        args=dict(cmd="ls {{result_pip.virtualenv}}/lib"),
+                    ),
+                    register="site_packages_parent_dir",
+                    changed_when="false",
+                )
+            )
+
+            task_list.append(
+                dict(
+                    name="Unzip ychaos src at remote",
+                    register="unizip_ychaos_at_remote",
+                    action=dict(
+                        module="ansible.builtin.unarchive",
+                        src=f"{ychaos_src_zip_path}.zip",
+                        dest="{{result_pip.virtualenv}}/lib/{{site_packages_parent_dir.stdout}}/site-packages/ychaos",
+                    ),
+                )
+            )
+
         # testplan will not have any changes from original if there are no contrib agents present
-        testplan_task = [
+        task_list.append(
             dict(
                 name="Copy testplan from local to remote",
                 register="result_testplan_file",
@@ -333,9 +368,9 @@ class MachineTargetExecutor(BaseExecutor):
                     dest="{{result_create_workspace.path}}/testplan.json",
                 ),
             )
-        ]
+        )
 
-        return testplan_task + task_list
+        return task_list
 
     def execute(self) -> None:
         self.prepare()
@@ -368,3 +403,5 @@ class MachineTargetExecutor(BaseExecutor):
             self.ansible_context.tqm.cleanup()
             if self.ansible_context.loader:  # pragma: no cover
                 self.ansible_context.loader.cleanup_all_tmp_files()
+            if self.debug_mode:
+                os.remove(f"{self.testplan.__src_path__.parent}/ychaos.zip")

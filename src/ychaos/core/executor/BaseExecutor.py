@@ -24,10 +24,13 @@ class BaseExecutor(EventHook, ABC):
 
     __target_type__: str
 
-    def __init__(self, testplan: TestPlan, *args, **kwargs):
+    def __init__(
+        self, testplan: TestPlan, is_debug_mode: bool = False, *args, **kwargs
+    ):
         super(BaseExecutor, self).__init__()
         self.testplan = testplan
         self._validate_target_config()
+        self.debug_mode = is_debug_mode
 
     def _get_target_type(self):
         # To avoid circular import

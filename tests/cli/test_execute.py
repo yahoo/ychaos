@@ -43,7 +43,7 @@ class TestVerificationCommand(TestCase):
     def test_execute_for_machine_target_when_no_targets_found(self):
         temp_testplan_file = NamedTemporaryFile("w+")
 
-        args = Namespace()
+        args = Namespace(debug=False)
         args.cls = self.cls
 
         # Create a Mocked CLI App

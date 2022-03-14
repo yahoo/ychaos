@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest import TestCase
 
 import yaml
-from mockito import ANY, mock, unstub, when, expect
+from mockito import ANY, mock, unstub, when, expect, verify
 
 from ychaos.core.exceptions.executor_errors import (
     YChaosTargetConfigConditionFailedError,
@@ -340,8 +340,9 @@ class TestMachineTargetExecutor(TestCase):
         executor.prepare()
         when(executor).prepare().thenReturn(None)
         expect(executor.ansible_context.tqm, times=1).run(ANY).thenReturn(None)
-        expect(os, times=1).remove(f"{ychaos_src_zip_path}.zip")
+        when(os).remove(f"{ychaos_src_zip_path}.zip").thenReturn(None)
         executor.execute()
+        verify(os, times=1).remove(f"{ychaos_src_zip_path}.zip")
 
     def tearDown(self) -> None:
         unstub()

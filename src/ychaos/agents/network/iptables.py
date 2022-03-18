@@ -117,7 +117,7 @@ class IPTablesBlock(Agent):
     @staticmethod
     def raise_io_error_on_iptables_failure(proc: subprocess.CompletedProcess, message):
         if proc.returncode != 0:
-            raise IOError(message)
+            raise IOError(f"{message}  stderr: {proc.stderr}")
 
     @log_agent_lifecycle
     def run(self) -> None:

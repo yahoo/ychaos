@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/core/executor/BaseExecutor/">
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.4">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.5">
     
     
       
@@ -1834,7 +1834,7 @@
 
 <h2 class="doc doc-heading" id="ychaos.core.executor.BaseExecutor.BaseExecutor">
         <code>
-BaseExecutor            (<a title="ychaos.utils.hooks.EventHook" href="../../../utils/hooks/#ychaos.utils.hooks.EventHook">EventHook</a>, <span title="abc.ABC">ABC</span>)
+BaseExecutor            (<a class="autorefs autorefs-internal" title="ychaos.utils.hooks.EventHook" href="../../../utils/hooks/#ychaos.utils.hooks.EventHook">EventHook</a>, <span title="abc.ABC">ABC</span>)
         </code>
 
 
@@ -1845,11 +1845,11 @@ BaseExecutor            (<a title="ychaos.utils.hooks.EventHook" href="../../../
 
       <p>TargetExecutor defines the target where the agents are executed to
 test the resiliency of the system. A simple example of Target Executor is the
-<a href="../MachineTargetExecutor/#ychaos.core.executor.MachineTargetExecutor.MachineTargetExecutor">MachineTargetExecutor</a>
+<a class="autorefs autorefs-internal" href="../MachineTargetExecutor/#ychaos.core.executor.MachineTargetExecutor.MachineTargetExecutor">MachineTargetExecutor</a>
 which holds the program logic to execute the agents (with Coordinator) in Virtual Machines/BareMetals</p>
 <p>Each new Target Executor overrides the <code>execute()</code> method which defines "what" is to be done
 to execute the agents in a particular target environment.</p>
-<p>This class extends the <a href="../../../utils/hooks/#ychaos.utils.hooks.EventHook">EventHook</a> class, which
+<p>This class extends the <a class="autorefs autorefs-internal" href="../../../utils/hooks/#ychaos.utils.hooks.EventHook">EventHook</a> class, which
 implies each of the target executor can define its own events and the hooks that will
 be called during the trigger of an event.</p>
 
@@ -1872,10 +1872,13 @@ be called during the trigger of an event.</p>
 
     <span class="n">__target_type__</span><span class="p">:</span> <span class="nb">str</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testplan</span><span class="p">:</span> <span class="n">TestPlan</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">testplan</span><span class="p">:</span> <span class="n">TestPlan</span><span class="p">,</span> <span class="n">is_debug_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BaseExecutor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">testplan</span> <span class="o">=</span> <span class="n">testplan</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_target_config</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug_mode</span> <span class="o">=</span> <span class="n">is_debug_mode</span>
 
     <span class="k">def</span> <span class="nf">_get_target_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># To avoid circular import</span>
@@ -2076,7 +2079,7 @@ target environment.</p>
     <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.bd0b6b67.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.5413a266.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.467223ff.min.js"></script>
       
     
   </body>

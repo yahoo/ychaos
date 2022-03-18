@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://yahoo.github.io/ychaos/package_docs/core/executor/MachineTargetExecutor/">
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.4">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.5">
     
     
       
@@ -1855,7 +1855,7 @@
 
 <h2 class="doc doc-heading" id="ychaos.core.executor.MachineTargetExecutor.MachineTargetExecutor">
         <code>
-MachineTargetExecutor            (<a title="ychaos.core.executor.BaseExecutor.BaseExecutor" href="../BaseExecutor/#ychaos.core.executor.BaseExecutor.BaseExecutor">BaseExecutor</a>)
+MachineTargetExecutor            (<a class="autorefs autorefs-internal" title="ychaos.core.executor.BaseExecutor.BaseExecutor" href="../BaseExecutor/#ychaos.core.executor.BaseExecutor.BaseExecutor">BaseExecutor</a>)
         </code>
 
 
@@ -1988,8 +1988,10 @@ too low or there are no hosts in the attack list.</p>
         <span class="s2">&quot;on_end&quot;</span><span class="p">:</span> <span class="n">EventHook</span><span class="o">.</span><span class="n">CallableType</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">),</span>
     <span class="p">}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testplan</span><span class="p">:</span> <span class="n">TestPlan</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">MachineTargetExecutor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">testplan</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">testplan</span><span class="p">:</span> <span class="n">TestPlan</span><span class="p">,</span> <span class="n">is_debug_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MachineTargetExecutor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">testplan</span><span class="p">,</span> <span class="n">is_debug_mode</span><span class="p">)</span>
 
         <span class="c1"># Selects a `blast_radius`% of hosts at random from the</span>
         <span class="c1"># effective hosts and uses it as the target hosts for the attack</span>
@@ -2171,6 +2173,7 @@ too low or there are no hosts in the attack list.</p>
     <span class="k">def</span> <span class="nf">get_file_transfer_tasks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">task_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="n">testplan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">agent</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">agents</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">AgentType</span><span class="o">.</span><span class="n">CONTRIB</span><span class="p">:</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">testplan</span><span class="o">.</span><span class="n">attack</span><span class="o">.</span><span class="n">agents</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">])</span>
@@ -2188,8 +2191,39 @@ too low or there are no hosts in the attack list.</p>
                     <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
                 <span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+            <span class="n">ychaos_src_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;../../../../ychaos&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="n">ychaos_src_zip_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">__src_path__</span><span class="o">.</span><span class="n">parent</span><span class="si">}</span><span class="s2">/ychaos&quot;</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">make_archive</span><span class="p">(</span><span class="n">ychaos_src_zip_path</span><span class="p">,</span> <span class="s2">&quot;zip&quot;</span><span class="p">,</span> <span class="n">ychaos_src_dir</span><span class="p">)</span>
+
+            <span class="n">task_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Get site-package parent directory&quot;</span><span class="p">,</span>
+                    <span class="n">action</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                        <span class="n">module</span><span class="o">=</span><span class="s2">&quot;command&quot;</span><span class="p">,</span>
+                        <span class="n">args</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="s2">&quot;ls {{result_pip.virtualenv}}/lib&quot;</span><span class="p">),</span>
+                    <span class="p">),</span>
+                    <span class="n">register</span><span class="o">=</span><span class="s2">&quot;site_packages_parent_dir&quot;</span><span class="p">,</span>
+                    <span class="n">changed_when</span><span class="o">=</span><span class="s2">&quot;false&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="n">task_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Unzip ychaos src at remote&quot;</span><span class="p">,</span>
+                    <span class="n">register</span><span class="o">=</span><span class="s2">&quot;unizip_ychaos_at_remote&quot;</span><span class="p">,</span>
+                    <span class="n">action</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                        <span class="n">module</span><span class="o">=</span><span class="s2">&quot;ansible.builtin.unarchive&quot;</span><span class="p">,</span>
+                        <span class="n">src</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ychaos_src_zip_path</span><span class="si">}</span><span class="s2">.zip&quot;</span><span class="p">,</span>
+                        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;{{result_pip.virtualenv}}/lib/{{site_packages_parent_dir.stdout}}/site-packages/ychaos&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
         <span class="c1"># testplan will not have any changes from original if there are no contrib agents present</span>
-        <span class="n">testplan_task</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">task_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="nb">dict</span><span class="p">(</span>
                 <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Copy testplan from local to remote&quot;</span><span class="p">,</span>
                 <span class="n">register</span><span class="o">=</span><span class="s2">&quot;result_testplan_file&quot;</span><span class="p">,</span>
@@ -2199,9 +2233,9 @@ too low or there are no hosts in the attack list.</p>
                     <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;{{result_create_workspace.path}}/testplan.json&quot;</span><span class="p">,</span>
                 <span class="p">),</span>
             <span class="p">)</span>
-        <span class="p">]</span>
+        <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">testplan_task</span> <span class="o">+</span> <span class="n">task_list</span>
+        <span class="k">return</span> <span class="n">task_list</span>
 
     <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prepare</span><span class="p">()</span>
@@ -2234,6 +2268,8 @@ too low or there are no hosts in the attack list.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">tqm</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">loader</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">cleanup_all_tmp_files</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">__src_path__</span><span class="o">.</span><span class="n">parent</span><span class="si">}</span><span class="s2">/ychaos.zip&quot;</span><span class="p">)</span>
 </code></pre></div>
         </details>
 
@@ -2339,6 +2375,8 @@ target environment.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">tqm</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">loader</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ansible_context</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">cleanup_all_tmp_files</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">testplan</span><span class="o">.</span><span class="n">__src_path__</span><span class="o">.</span><span class="n">parent</span><span class="si">}</span><span class="s2">/ychaos.zip&quot;</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -2450,7 +2488,7 @@ target environment.</p>
     <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.bd0b6b67.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.5413a266.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.467223ff.min.js"></script>
       
     
   </body>

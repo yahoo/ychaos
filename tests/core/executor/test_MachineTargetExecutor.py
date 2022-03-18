@@ -1,11 +1,13 @@
 #  Copyright 2021, Yahoo
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 import json
+import os
+import shutil
 from pathlib import Path
 from unittest import TestCase
 
 import yaml
-from mockito import ANY, mock, unstub, when
+from mockito import ANY, mock, unstub, when, expect, verify
 
 from ychaos.core.exceptions.executor_errors import (
     YChaosTargetConfigConditionFailedError,
@@ -309,6 +311,38 @@ class TestMachineTargetExecutor(TestCase):
             map(lambda x: x["name"], executor.ansible_context.play_source["tasks"])
         )
         self.assertIn("Copy awesome_agent.py to remote", playbook_tasks)
+
+    def test_machine_executor_tasks_when_in_debug_mode(self):
+        mock_valid_testplan = TestPlan.load_file(
+            self.testplans_directory.joinpath("valid/testplan2.yaml")
+        )
+        ychaos_src_zip_path = f"{mock_valid_testplan.__src_path__.parent}/ychaos"
+        executor = MachineTargetExecutor(mock_valid_testplan, is_debug_mode=True)
+        expect(shutil, times=1).make_archive(
+            ychaos_src_zip_path, "zip", ANY
+        ).thenReturn(None)
+        executor.prepare()
+        playbook_tasks = list(
+            map(lambda x: x["name"], executor.ansible_context.play_source["tasks"])
+        )
+        self.assertIn("Get site-package parent directory", playbook_tasks)
+        self.assertIn("Unzip ychaos src at remote", playbook_tasks)
+
+    def test_ychaos_src_zip_is_removed_after_execution_in_debug_mode(self):
+        mock_valid_testplan = TestPlan.load_file(
+            self.testplans_directory.joinpath("valid/testplan2.yaml")
+        )
+        ychaos_src_zip_path = f"{mock_valid_testplan.__src_path__.parent}/ychaos"
+        executor = MachineTargetExecutor(mock_valid_testplan, is_debug_mode=True)
+        expect(shutil, times=1).make_archive(
+            ychaos_src_zip_path, "zip", ANY
+        ).thenReturn(None)
+        executor.prepare()
+        when(executor).prepare().thenReturn(None)
+        expect(executor.ansible_context.tqm, times=1).run(ANY).thenReturn(None)
+        when(os).remove(f"{ychaos_src_zip_path}.zip").thenReturn(None)
+        executor.execute()
+        verify(os, times=1).remove(f"{ychaos_src_zip_path}.zip")
 
     def tearDown(self) -> None:
         unstub()

@@ -78,7 +78,9 @@ class Execute(YChaosTestplanInputSubCommand):
 
     def build_executor(self):
         if self.testplan.attack.target_type == TargetType.MACHINE:
-            self.executor = MachineTargetExecutor(testplan=self.testplan)
+            self.executor = MachineTargetExecutor(
+                testplan=self.testplan, is_debug_mode=self.app.is_debug_mode()
+            )
 
         elif self.testplan.attack.target_type == TargetType.SELF:
             self.executor = SelfTargetExecutor(testplan=self.testplan)

@@ -100,3 +100,4 @@ docs/testplan/schema/*.css
 docs/testplan/schema/*.js
 docs/cli/manual.md
 
+*.DS_Store

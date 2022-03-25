@@ -39,9 +39,7 @@ class IptablesRuleOperation(Enum):
     DELETE = "-D"
 
 
-iptables_command = shutil.which("iptables")
-if iptables_command is None:
-    iptables_command = "/sbin/iptables"
+iptables_command = shutil.which("iptables") or "/sbin/iptables"
 
 
 def iptables_command_builder(

@@ -2,6 +2,7 @@
 #  Licensed under the terms of the Apache 2.0 license. See the LICENSE file in the project root for terms
 
 import shlex
+import shutil
 import subprocess  # nosec using shlex
 from enum import Enum
 from ipaddress import IPv4Address, IPv4Network
@@ -38,10 +39,13 @@ class IptablesRuleOperation(Enum):
     DELETE = "-D"
 
 
+iptables_command = shutil.which("iptables") or "/sbin/iptables"
+
+
 def iptables_command_builder(
     operation, chain, port, endpoint, iptable_wait_second
 ) -> str:
-    command = f"sudo iptables {shlex.quote(operation)} {shlex.quote(chain)}"
+    command = f"sudo {iptables_command} {shlex.quote(operation)} {shlex.quote(chain)}"
 
     args = f" -p tcp -j DROP -w {shlex.quote(str(iptable_wait_second))}"
 
@@ -330,7 +334,7 @@ class DNSBlock(Agent):
     def run(self):
         super(DNSBlock, self).run()
 
-        _cmd = f"sudo iptables -I OUTPUT -p udp --dport {self.DNS_PORT} -j DROP -w {shlex.quote(str(self.config.iptables_wait))}".split()
+        _cmd = f"sudo {iptables_command} -I OUTPUT -p udp --dport {self.DNS_PORT} -j DROP -w {shlex.quote(str(self.config.iptables_wait))}".split()
         proc = subprocess.run(  # nosec
             _cmd,
             stdout=subprocess.PIPE,
@@ -340,7 +344,7 @@ class DNSBlock(Agent):
             proc, "Error While Adding IPTables Rule: DROP udp port: 53 to OUTPUT chain"
         )
 
-        _cmd = f"sudo iptables -I OUTPUT -p tcp --dport {self.DNS_PORT} -j DROP -w {shlex.quote(str(self.config.iptables_wait))}".split()
+        _cmd = f"sudo {iptables_command} -I OUTPUT -p tcp --dport {self.DNS_PORT} -j DROP -w {shlex.quote(str(self.config.iptables_wait))}".split()
         proc = subprocess.run(  # nosec
             _cmd,
             stdout=subprocess.PIPE,
@@ -360,7 +364,7 @@ class DNSBlock(Agent):
             AgentState.ERROR,
             AgentState.ABORTED,
         ):
-            _cmd = f"sudo iptables -D OUTPUT -p udp --dport {self.DNS_PORT} -j DROP -w {self.config.iptables_wait}".split()
+            _cmd = f"sudo {iptables_command} -D OUTPUT -p udp --dport {self.DNS_PORT} -j DROP -w {self.config.iptables_wait}".split()
             proc = subprocess.run(  # nosec
                 _cmd,
                 stdout=subprocess.PIPE,
@@ -369,7 +373,7 @@ class DNSBlock(Agent):
 
             error = proc.returncode != 0 or error
 
-            _cmd = f"sudo iptables -D OUTPUT -p tcp --dport {self.DNS_PORT} -j DROP -w {self.config.iptables_wait}".split()
+            _cmd = f"sudo {iptables_command} -D OUTPUT -p tcp --dport {self.DNS_PORT} -j DROP -w {self.config.iptables_wait}".split()
             proc = subprocess.run(  # nosec
                 _cmd,
                 stdout=subprocess.PIPE,

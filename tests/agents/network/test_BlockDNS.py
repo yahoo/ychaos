@@ -51,13 +51,13 @@ class TestBlockDNSConfig(TestCase):
         when(os).geteuid().thenReturn(0)
 
         when(subprocess).run(
-            "sudo iptables -I OUTPUT -p udp --dport 53 -j DROP -w 3".split(),
+            "sudo /sbin/iptables -I OUTPUT -p udp --dport 53 -j DROP -w 3".split(),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         ).thenReturn(subprocess.CompletedProcess(args=[], returncode=0))
 
         when(subprocess).run(
-            f"sudo iptables -I OUTPUT -p tcp --dport 53 -j DROP -w 3".split(),
+            f"sudo /sbin/iptables -I OUTPUT -p tcp --dport 53 -j DROP -w 3".split(),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         ).thenReturn(subprocess.CompletedProcess(args=[], returncode=0))
@@ -76,13 +76,13 @@ class TestBlockDNSConfig(TestCase):
         when(os).geteuid().thenReturn(0)
 
         when(subprocess).run(
-            "sudo iptables -I OUTPUT -p udp --dport 53 -j DROP -w 3".split(),
+            "sudo /sbin/iptables -I OUTPUT -p udp --dport 53 -j DROP -w 3".split(),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         ).thenReturn(subprocess.CompletedProcess(args=[], returncode=0))
 
         when(subprocess).run(
-            f"sudo iptables -I OUTPUT -p tcp --dport 53 -j DROP -w 3".split(),
+            f"sudo /sbin/iptables -I OUTPUT -p tcp --dport 53 -j DROP -w 3".split(),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         ).thenReturn(subprocess.CompletedProcess(args=[], returncode=1))
@@ -100,13 +100,13 @@ class TestBlockDNSConfig(TestCase):
         agent.advance_state(AgentState.RUNNING)
 
         when(subprocess).run(
-            "sudo iptables -D OUTPUT -p udp --dport 53 -j DROP -w 3".split(),
+            "sudo /sbin/iptables -D OUTPUT -p udp --dport 53 -j DROP -w 3".split(),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         ).thenReturn(subprocess.CompletedProcess(args=[], returncode=0))
 
         when(subprocess).run(
-            "sudo iptables -D OUTPUT -p tcp --dport 53 -j DROP -w 3".split(),
+            "sudo /sbin/iptables -D OUTPUT -p tcp --dport 53 -j DROP -w 3".split(),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         ).thenReturn(subprocess.CompletedProcess(args=[], returncode=0))
@@ -129,13 +129,13 @@ class TestBlockDNSConfig(TestCase):
         agent.advance_state(AgentState.RUNNING)
 
         when(subprocess).run(
-            "sudo iptables -D OUTPUT -p udp --dport 53 -j DROP -w 3".split(),
+            "sudo /sbin/iptables -D OUTPUT -p udp --dport 53 -j DROP -w 3".split(),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         ).thenReturn(subprocess.CompletedProcess(args=[], returncode=0))
 
         when(subprocess).run(
-            "sudo iptables -D OUTPUT -p tcp --dport 53 -j DROP -w 3".split(),
+            "sudo /sbin/iptables -D OUTPUT -p tcp --dport 53 -j DROP -w 3".split(),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         ).thenReturn(subprocess.CompletedProcess(args=[], returncode=1))

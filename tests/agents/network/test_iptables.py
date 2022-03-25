@@ -54,28 +54,28 @@ class TestIPTablesBlock(TestCase):
         self.mock_subprocess_exits_normally(ANY)
         agent.run()
         self.verify_sub_process(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 9000"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 9000"
         )
         self.verify_sub_process(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 9001"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 9001"
         )
         self.verify_sub_process(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9002"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9002"
         )
         self.verify_sub_process(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9003"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9003"
         )
         self.verify_sub_process(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
         )
         self.verify_sub_process(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 443 -d yahoo.com"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 443 -d yahoo.com"
         )
         self.verify_sub_process(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
         )
         self.verify_sub_process(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 443 -d yahoo.com"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 443 -d yahoo.com"
         )
 
     def test_run_sets_ip_tables_rules_incoming_port_error(self):
@@ -83,10 +83,10 @@ class TestIPTablesBlock(TestCase):
         iptables_block_agent_config = self.iptables_block_agent_config
         agent = IPTablesBlock(iptables_block_agent_config)
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 9000"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 9000"
         )
         self.mock_subprocess_exits_with_error(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 9001"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 9001"
         )
         agent.setup()
         with self.assertRaises(IOError):
@@ -97,16 +97,16 @@ class TestIPTablesBlock(TestCase):
         iptables_block_agent_config = self.iptables_block_agent_config
         agent = IPTablesBlock(iptables_block_agent_config)
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 9000"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 9000"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 9001"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 9001"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9002"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9002"
         )
         self.mock_subprocess_exits_with_error(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9003"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9003"
         )
         agent.setup()
         with self.assertRaises(IOError):
@@ -117,19 +117,19 @@ class TestIPTablesBlock(TestCase):
         iptables_block_agent_config = self.iptables_block_agent_config
         agent = IPTablesBlock(iptables_block_agent_config)
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 9000"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 9000"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 9001"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 9001"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9002"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9002"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9003"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9003"
         )
         self.mock_subprocess_exits_with_error(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
         )
         agent.setup()
         with self.assertRaises(IOError):
@@ -140,22 +140,22 @@ class TestIPTablesBlock(TestCase):
         iptables_block_agent_config = self.iptables_block_agent_config
         agent = IPTablesBlock(iptables_block_agent_config)
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 9000"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 9000"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 9001"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 9001"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9002"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9002"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9003"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9003"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
         )
         self.mock_subprocess_exits_with_error(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 443 -d yahoo.com"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 443 -d yahoo.com"
         )
         agent.setup()
         with self.assertRaises(IOError):
@@ -166,25 +166,25 @@ class TestIPTablesBlock(TestCase):
         iptables_block_agent_config = self.iptables_block_agent_config
         agent = IPTablesBlock(iptables_block_agent_config)
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 9000"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 9000"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 9001"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 9001"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9002"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9002"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9003"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9003"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 443 -d yahoo.com"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 443 -d yahoo.com"
         )
         self.mock_subprocess_exits_with_error(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
         )
         agent.setup()
         with self.assertRaises(IOError):
@@ -195,28 +195,28 @@ class TestIPTablesBlock(TestCase):
         iptables_block_agent_config = self.iptables_block_agent_config
         agent = IPTablesBlock(iptables_block_agent_config)
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 9000"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 9000"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 9001"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 9001"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9002"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9002"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9003"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 9003"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I INPUT -p tcp -j DROP -w 1 --dport 443 -d yahoo.com"
+            "sudo /sbin/iptables -I INPUT -p tcp -j DROP -w 1 --dport 443 -d yahoo.com"
         )
         self.mock_subprocess_exits_normally(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 -d 203.0.113.0/32"
         )
         self.mock_subprocess_exits_with_error(
-            "sudo iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 443 -d yahoo.com"
+            "sudo /sbin/iptables -I OUTPUT -p tcp -j DROP -w 1 --dport 443 -d yahoo.com"
         )
         agent.setup()
         with self.assertRaises(IOError):

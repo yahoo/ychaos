@@ -34,6 +34,7 @@ shared:
             docker push $DOCKER_REPO:py$PY_VERSION-$DOCKER_TAG
 
 jobs:
+
     doc_validation:
         template: python/documentation
         environment:

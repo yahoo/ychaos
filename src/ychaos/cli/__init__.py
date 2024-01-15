@@ -12,6 +12,7 @@ from rich.panel import Panel
 from ..testplan.schema import TestPlan
 from ..utils.argparse import SubCommand
 from .exceptions import YChaosCLIError
+from ..utils.builtins import BuiltinUtils
 
 
 class YChaosArgumentParser(ArgumentParser):
@@ -98,7 +99,8 @@ class YChaosTestplanInputSubCommand(YChaosSubCommand, ABC):
         except ValidationError as validation_error:
             self.set_exitcode(1)
             self.console.print(
-                Panel.fit(str(validation_error), title="Validation Error", style="red")
+                Panel.fit(BuiltinUtils.OscSequenceSanitizer.validate(str(validation_error)),
+                          title="Validation Error", style="red")
             )
         except IsADirectoryError as is_directory:
             self.set_exitcode(1)

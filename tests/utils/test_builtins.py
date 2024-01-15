@@ -9,7 +9,7 @@ from ychaos.utils.builtins import FQDN, AEnum, BuiltinUtils
 class TestFQDN(TestCase):
     def test_fqdn_length_exceeded_max_limits(self):
         with self.assertRaises(ValueError):
-            FQDN(f"yaho{'o'* 255}o.com")
+            FQDN(f"yaho{'o' * 255}o.com")
 
     def test_fqdn_init_for_invalid_fqdn(self):
         with self.assertRaises(ValueError):
@@ -36,3 +36,9 @@ class TestAEnum(TestCase):
         # Missing Alias
         with self.assertRaises(ValueError):
             self.MockTestEnum("3")
+
+
+class TestOscSequenceSanitizer(TestCase):
+    def test_validate(self):
+        self.assertEqual('https://exam\n\n\ntesttesttest\n\n\n/', BuiltinUtils.OscSequenceSanitizer.validate(
+            "https://exam\n\n\n\x1b[1;35mtest\x1b[1;34mtest\x1b[1;33mtest\n\n\n\e]52;c;/"))

@@ -4,7 +4,7 @@ from argparse import Namespace
 from pathlib import Path
 from unittest import TestCase
 
-from mockito import mock, unstub, verify
+from mockito import mock, unstub, verify, when
 from rich.console import Console
 
 from ychaos.cli.exceptions import YChaosCLIError
@@ -57,6 +57,7 @@ class TestYChaosCLIError(TestCase):
         except:
             error = YChaosCLIError(app=MockApp(args), message="Some Error occurred")
             error.app.console = mock(spec=Console)
+            when(error.app.console).print_exception(extra_lines=2).thenReturn(None)
             error.handle()
             verify(error.app.console, times=1).print_exception(extra_lines=2)
 

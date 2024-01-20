@@ -30,6 +30,13 @@ class BuiltinUtils:
             except Exception:
                 return default
 
+    class OscSequenceSanitizer:
+        _osc_sequence = re.compile(r"(\\e]52;c;|\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~]))")
+
+        @classmethod
+        def validate(cls, message: str):
+            return cls._osc_sequence.sub('', message)
+
     @classmethod
     def raise_error(cls, e):
         raise e

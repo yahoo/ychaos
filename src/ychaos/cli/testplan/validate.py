@@ -13,6 +13,8 @@ from .. import YChaosSubCommand
 
 __all__ = ["TestPlanValidatorCommand"]
 
+from ...utils.builtins import BuiltinUtils
+
 
 class TestPlanValidatorCommand(YChaosSubCommand):
     """
@@ -84,7 +86,8 @@ class TestPlanValidatorCommand(YChaosSubCommand):
                 self.console.print(f":exclamation: {file}", style="bold red")
                 self.console.print(
                     Panel.fit(
-                        str(validation_error), title="Validation Error", style="red"
+                        BuiltinUtils.OscSequenceSanitizer.validate(str(validation_error)),
+                        title="Validation Error", style="red"
                     )
                 )
                 self.console.print("")
